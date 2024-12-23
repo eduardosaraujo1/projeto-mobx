@@ -10,7 +10,7 @@ O MOBX é um sistema destinado à organização interna de imobiliárias que o u
 
 Usuários autenticados podem acessar o sistema com um login seguro. O sistema permite o cadastro de novos usuários, garantindo acesso controlado.
 
-### 2. Cadastro, Remoção e Edição de Imóveis
+### 2. Cadastro, Remoção e Edição de Imóveis (CRUD)
 
 O sistema permite o cadastro de imóveis com base nos dados importados de uma planilha Excel. Além disso, os usuários podem editar informações existentes ou remover imóveis que não estão mais em uso.
 
@@ -57,3 +57,9 @@ Um sistema de busca detalhado, com filtros como localização, status, valor de 
 ### 13. Histórico de Alterações
 
 Cada imóvel terá um histórico detalhado das alterações realizadas, como mudanças de status, upload de documentos, ou edições de dados. Esse histórico garante transparência e rastreabilidade das ações no sistema.
+
+# Roadmap
+
+-   [ ] DEV-FRAMEWORK - Inicializar framework escolhido (Laravel, Symphony, CodeIgniter ou CakePHP) com npm para Tailwind
+-   [ ] DEV-UI Replicar código do commit inicial no framework
+-   [ ] DEV-DOCKERIZE - Dockerizar projeto
