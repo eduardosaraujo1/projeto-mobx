@@ -60,6 +60,8 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 # Roadmap
 
--   [ ] DEV-FRAMEWORK - Inicializar framework escolhido (Laravel, Symphony, CodeIgniter ou CakePHP) com npm para Tailwind
+-   [ ] DEV-FRAMEWORK - Inicializar framework Laravel e Tailwind
 -   [ ] DEV-UI Replicar código do commit inicial no framework
 -   [ ] DEV-DOCKERIZE - Dockerizar projeto
+-   [ ] Prototipar telas baseando-se nos requisitos
+-   [ ] USER-INTERFACE - Desenvolver frontend baseando-se nos prototipos
