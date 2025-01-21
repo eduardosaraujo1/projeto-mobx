@@ -60,6 +60,4 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 # Roadmap
 
--   [ ] DEV-UI Replicar código do commit inicial no framework
--   [ ] Prototipar telas baseando-se nos requisitos
--   [ ] USER-INTERFACE - Desenvolver frontend baseando-se nos prototipos
+-   [ ] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
