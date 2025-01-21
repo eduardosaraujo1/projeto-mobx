@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .legacy-nav-link {
+        @apply flex items-center p-3 text-base font-semibold transition-all duration-200 hover:bg-[#e5e7eb] hover:text-[#1f2937] hover:scale-105
+    }
+}
