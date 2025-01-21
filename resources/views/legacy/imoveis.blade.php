@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Imobiliária - Imóveis</title>
-    <!-- Importando Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        /* Estilização personalizada para modernização */
-        .card-hover:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body class="flex bg-gray-50 min-h-screen font-sans">
-    <!-- Navbar Lateral -->
-    <nav class="w-64 bg-white text-gray-800 flex flex-col p-6 fixed h-full shadow-lg border-r border-gray-200 z-50">
-        <div class="flex items-center mb-8">
-            <img src="logo.png" alt="Logo da Imobiliária" class="w-10 h-10 mr-3 rounded-full">
-            <h2 class="text-2xl font-bold">Minha Imobiliária</h2>
-        </div>
-        <ul class="space-y-4">
-            <li><a href="index.html" class="block text-lg font-medium hover:bg-gray-100 p-3 rounded transition duration-200">Início</a></li>
-            <li><a href="imoveis.html" class="block text-lg font-medium hover:bg-gray-100 p-3 rounded transition duration-200">Imóveis</a></li>
-            <li><a href="cadastro.html" class="block text-lg font-medium hover:bg-gray-100 p-3 rounded transition duration-200">Cadastrar Imóveis</a></li>
-            <li><a href="sua_imobiliaria.html" class="block text-lg font-medium hover:bg-gray-100 p-3 rounded transition duration-200">Sua Imobiliária</a></li>
-            <li><a href="configuraçoes.html" class="block text-lg font-medium hover:bg-gray-100 p-3 rounded transition duration-200">Configurações</a></li>
-        </ul>
-    </nav>
-
+<x-legacy-layout>
+    <x-slot:title>Minha Imobiliária - Imóveis</x-slot:title>
     <!-- Conteúdo Principal -->
     <main class="flex-1 p-10 ml-64 transition-opacity duration-700 ease-in opacity-0" id="main-content">
         <header class="text-center mb-12">
@@ -40,13 +10,16 @@
         <!-- Lista de Imóveis -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <!-- Card de Imóvel -->
-            <article class="relative bg-white rounded-lg shadow-md card-hover transition-transform duration-300 p-5">
-                <img src="casa2.jpg" alt="Imagem do Apartamento no Centro" class="w-full h-48 object-cover rounded-md">
+            <article
+                class="relative bg-white rounded-lg shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-300 p-5">
+                <img src="{{ asset('images/casa2.jpg') }}" alt="Imagem do Apartamento no Centro"
+                    class="w-full h-48 object-cover rounded-md">
                 <h3 class="text-xl font-semibold text-gray-800 mt-4">Apartamento no Centro</h3>
                 <p class="text-lg text-gray-900 font-bold mt-2">R$ 500.000</p>
 
                 <!-- Sobreposição de Informações -->
-                <div class="absolute inset-0 bg-white bg-opacity-90 text-gray-800 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg p-4 flex flex-col justify-between shadow-lg">
+                <div
+                    class="absolute inset-0 bg-white bg-opacity-90 text-gray-800 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg p-4 flex flex-col justify-between shadow-lg">
                     <div>
                         <h3 class="text-lg font-semibold mb-2">Detalhes do Imóvel</h3>
                         <ul class="space-y-1 text-sm">
@@ -58,20 +31,24 @@
                             <li><strong>Status:</strong> Em Negociação</li>
                         </ul>
                     </div>
-                    <button class="mt-4 w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors transform hover:scale-105 active:scale-95">
+                    <button
+                        class="mt-4 w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors transform hover:scale-105 active:scale-95">
                         Acessar Imóvel
                     </button>
                 </div>
             </article>
 
             <!-- Outro Card de Imóvel -->
-            <article class="relative bg-white rounded-lg shadow-md card-hover transition-transform duration-300 p-5">
-                <img src="casa1.jpg" alt="Imagem da Casa com Piscina" class="w-full h-48 object-cover rounded-md">
+            <article
+                class="relative bg-white rounded-lg shadow-md hover:scale-105 hover:shadow-lg transition-transform duration-300 p-5">
+                <img src="{{ asset('images/casa1.jpg') }}" alt="Imagem da Casa com Piscina"
+                    class="w-full h-48 object-cover rounded-md">
                 <h3 class="text-xl font-semibold text-gray-800 mt-4">Casa com Piscina</h3>
                 <p class="text-lg text-gray-900 font-bold mt-2">R$ 750.000</p>
 
                 <!-- Sobreposição de Informações -->
-                <div class="absolute inset-0 bg-white bg-opacity-90 text-gray-800 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg p-4 flex flex-col justify-between shadow-lg">
+                <div
+                    class="absolute inset-0 bg-white bg-opacity-90 text-gray-800 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg p-4 flex flex-col justify-between shadow-lg">
                     <div>
                         <h3 class="text-lg font-semibold mb-2">Detalhes do Imóvel</h3>
                         <ul class="space-y-1 text-sm">
@@ -83,7 +60,8 @@
                             <li><strong>Status:</strong> Alugado</li>
                         </ul>
                     </div>
-                    <button class="mt-4 w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors transform hover:scale-105 active:scale-95">
+                    <button
+                        class="mt-4 w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors transform hover:scale-105 active:scale-95">
                         Acessar Imóvel
                     </button>
                 </div>
@@ -100,5 +78,4 @@
             content.classList.remove('opacity-0');
         });
     </script>
-</body>
-</html>
+</x-legacy-layout>
