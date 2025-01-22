@@ -386,4 +386,6 @@ LCRUD (List, Create, Read, Update, Delete)
 -   [ ] DASHBOARD - Criar dashboard do gerente e controlar seu acesso para os LCRUDs dos modelos eloquentes
 -   [ ] PERMISSIONS - Criar tela para um gerente controlar o acesso de seus colaboradores
 -   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
+    -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
 -   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
+    -   Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário
