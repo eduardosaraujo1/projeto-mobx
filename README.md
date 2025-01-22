@@ -130,12 +130,17 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 ## Relações banco de dados
 
+<details>
+<summary>Expandir</summary>
+
 1. Um usuário pode ter **varias** imobiliarias (um pra muitos)
 2. **Vários** usuários colaboradores podem ter acesso a **várias** imobiliárias (muitos para muitos)
 3. Um imobiliária pode ter **vários** imóveis (um pra muitos)
 4. Um cliente pode ter **vários** imóveis (um pra muitos)
 5. Um imóvel pode ter **vários** documentos (um pra muitos)
 6. Um imóvel pode ter **várias** alterações (um pra muitos)
+
+</details>
 
 ## Roles de usuário ([implementação](https://spatie.be/docs/laravel-permission/v6/introduction))
 
@@ -193,7 +198,12 @@ LCRUD (List, Create, Read, Update, Delete)
 <summary>Expandir</summary>
 
 -   Tela home do usuário "Gerente" e "Colaborador", com conteúdo a depender de seu nível de acesso
--   Possui navegação para: - Listagem Imobiliárias (botão escolher na topbar) - Listagem Imóveis (sidebar) - Listagem Clientes (sidebar)
+-   Possui navegação para:
+
+    -   Listagem Imobiliárias (botão dropdown escolher na topbar)
+    -   Listagem Imóveis (sidebar)
+    -   Listagem Clientes (sidebar)
+
 </details>
 
 ### Usuários
