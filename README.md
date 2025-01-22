@@ -58,12 +58,14 @@ Um sistema de busca detalhado, com filtros como localização, status, valor de 
 
 Cada imóvel terá um histórico detalhado das alterações realizadas, como mudanças de status, upload de documentos, ou edições de dados. Esse histórico garante transparência e rastreabilidade das ações no sistema.
 
-## Tabelas banco de dados
+## Banco de Dados
+
+### Tabelas
 
 <details>
 <summary>Expandir</summary>
 
-### users
+#### users
 
 -   id (PK)
 -   nome
@@ -73,10 +75,14 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 -   data_criacao
 -   data_atualizacao
 
-### imobiliarias
+#### acessos_imobiliarias
+
+-   fk_id_user (FK)
+-   fk_id_imobiliaria (FK)
+
+#### imobiliarias
 
 -   id (PK)
--   fk_id_dono (FK user)
 -   nome
 -   endereco
 -   caminho_foto
@@ -84,19 +90,19 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 -   data_criacao
 -   data_atualizacao
 
-### clientes
+#### clientes
 
 -   id (PK)
+-   fk_id_imobiliaria (FK)
 -   cpf
 -   nome
--   email
--   telefone
+-   contato
 -   endereco
 -   tipo (vendedor ou locador)
 -   data_criacao
 -   data_atualizacao
 
-### imoveis
+#### imoveis
 
 -   id (PK)
 -   fk_id_cliente (FK)
@@ -108,37 +114,44 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 -   data_criacao
 -   data_atualizacao
 
-### documentos_imovel
+#### documentos_imovel
 
 -   id (PK)
 -   fk_id_imovel (FK para imoveis)
--   nome_arquivo
 -   caminho_arquivo
 -   data_upload
 -   data_atualizacao
 
-### logs_imovel
+#### logs_imovel
 
 -   id (PK)
 -   fk_id_imovel (FK para imoveis)
 -   fk_id_usuario (FK para usuarios)
 -   tipo_alteracao (status, descricao, etc.)
 -   descricao_alteracao
--   data_alteracao
+-   timestamp
 
 </details>
 
-## Relações banco de dados
+### Relações
 
 <details>
 <summary>Expandir</summary>
 
-1. Um usuário pode ter **varias** imobiliarias (um pra muitos)
-2. **Vários** usuários colaboradores podem ter acesso a **várias** imobiliárias (muitos para muitos)
-3. Um imobiliária pode ter **vários** imóveis (um pra muitos)
-4. Um cliente pode ter **vários** imóveis (um pra muitos)
-5. Um imóvel pode ter **vários** documentos (um pra muitos)
-6. Um imóvel pode ter **várias** alterações (um pra muitos)
+1. **Vários** usuários (gerentes e colaboradores) podem ter **várias** imobiliarias (muitos pra muitos)
+2. **Uma** imobiliária pode ter **vários** clientes (um pra muitos)
+3. Um cliente pode ter **vários** imóveis (um pra muitos)
+4. Um imóvel pode ter **vários** documentos (um pra muitos)
+5. Um imóvel pode ter **várias** alterações (um pra muitos)
+
+</details>
+
+### Modelagem
+
+<details>
+<summary>Expandir</summary>
+
+![MODELAGEM](/docs/database/model.png)
 
 </details>
 
@@ -349,7 +362,7 @@ LCRUD (List, Create, Read, Update, Delete)
 
 # Roadmap
 
--   [ ] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
+-   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
 -   [ ] ADMIN - Criar painel administrativo e LCRUDs dos modelos eloquentes
 -   [ ] DASHBOARD - Criar dashboard do gerente e controlar seu acesso para os LCRUDs dos modelos eloquentes
 -   [ ] PERMISSIONS - Criar tela para um gerente controlar o acesso de seus colaboradores
