@@ -190,6 +190,17 @@ LCRUD (List, Create, Read, Update, Delete)
 
 ## Telas
 
+### Login
+
+<details>
+<summary>Expandir</summary>
+
+-   Tela de Login para usuários
+-   Campos "login", "senha", e "entrar"
+-   Esqueci a senha será delegado para uma atualização pós MVP
+
+</details>
+
 ### Painel Admin
 
 <details>
@@ -314,13 +325,18 @@ LCRUD (List, Create, Read, Update, Delete)
 -   Navegação para alterar cliente do imóvel
 -   Acessível pelo colaborador, exceto remoção de imóvel e cliente
 
-#### Alterar cliente de imóvel
+#### Selecionar cliente
 
--   Exibe campo para digitar o CPF do cliente que deve ser cadastrado
--   Caso cliente seja encontrado, perguntar se os dados estão corretos antes de cadastrar, se não estiverem corretos enviar para edição
--   Caso cliente não seja encontrado, exibir formulario de cadastro de novo cliente que o cadastra e repassa pela tela de perguntar se os dados estão corretos
+-   Exibe campo para pesquisar o cliente a partir de CPF/nome/outros critérios
+-   Caso cliente seja encontrado, perguntar se os dados estão corretos na tela Confirmar Cliente
+-   Incluir um botão na parte de baixo da página para criar um novo cliente caso necessário
 -   Sempre opções de Cancelar e voltar para tela de visualização de imóvel
 -   Acessível pelo gerente
+
+#### Confirmar Cliente
+
+-   Exibe as informações do cliente para confirmar que os dados do cliente a serem colocados no aluguel especificado estão corretos
+-   Caso estejam, substir o cliente no imóvel especificado na URL (ou session) pelo selecionado
 
 #### Documentos do imóvel
 
@@ -365,6 +381,9 @@ LCRUD (List, Create, Read, Update, Delete)
 # Roadmap
 
 -   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
+-   [ ] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
 -   [ ] ADMIN - Criar painel administrativo e LCRUDs dos modelos eloquentes
 -   [ ] DASHBOARD - Criar dashboard do gerente e controlar seu acesso para os LCRUDs dos modelos eloquentes
 -   [ ] PERMISSIONS - Criar tela para um gerente controlar o acesso de seus colaboradores
+-   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
+-   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
