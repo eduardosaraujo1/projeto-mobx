@@ -1,10 +1,10 @@
-# Fluxo de Dados - MVP MOBX
+# MVP MOBX
 
 ## Resumo
 
 O MOBX é um sistema destinado à organização interna de imobiliárias que o utilizarem. Seu objetivo principal é possibilitar a busca e gerenciamento de imóveis importados de uma planilha Excel. Essa planilha contém informações como número do imóvel, endereço, localização (lado praia ou morro), IPTU, aluguel, e bairro. O sistema não possui funcionalidade externa e é restrito ao uso interno.
 
-### Funcionalidades
+## Requisitos Funcionais
 
 ### 1. Cadastro e Login
 
@@ -22,7 +22,7 @@ Imóveis podem ter seus status alterados entre opções como: 'vendido', 'alugad
 
 Os usuários podem anexar documentos relevantes a cada imóvel, como contratos, termos e outros arquivos necessários para a operação da imobiliária.
 
-### 5. Cadastro de Locadores e Vendedores
+### 5. Cadastro de Locadores e Vendedores (Clientes)
 
 O sistema permite o registro de locadores e vendedores, incluindo informações de contato e nome, para manter um controle organizado sobre as partes interessadas nos imóveis.
 
@@ -58,6 +58,334 @@ Um sistema de busca detalhado, com filtros como localização, status, valor de 
 
 Cada imóvel terá um histórico detalhado das alterações realizadas, como mudanças de status, upload de documentos, ou edições de dados. Esse histórico garante transparência e rastreabilidade das ações no sistema.
 
+## Banco de Dados
+
+### Tabelas
+
+<details>
+<summary>Expandir</summary>
+
+#### users
+
+-   id (PK)
+-   nome
+-   email (único)
+-   senha (hashed)
+-   nivel_acesso (admin, gerente, colaborador)
+-   data_criacao
+-   data_atualizacao
+
+#### acessos_imobiliarias
+
+-   fk_id_user (FK)
+-   fk_id_imobiliaria (FK)
+
+#### imobiliarias
+
+-   id (PK)
+-   nome
+-   endereco
+-   caminho_foto
+-   contato
+-   data_criacao
+-   data_atualizacao
+
+#### clientes
+
+-   id (PK)
+-   fk_id_imobiliaria (FK)
+-   cpf
+-   nome
+-   contato
+-   endereco
+-   tipo (vendedor ou locador)
+-   data_criacao
+-   data_atualizacao
+
+#### imoveis
+
+-   id (PK)
+-   fk_id_cliente (FK)
+-   caminho_foto
+-   endereco
+-   descricao
+-   status (livre, vendido, alugado, etc.)
+-   valor (decimal(15, 2))
+-   data_criacao
+-   data_atualizacao
+
+#### documentos_imovel
+
+-   id (PK)
+-   fk_id_imovel (FK para imoveis)
+-   caminho_arquivo
+-   data_upload
+-   data_atualizacao
+
+#### logs_imovel
+
+-   id (PK)
+-   fk_id_imovel (FK para imoveis)
+-   fk_id_usuario (FK para usuarios)
+-   tipo_alteracao (status, descricao, etc.)
+-   descricao_alteracao
+-   timestamp
+
+</details>
+
+### Relações
+
+<details>
+<summary>Expandir</summary>
+
+1. **Vários** usuários (gerentes e colaboradores) podem ter **várias** imobiliarias (muitos pra muitos)
+2. **Uma** imobiliária pode ter **vários** clientes (um pra muitos)
+3. Um cliente pode ter **vários** imóveis (um pra muitos)
+4. Um imóvel pode ter **vários** documentos (um pra muitos)
+5. Um imóvel pode ter **várias** alterações (um pra muitos)
+
+</details>
+
+### Modelagem
+
+<details>
+<summary>Expandir</summary>
+
+![MODELAGEM](/docs/database/model.png)
+
+</details>
+
+## Tipos de usuário ([implementação](https://spatie.be/docs/laravel-permission/v6/introduction))
+
+<details>
+<summary>Expandir</summary>
+
+LCRUD (List, Create, Read, Update, Delete)
+
+### Administrador (painel admin)
+
+-   LCRUD Usuários
+-   LCRUD Imobiliárias
+-   LCRUD Imóveis
+-   LCRUD Clientes
+-   \_CRUD Documentos
+    -   _listagem não é necessária, está atrelado à tela do imóvel_
+-   L_R\_\_ Logs
+
+### Gerente da imobiliaria (dashboard)
+
+-   L\_\R\_\_ Imobiliárias (apenas suas próprias)
+-   LCRUD Imóveis (de sua imobiliária)
+-   LCRUD Clientes (de imóveis da sua imobiliária)
+-   \_CRUD Documentos (de imóveis da sua imobiliária)
+-   L_R\_\_ Logs (de imóveis de sua imobiliária)
+
+### Colaborador do gerente (dashboard)
+
+-   L\_\R\_\_ Imobiliárias
+-   L_R\_\_ Imóveis
+-   L_R\_\_ Clientes
+-   \_\_R\_\_ Documentos
+</details>
+
+## Telas
+
+### Login
+
+<details>
+<summary>Expandir</summary>
+
+-   Tela de Login para usuários
+-   Campos "login", "senha", e "entrar"
+-   Esqueci a senha será delegado para uma atualização pós MVP
+
+</details>
+
+### Painel Admin
+
+<details>
+<summary>Expandir</summary>
+
+-   Tela home do administrador
+-   Mesma função do dashboard mas não possui os relatórios
+-   Possui navegação para:
+
+    -   Listagem Usuários
+    -   Listagem Imobiliárias
+    -   Listagem Imóveis
+    -   Listagem Clientes
+
+    </details>
+
+### Dashboard
+
+<details>
+<summary>Expandir</summary>
+
+-   Tela home do usuário "Gerente" e "Colaborador", com conteúdo a depender de seu nível de acesso
+-   Possui os graficos e dados dos imoveis como descrito em requisito 7
+-   Possui navegação para:
+
+    -   Listagem Imobiliárias (botão dropdown escolher na topbar)
+    -   Listagem Imóveis (sidebar)
+    -   Listagem Clientes (sidebar)
+
+</details>
+
+### Usuários
+
+<details>
+<summary>Expandir</summary>
+
+#### Listagem Usuários
+
+-   Lista de usuários no sistema, incluindo o atual
+-   Pesquisa por nome
+-   Navegação para cadastro, edição e visualização
+
+#### Cadastro de Usuário
+
+-   Cadastro para novo usuário, aplicando validações necessárias
+
+#### Edição de Usuário
+
+-   Alteração de usuário existente, aplicando validações necessárias
+
+#### Visualização de Usuário
+
+-   Visualização de dados mais detalhados do usuário
+-   Opção de exclusão de usuário com confirmação
+-   Acessível pelo colaborador (tela de perfil) e administrador (funções destrutivas)
+</details>
+
+### Imobiliária
+
+<details>
+<summary>Expandir</summary>
+
+#### Seleção de imobiliária
+
+-   Lista de imobiliárias do gerente logado atualmente.
+-   Seleção necessária antes de navegar para telas de imóveis e clientes
+-   Acessível pelo colaborador
+
+#### Listagem imobiliárias
+
+-   Lista de imobiliárias no sistema
+-   Pesquisa por nome
+-   Navegação para cadastro, edição e visualização
+-   Acessível pelo administrador
+
+#### Cadastro de imobiliária
+
+-   Cadastro para novo imobiliária, aplicando validações necessárias
+-   Acessível pelo administrador
+
+#### Edição de imobiliária
+
+-   Alteração de imobiliária existente, aplicando validações necessárias
+-   Acessível pelo administrador e gerente com limitações
+
+#### Visualização de imobiliária
+
+-   Visualização de dados mais detalhados da imobiliária
+-   Opção de inativação de imobiliária pelo administrador
+-   Acessível pelo gerente (requisito #6) com exceção da função de inativação
+</details>
+
+### Imóveis
+
+<details>
+<summary>Expandir</summary>
+
+#### Listagem imóveis
+
+-   Lista de imóveis da imobiliária selecionada
+-   Para navegar aqui, a imobiliária deve ser sido selecionada previamente na Seleção de Imobiliária
+-   Pesquisa por endereço do imóvel ou nome do cliente
+-   Navegação para cadastro, edição e visualização de imóveis
+-   Acessível pelo administrador e gerente com limitações (apenas próprias imobiliarias)
+
+#### Cadastro de imóvel
+
+-   Cadastro para novo imóvel, aplicando validações necessárias
+-   Acessível pelo gerente
+
+#### Edição de imóvel
+
+-   Alteração de imóvel existente, aplicando validações necessárias
+-   Acessível pelo gerente
+
+#### Visualização de imóvel
+
+-   Visualização de dados mais detalhados do imóvel (se necessário)
+-   Opção de remoção de imóvel (para o gerente)
+-   Opção de remoção de cliente (para o gerente)
+-   Visualização de cliente atual
+-   Navegação para alterar cliente do imóvel
+-   Acessível pelo colaborador, exceto remoção de imóvel e cliente
+
+#### Selecionar cliente
+
+-   Exibe campo para pesquisar o cliente a partir de CPF/nome/outros critérios
+-   Caso cliente seja encontrado, perguntar se os dados estão corretos na tela Confirmar Cliente
+-   Incluir um botão na parte de baixo da página para criar um novo cliente caso necessário
+-   Sempre opções de Cancelar e voltar para tela de visualização de imóvel
+-   Acessível pelo gerente
+
+#### Confirmar Cliente
+
+-   Exibe as informações do cliente para confirmar que os dados do cliente a serem colocados no aluguel especificado estão corretos
+-   Caso estejam, substir o cliente no imóvel especificado na URL (ou session) pelo selecionado
+
+#### Documentos do imóvel
+
+-   Tela para upload, download e remoção de documentos do imóvel
+-   Acessível pelo colaborador para download; upload e remoção pelo gerente
+
+#### Logs do imóvel
+
+-   Tela para visualizar as alterações efetuadas no imóvel
+-   Filtravel por período
+-   Acessível pelo gerente
+</details>
+
+### Clientes
+
+<details>
+<summary>Expandir</summary>
+
+#### Listagem de Cliente
+
+-   Lista de clientes da imobiliária selecionada
+-   Pesquisa por cpf e/ou nome
+-   Navegação para cadastro, edição e visualização
+-   Acessível pelo administrador e gerente com limitações (apenas clientes de sua imobiliária)
+
+#### Cadastro de cliente
+
+-   Cadastro para novo cliente, aplicando validações necessárias
+-   Acessível pelo gerente
+
+#### Edição de cliente
+
+-   Alteração de cliente existente, aplicando validações necessárias
+-   Acessível pelo gerente
+
+#### Visualização de cliente
+
+-   Visualização de dados mais detalhados do cliente (se necessário)
+-   Acessível pelo colaborador
+</details>
+
 # Roadmap
 
--   [ ] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
+-   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
+-   [ ] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
+-   [ ] ADMIN - Criar painel administrativo e LCRUDs dos modelos eloquentes
+-   [ ] DASHBOARD - Criar dashboard do gerente e controlar seu acesso para os LCRUDs dos modelos eloquentes
+-   [ ] PERMISSIONS - Criar tela para um gerente controlar o acesso de seus colaboradores
+-   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
+    -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
+-   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
+    -   Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário
