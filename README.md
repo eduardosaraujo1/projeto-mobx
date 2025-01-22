@@ -155,7 +155,7 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 </details>
 
-## Roles de usuário ([implementação](https://spatie.be/docs/laravel-permission/v6/introduction))
+## Tipos de usuário ([implementação](https://spatie.be/docs/laravel-permission/v6/introduction))
 
 <details>
 <summary>Expandir</summary>
@@ -195,7 +195,8 @@ LCRUD (List, Create, Read, Update, Delete)
 <details>
 <summary>Expandir</summary>
 
--   Tela home do usuário "Administrador"
+-   Tela home do administrador
+-   Mesma função do dashboard mas não possui os relatórios
 -   Possui navegação para:
 
     -   Listagem Usuários
@@ -211,6 +212,7 @@ LCRUD (List, Create, Read, Update, Delete)
 <summary>Expandir</summary>
 
 -   Tela home do usuário "Gerente" e "Colaborador", com conteúdo a depender de seu nível de acesso
+-   Possui os graficos e dados dos imoveis como descrito em requisito 7
 -   Possui navegação para:
 
     -   Listagem Imobiliárias (botão dropdown escolher na topbar)
