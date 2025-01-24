@@ -1,8 +1,4 @@
-<x-legacy-layout>
-    <x-slot:title>
-        Mobx - Sua Imobiliária
-    </x-slot:title>
-
+<x-legacy-layout title="Mobx - Sua Imobiliaria">
     <!-- Conteúdo Principal -->
     <div class="flex-1 p-12 ml-64 sm:ml-1/3 lg:ml-64 transition-opacity duration-700 ease-in opacity-0" id="main-content">
         <header class="flex flex-col items-center mb-12">

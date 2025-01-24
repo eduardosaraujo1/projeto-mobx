@@ -1,6 +1,4 @@
-<x-legacy-layout>
-    <x-slot:title>Sua Imobiliaria</x-slot:title>
-
+<x-legacy-layout title="Sua Imobiliaria">
     <!-- Conteúdo Principal -->
     <div class="flex-1 p-12 ml-64">
         <!-- Cabeçalho da Página -->
