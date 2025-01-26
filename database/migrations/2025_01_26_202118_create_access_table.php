@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('access', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('imobiliaria_id')->constrained()->cascadeOnDelete();
-            $table->unsignedSmallInteger('level');
+            $table->unsignedSmallInteger('level'); // 0 is colaborador, 1 is gerente
         });
     }
 

@@ -17,9 +17,9 @@ class ImobiliariaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => fake()->company(),
-            'endereco' => fake()->address(),
-            'contato' => fake()->email(),
+            'name' => fake()->company(),
+            'address' => fake()->address(),
+            'contact' => fake()->email(),
         ];
     }
 }

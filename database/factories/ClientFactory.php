@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Imobiliaria;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class ClientFactory extends Factory
             'contact' => fake()->email(),
             'address' => fake()->address(),
             'type' => fake()->numberBetween(0, 1), // 0 is locator, 1 is vendedor
+            'imobiliaria_id' => Imobiliaria::factory()
         ];
     }
 }
