@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->string('title');
             $table->string('description');
             $table->timestamps();
-            $table->foreignId('imovel_id')->nullable()->constrained('imoveis', 'id')->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('imovel_id')->constrained('imoveis', 'id')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         });
     }
 

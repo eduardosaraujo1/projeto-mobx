@@ -12,15 +12,15 @@ return new class extends Migration {
     {
         Schema::create('imoveis', function (Blueprint $table) {
             $table->id();
+            $table->string('address_name');
+            $table->string('address_number', 4);
+            $table->string('bairro');
+            $table->boolean('is_lado_praia');
             $table->decimal('value', 15, 2)->nullable();
             $table->decimal('iptu', 11, 2)->nullable();
-            $table->unsignedSmallInteger('status'); // 0 is livre, 1 is alugado, 2 is vendido
-            $table->string('address_name');
-            $table->unsignedSmallInteger('address_number');
-            $table->string('bairro');
-            $table->boolean('lado_praia');
+            $table->unsignedTinyInteger('status'); // livre, alugado ou vendido
             $table->timestamps();
-            $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('client_id')->constrained()->restrictOnDelete();
         });
     }
 

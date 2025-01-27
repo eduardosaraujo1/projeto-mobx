@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
-            $table->unsignedSmallInteger('type'); // 0 is locator, 1 is vendedor
+            $table->unsignedTinyInteger('role'); // rents or sells (locador ou vendedor)
             $table->timestamps();
             $table->foreignId('imobiliaria_id')->constrained()->cascadeOnDelete();
         });
