@@ -24,7 +24,7 @@ class ImovelFactory extends Factory
             'address_name' => fake()->address(),
             'address_number' => rand(1, 600),
             'bairro' => fake()->word(),
-            'is_lado_praia' => rand(0, 1),
+            'lado_praia' => rand(0, 1),
             'client_id' => Client::factory(),
         ];
     }

@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use App\Models\Access;
 use App\Models\Client;
 use App\Models\Imobiliaria;
+use App\Models\Imovel;
+use App\Models\ImovelDocument;
+use App\Models\ImovelLog;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -34,6 +37,17 @@ class DatabaseSeeder extends Seeder
 
         $imobiliarias->each(function ($imobiliaria) {
             Client::factory()->for($imobiliaria)->create();
+        });
+
+        $clients = Client::all();
+
+        $log = ImovelLog::factory()->has(User::factory())->has(Imovel::factory());
+
+        $clients->each(function ($client) {
+            Imovel::factory()->count(2)
+                ->for($client)
+                ->has(ImovelDocument::factory())
+                ->create();
         });
     }
 }
