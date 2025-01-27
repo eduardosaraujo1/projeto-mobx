@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum AccessLevel: int
+enum ClientType: int
 {
-    case COLABORADOR = 0;
-    case GERENTE = 1;
+    case LOCADOR = 0;
+    case VENDEDOR = 1;
 
     public static function randomId()
     {
