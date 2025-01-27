@@ -17,7 +17,7 @@ class Imovel extends Model
     protected function casts(): array
     {
         return [
-            'lado_praia' => 'boolean'
+            'is_lado_praia' => 'boolean'
         ];
     }
 
