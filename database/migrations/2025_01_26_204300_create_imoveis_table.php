@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('bairro');
             $table->boolean('lado_praia');
             $table->timestamps();
-            $table->foreignId('client_id')->constrained()->noActionOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 
