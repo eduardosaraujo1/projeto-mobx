@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('user_imobiliaria_access', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('imobiliaria_id')->constrained()->cascadeOnDelete();
-            $table->unsignedSmallInteger('level'); // 0 is colaborador, 1 is gerente
+            $table->unsignedSmallInteger('level');
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('access');
+        Schema::dropIfExists('user_imobiliaria_access');
     }
 };
