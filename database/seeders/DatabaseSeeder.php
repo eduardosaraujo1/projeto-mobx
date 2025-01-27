@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Access;
+use App\Models\Client;
 use App\Models\Imobiliaria;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -22,14 +23,17 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        $count = 5;
-        Imobiliaria::factory()
-            ->count($count)
-            ->hasAttached(User::factory()->count($count), [
-                'level' => rand(
-                    Access::ACCESS_LEVEL_COLABORADOR,
-                    Access::ACCESS_LEVEL_GERENTE,
-                ),
+        $users = User::factory()->count(5)->create();
+
+        $imobiliarias = Imobiliaria::factory()
+            ->count(5)
+            ->hasAttached($users, fn() => [
+                'level' => rand(0, 1),
             ])->create();
+
+
+        $imobiliarias->each(function ($imobiliaria) {
+            Client::factory()->for($imobiliaria)->create();
+        });
     }
 }
