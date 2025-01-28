@@ -65,84 +65,77 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 <details>
 <summary>Expandir</summary>
 
-#### users
+#### clients
 
 -   id (PK)
--   nome
--   email (único)
--   senha (hashed)
--   nivel_acesso (admin, gerente, colaborador)
--   data_criacao
--   data_atualizacao
-
-#### acessos_imobiliarias
-
--   fk_id_user (FK)
--   fk_id_imobiliaria (FK)
+-   cpf
+-   name
+-   contact
+-   address
+-   type (0 => Locator, 1 => Vendedor)
+-   created_at
+-   updated_at
+-   imobiliaria_id (FK) References `imobiliarias.id` ON DELETE CASCADE
 
 #### imobiliarias
 
 -   id (PK)
--   nome
--   endereco
--   caminho_foto
--   contato
--   data_criacao
--   data_atualizacao
-
-#### clientes
-
--   id (PK)
--   fk_id_imobiliaria (FK)
--   cpf
--   nome
--   contato
--   endereco
--   tipo (vendedor ou locador)
--   data_criacao
--   data_atualizacao
+-   name
+-   address
+-   logo_path
+-   contact
+-   created_at
+-   updated_at
 
 #### imoveis
 
 -   id (PK)
--   fk_id_cliente (FK)
--   caminho_foto
--   endereco
--   descricao
--   status (livre, vendido, alugado, etc.)
--   valor (decimal(15, 2))
--   data_criacao
--   data_atualizacao
+-   address_name
+-   address_number
+-   bairro
+-   is_lado_praia
+-   value
+-   iptu
+-   status
+-   created_at
+-   updated_at
+-   client_id (FK) References `clients_id` ON DELETE RESTRICT
 
-#### documentos_imovel
-
--   id (PK)
--   fk_id_imovel (FK para imoveis)
--   caminho_arquivo
--   data_upload
--   data_atualizacao
-
-#### logs_imovel
+#### imovel_documents
 
 -   id (PK)
--   fk_id_imovel (FK para imoveis)
--   fk_id_usuario (FK para usuarios)
--   tipo_alteracao (status, descricao, etc.)
--   descricao_alteracao
--   timestamp
+-   filepath
+-   created_at
+-   updated_at
+-   imovel_id (FK) References `imoveis.id` ON DELETE CASCADE
 
-</details>
+#### imovel_logs
 
-### Relações
+-   id (PK)
+-   title
+-   description
+-   created_at
+-   updated_at
+-   imovel_id (FK) References `imoveis.id` ON DELETE CASCADE
+-   user_id (FK) References `users.id` ON DELETE CASCADE
 
-<details>
-<summary>Expandir</summary>
+#### user_imobiliaria_access
 
-1. **Vários** usuários (gerentes e colaboradores) podem ter **várias** imobiliarias (muitos pra muitos)
-2. **Uma** imobiliária pode ter **vários** clientes (um pra muitos)
-3. Um cliente pode ter **vários** imóveis (um pra muitos)
-4. Um imóvel pode ter **vários** documentos (um pra muitos)
-5. Um imóvel pode ter **várias** alterações (um pra muitos)
+-   user_id (FK) References `users.id` ON DELETE CASCADE
+-   imobiliaria_id (FK) References `imobiliarias.id` ON DELETE CASCADE
+-   level
+
+#### users
+
+-   id (PK)
+-   name
+-   email (Unique)
+-   email_verified_at
+-   password
+-   remember_token
+-   is_admin
+-   created_at
+-   updated_at
 
 </details>
 
@@ -155,236 +148,379 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 </details>
 
-## Tipos de usuário ([implementação](https://spatie.be/docs/laravel-permission/v6/introduction))
+## Permissões
 
 <details>
 <summary>Expandir</summary>
 
-LCRUD (List, Create, Read, Update, Delete)
+### Administrador
 
-### Administrador (painel admin)
+#### Usuários
 
--   LCRUD Usuários
--   LCRUD Imobiliárias
--   LCRUD Imóveis
--   LCRUD Clientes
--   \_CRUD Documentos
-    -   _listagem não é necessária, está atrelado à tela do imóvel_
--   L_R\_\_ Logs
+-   Listar
+-   Ler
+-   Criar
+-   Editar
+-   Apagar
 
-### Gerente da imobiliaria (dashboard)
+#### Imobiliárias
 
--   L\_\R\_\_ Imobiliárias (apenas suas próprias)
--   LCRUD Imóveis (de sua imobiliária)
--   LCRUD Clientes (de imóveis da sua imobiliária)
--   \_CRUD Documentos (de imóveis da sua imobiliária)
--   L_R\_\_ Logs (de imóveis de sua imobiliária)
+-   Listar
+-   Ler
+-   Criar
+-   Editar
+-   Apagar
 
-### Colaborador do gerente (dashboard)
+#### Cliente
 
--   L\_\R\_\_ Imobiliárias
--   L_R\_\_ Imóveis
--   L_R\_\_ Clientes
--   \_\_R\_\_ Documentos
+-   Listar
+-   Ler
+-   Criar
+-   Editar
+
+#### Imoveis
+
+-   Listar
+-   Ler
+-   Criar
+-   Editar
+-   Apagar
+
+#### Documentos imoveis
+
+-   Listar
+-   Ler (download)
+-   Criar (upload)
+-   Apagar
+
+#### Logs imoveis
+
+-   Listar
+-   Ler
+-   Criar (não diretamente)
+
+### Gerente
+
+#### Imobiliárias
+
+-   Listar (apenas suas próprias)
+-   Ler (apenas suas próprias)
+
+#### Imóveis
+
+-   Listar (de sua imobiliária)
+-   Ler (de sua imobiliária)
+-   Criar (de sua imobiliária)
+-   Editar (de sua imobiliária)
+-   Apagar (de sua imobiliária)
+
+#### Clientes
+
+-   Listar (de imóveis da sua imobiliária)
+-   Ler (de imóveis da sua imobiliária)
+-   Criar (de imóveis da sua imobiliária)
+-   Editar (de imóveis da sua imobiliária)
+-   Apagar (de imóveis da sua imobiliária)
+
+#### Documentos de imóveis
+
+-   Ler (download - de imóveis da sua imobiliária)
+-   Criar (upload - de imóveis da sua imobiliária)
+-   Apagar (de imóveis da sua imobiliária)
+
+#### Logs de imóveis
+
+-   Listar (de imóveis da sua imobiliária)
+-   Ler (de imóveis da sua imobiliária)
+
+### Colaborador
+
+#### Imobiliárias
+
+-   Listar
+-   Ler
+
+#### Imóveis
+
+-   Listar
+-   Ler
+
+#### Clientes
+
+-   Listar
+-   Ler
+
+#### Documentos de imóveis
+
+-   Ler (download)
+
 </details>
+
+## Hierarquia
+
+1. Administrador
+2. Gerente
+3. Colaborador
+4. SelectedImobiliária
+5. Authed
+    - Self (current_user === resource_user)
+6. All
 
 ## Telas
 
-### Login
+### Login | All
 
-<details>
-<summary>Expandir</summary>
+-   **Descrição:** campos 'email' e 'senha' e botão de login.
+-   **Navegação:**
 
--   Tela de Login para usuários
--   Campos "login", "senha", e "entrar"
--   Esqueci a senha será delegado para uma atualização pós MVP
+    -   Selecionar Imobiliária
 
-</details>
+-   **Use Cases:**
 
-### Painel Admin
+    -   login | All
 
-<details>
-<summary>Expandir</summary>
+### Gerenciar Usuários | Admin
 
--   Tela home do administrador
--   Mesma função do dashboard mas não possui os relatórios
--   Possui navegação para:
+-   **Descrição:** pesquisa e visualização de usuários.
+-   **Navegação:**
 
-    -   Listagem Usuários
-    -   Listagem Imobiliárias
-    -   Listagem Imóveis
-    -   Listagem Clientes
+    -   Cadastrar Usuário
+    -   Visualizar Usuário
+    -   Navbar
 
-    </details>
+-   **Use Cases:**
 
-### Dashboard
+    -   pesquisar_usuario | Admin
 
-<details>
-<summary>Expandir</summary>
+### Cadastrar Usuário | Admin
 
--   Tela home do usuário "Gerente" e "Colaborador", com conteúdo a depender de seu nível de acesso
--   Possui os graficos e dados dos imoveis como descrito em requisito 7
--   Possui navegação para:
+-   **Descrição:** cadastro de usuário novo, com nome, email, senha e status administrativo.
+-   **Navegação:**
 
-    -   Listagem Imobiliárias (botão dropdown escolher na topbar)
-    -   Listagem Imóveis (sidebar)
-    -   Listagem Clientes (sidebar)
+    -   Navbar
 
-</details>
+-   **Use Cases:**
 
-### Usuários
+    -   cadastrar_usuario
 
-<details>
-<summary>Expandir</summary>
+### Visualizar Usuário | Self or Admin
 
-#### Listagem Usuários
+-   **Descrição:** visualização dos dados do usuário selecionado, com edição para administradores.
+-   **Navegação:**
 
--   Lista de usuários no sistema, incluindo o atual
--   Pesquisa por nome
--   Navegação para cadastro, edição e visualização
+    -   Navbar
 
-#### Cadastro de Usuário
+-   **Use Cases:**
 
--   Cadastro para novo usuário, aplicando validações necessárias
+    -   editar_usuario
+    -   remover_usuario
 
-#### Edição de Usuário
+### Alterar Senha | Self
 
--   Alteração de usuário existente, aplicando validações necessárias
+-   **Descrição:** campos para alterar senha do usuário atual e confirmar.
+-   **Navegação:**
 
-#### Visualização de Usuário
+    -   Navbar
+    -   Voltar
 
--   Visualização de dados mais detalhados do usuário
--   Opção de exclusão de usuário com confirmação
--   Acessível pelo colaborador (tela de perfil) e administrador (funções destrutivas)
-</details>
+-   **Use Cases:**
 
-### Imobiliária
+    -   change_password
 
-<details>
-<summary>Expandir</summary>
+### Selecionar Imobiliária | Authed
 
-#### Seleção de imobiliária
+-   **Descrição:** seleção de imobiliária para gerenciar; com barra de pesquisa e botão para cadastro; navbar para gerenciar usuários.
+-   **Navegação:**
 
--   Lista de imobiliárias do gerente logado atualmente.
--   Seleção necessária antes de navegar para telas de imóveis e clientes
--   Acessível pelo colaborador
+    -   Navbar
+    -   Cadastrar Imobiliária
+    -   Perfil Imobiliária
 
-#### Listagem imobiliárias
+-   **Use Cases:**
 
--   Lista de imobiliárias no sistema
--   Pesquisa por nome
--   Navegação para cadastro, edição e visualização
--   Acessível pelo administrador
+    -   select_imobiliaria | Colaborador
+    -   search_imobiliaria | Colaborador
+    -   create_imobiliaria | Admin
 
-#### Cadastro de imobiliária
+### Cadastrar Imobiliária | Admin
 
--   Cadastro para novo imobiliária, aplicando validações necessárias
--   Acessível pelo administrador
+-   **Descrição:** criar nova imobiliária.
+-   **Navegação:**
 
-#### Edição de imobiliária
+    -   Navbar
+    -   Voltar
 
--   Alteração de imobiliária existente, aplicando validações necessárias
--   Acessível pelo administrador e gerente com limitações
+-   **Use Cases:**
 
-#### Visualização de imobiliária
+    -   cadastrar_imobiliaria
+    -   upload_logo_imobiliaria
 
--   Visualização de dados mais detalhados da imobiliária
--   Opção de inativação de imobiliária pelo administrador
--   Acessível pelo gerente (requisito #6) com exceção da função de inativação
-</details>
+### Perfil Imobiliária | Colaborador.SelectedImobiliaria
 
-### Imóveis
+-   **Descrição:** ver dados da imobiliária, com edição e exclusão (para administrador).
+-   **Navegação:**
 
-<details>
-<summary>Expandir</summary>
+    -   Navbar
+    -   Sidebar
+    -   Gerenciar Membros Imobiliaria
 
-#### Listagem imóveis
+-   **Use Cases:**
 
--   Lista de imóveis da imobiliária selecionada
--   Para navegar aqui, a imobiliária deve ser sido selecionada previamente na Seleção de Imobiliária
--   Pesquisa por endereço do imóvel ou nome do cliente
--   Navegação para cadastro, edição e visualização de imóveis
--   Acessível pelo administrador e gerente com limitações (apenas próprias imobiliarias)
+    -   editar_imobiliaria | Admin
+    -   remover_imobiliaria | Admin
 
-#### Cadastro de imóvel
+### Gerenciar Membros Imobiliária | Gerente.SelectedImobiliaria
 
--   Cadastro para novo imóvel, aplicando validações necessárias
--   Acessível pelo gerente
+-   **Descrição:** adicionar ou remover pessoas com acesso à imobiliária e seus cargos.
+-   **Navegação:**
 
-#### Edição de imóvel
+    -   Navbar
+    -   Sidebar
 
--   Alteração de imóvel existente, aplicando validações necessárias
--   Acessível pelo gerente
+-   **Use Cases:**
 
-#### Visualização de imóvel
+    -   pesquisar_usuario | Gerente
+    -   alterar_permissao_usuario | Gerente
 
--   Visualização de dados mais detalhados do imóvel (se necessário)
--   Opção de remoção de imóvel (para o gerente)
--   Opção de remoção de cliente (para o gerente)
--   Visualização de cliente atual
--   Navegação para alterar cliente do imóvel
--   Acessível pelo colaborador, exceto remoção de imóvel e cliente
+### Dashboard Imobiliária | Colaborador.SelectedImobiliaria
 
-#### Selecionar cliente
+-   **Descrição:** ver gráficos e relatórios relacionados aos imóveis.
+-   **Navegação:**
 
--   Exibe campo para pesquisar o cliente a partir de CPF/nome/outros critérios
--   Caso cliente seja encontrado, perguntar se os dados estão corretos na tela Confirmar Cliente
--   Incluir um botão na parte de baixo da página para criar um novo cliente caso necessário
--   Sempre opções de Cancelar e voltar para tela de visualização de imóvel
--   Acessível pelo gerente
+    -   Navbar
+    -   Sidebar
 
-#### Confirmar Cliente
+-   **Use Cases:**
 
--   Exibe as informações do cliente para confirmar que os dados do cliente a serem colocados no aluguel especificado estão corretos
--   Caso estejam, substir o cliente no imóvel especificado na URL (ou session) pelo selecionado
+    -   exportar_relatorio | Colaborador.SelectedImobiliaria
 
-#### Documentos do imóvel
+### Gerenciar Clientes | Colaborador.SelectedImobiliaria
 
--   Tela para upload, download e remoção de documentos do imóvel
--   Acessível pelo colaborador para download; upload e remoção pelo gerente
+-   **Descrição:** ver clientes atrelados à imobiliária.
+-   **Navegação:**
 
-#### Logs do imóvel
+    -   Navbar
+    -   Sidebar
+    -   Cadastrar Cliente
+    -   Visualizar Cliente
 
--   Tela para visualizar as alterações efetuadas no imóvel
--   Filtravel por período
--   Acessível pelo gerente
-</details>
+-   **Use Cases:**
 
-### Clientes
+    -   pesquisar_cliente | Colaborador.SelectedImobiliaria
 
-<details>
-<summary>Expandir</summary>
+### Cadastrar Cliente | Gerente.SelectedImobiliaria
 
-#### Listagem de Cliente
+-   **Descrição:** **modal** para adicionar cliente à imobiliária.
+-   **Navegação:**
 
--   Lista de clientes da imobiliária selecionada
--   Pesquisa por cpf e/ou nome
--   Navegação para cadastro, edição e visualização
--   Acessível pelo administrador e gerente com limitações (apenas clientes de sua imobiliária)
+    -   N/A (é um modal)
 
-#### Cadastro de cliente
+-   **Use Cases:**
 
--   Cadastro para novo cliente, aplicando validações necessárias
--   Acessível pelo gerente
+    -   cadastrar_cliente | Gerente.SelectedImobiliaria
 
-#### Edição de cliente
+### Visualizar Cliente | Colaborador.SelectedImobiliaria
 
--   Alteração de cliente existente, aplicando validações necessárias
--   Acessível pelo gerente
+-   **Descrição:** ver dados cadastrados de um cliente, com edição para gerentes.
+-   **Navegação:**
 
-#### Visualização de cliente
+    -   Navbar
+    -   Sidebar
 
--   Visualização de dados mais detalhados do cliente (se necessário)
--   Acessível pelo colaborador
-</details>
+-   **Use Cases:**
+
+    -   editar_cliente | Gerente.SelectedImobiliaria
+
+### Gerenciar Imóveis | Colaborador.SelectedImobiliaria
+
+-   **Descrição:** ver imóveis relacionados à imobiliária.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+    -   Cadastrar Imóvel
+
+-   **Use Cases:**
+
+    -   pesquisar_imovel | Colaborador.SelectedImobiliaria
+
+### Cadastrar Imóvel | Gerente.SelectedImobiliaria
+
+-   **Descrição:** cadastrar novo imóvel à imobiliária através do upload de um excel.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+    -   Voltar
+
+-   **Use Cases:**
+
+    -   download_template | Gerente.SelectedImobiliaria
+    -   upload_data | Gerente.SelectedImobiliaria
+    -   verify_template | Gerente.SelectedImobiliaria
+    -   cadastrar_imovel | Gerente.SelectedImobiliaria
+
+### Cadastrar Imóvel Manualmente | Gerente.SelectedImobiliaria
+
+-   **Descrição:** cadastrar novo imóvel à imobiliária através de um formulário.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+    -   Voltar
+
+-   **Use Cases:**
+
+    -   cadastrar_imovel | Gerente.SelectedImobiliaria
+
+### Visualizar Imóvel | Colaborador.SelectedImobiliaria
+
+-   **Descrição:** ver dados cadastrados de um imóvel, com edição para gerentes.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+    -   Gerenciar Documentos Imóvel
+    -   Histórico de Imóvel
+
+-   **Use Cases:**
+
+    -   delete_imovel | Gerente.SelectedImobiliaria
+    -   edit_imovel | Gerente.SelectedImobiliaria
+
+### Gerenciar Documentos Imóvel | Colaborador.SelectedImobiliaria
+
+-   **Descrição:** ver e modificar documentos atrelados ao imóvel.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+
+-   **Use Cases:**
+
+    -   upload_document | Gerente.SelectedImobiliaria
+    -   remove_document | Gerente.SelectedImobiliaria
+    -   download_document | Colaborador.SelectedImobiliaria
+
+### Histórico de Alterações Imóvel | Colaborador.SelectedImobiliaria
+
+-   **Descrição:** ver o histórico de alterações de imóvel.
+-   **Navegação:**
+
+    -   Navbar
+    -   Sidebar
+
+-   **Use Cases:**
+
+    -   N/A (readonly page)
 
 # Roadmap
 
 -   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
--   [ ] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
--   [ ] ADMIN - Criar painel administrativo e LCRUDs dos modelos eloquentes
--   [ ] DASHBOARD - Criar dashboard do gerente e controlar seu acesso para os LCRUDs dos modelos eloquentes
--   [ ] PERMISSIONS - Criar tela para um gerente controlar o acesso de seus colaboradores
+-   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
+-   [ ] FRONT - Montar estrutura de arquivos (views)
+-   [ ] ROUTES - Montar rotas para as funcionalidades
+-   [ ] PERMISSIONS - Criar Gates e Policies e Middlewares para restringir acessos (authenticaiton and authorization)
 -   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
     -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
 -   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
