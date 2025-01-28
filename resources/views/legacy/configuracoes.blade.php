@@ -1,5 +1,4 @@
-<x-legacy-layout>
-    <x-slot:title>Configurações</x-slot:title>
+<x-legacy-layout title="Configurações">
     <!-- Conteúdo Principal -->
     <div class="flex-1 p-12 ml-64">
         <!-- Cabeçalho da Página -->

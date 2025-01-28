@@ -1,5 +1,4 @@
-<x-legacy-layout>
-    <x-slot:title>Minha Imobiliária - Imóveis</x-slot:title>
+<x-legacy-layout title="Minha Imobiliária - Imóveis">
     <!-- Conteúdo Principal -->
     <main class="flex-1 p-10 ml-64 transition-opacity duration-700 ease-in opacity-0" id="main-content">
         <header class="text-center mb-12">

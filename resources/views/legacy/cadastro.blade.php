@@ -1,5 +1,4 @@
-<x-legacy-layout>
-    <x-slot:title>Upload de Planilha Excel</x-slot:title>
+<x-legacy-layout title="Upload de Planilha Excel">
     <!-- Conteúdo Principal -->
     <div class="flex-1 p-12 ml-64">
         <header class="text-center mb-10">
