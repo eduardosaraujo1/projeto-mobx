@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
 Route::prefix('legacy')->name('legacy.')->group(
     function () {
@@ -18,9 +19,17 @@ Route::get('/', function () {
 
 Route::view('imobiliaria', 'imobiliaria.index')->name('imobiliaria.index');
 
-Route::view('dashboard', 'dashboard')
+Volt::route('dashboard', 'pages.dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::view('imoveis', 'imovel.index')
+    ->middleware(['auth', 'verified'])
+    ->name('imovel.index');
+
+Route::view('clientes', 'client.index')
+    ->middleware(['auth', 'verified'])
+    ->name('client.index');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])

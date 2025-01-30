@@ -35,19 +35,23 @@ new class extends Component {
         <li>
             {{-- <a href="{{ route('legacy.index') }}"
                 class="flex items-center p-3 font-semibold underline transition-all duration-200 hover:bg-gray-100">Início</a> --}}
-            <x-nav-link href="{{ route('imobiliaria.index') }}" :active="request()->routeIs('imobiliaria.index')">Minha Imobiliaria</x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="{{ route('legacy.imoveis') }}" :active="request()->routeIs('legacy.imoveis')">Imóveis</x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="{{ route('legacy.cadastro') }}" :active="request()->routeIs('legacy.cadastro')">
-                Cadastrar Imóveis
+            <x-nav-link href="{{ route('imobiliaria.index') }}" :active="request()->routeIs('imobiliaria.index')">
+                Minha Imobiliaria
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('legacy.configuracoes') }}" :active="request()->routeIs('legacy.configuracoes')">
-                Configurações
+            <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                Dashboard
+            </x-nav-link>
+        </li>
+        <li>
+            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.index')">
+                Imóveis
+            </x-nav-link>
+        </li>
+        <li>
+            <x-nav-link href="{{ route('imovel.index') }}" :active="request()->routeIs('imovel.index')">
+                Clientes
             </x-nav-link>
         </li>
     </ul>
