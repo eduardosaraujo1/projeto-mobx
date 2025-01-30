@@ -17,12 +17,14 @@
     <wireui:scripts />
 </head>
 
-<body class="flex min-h-screen overflow-scroll font-sans bg-gray-50">
-    <livewire:layout.sidebar />
-    <div class="flex-1 p-12 ml-64">
-        {{ $slot }}
+<body>
+    <div class="flex min-h-screen bg-gray-50">
+        <livewire:layout.sidebar />
+        <div class="flex-1 p-12 ml-64">
+            {{ $slot }}
+        </div>
+        <livewire:layout.profile-bar />
     </div>
-    <livewire:layout.profile-bar />
 </body>
 
 </html>
