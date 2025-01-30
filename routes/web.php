@@ -12,7 +12,11 @@ Route::prefix('legacy')->name('legacy.')->group(
     }
 );
 
-Route::view('/', 'welcome');
+Route::get('/', function () {
+    return redirect(Auth::check() ? '/imobiliaria' : '/login');
+});
+
+Route::view('imobiliaria', 'imobiliaria.index')->name('imobiliaria.index');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
