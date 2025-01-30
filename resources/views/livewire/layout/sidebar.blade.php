@@ -35,22 +35,22 @@ new class extends Component {
         <li>
             {{-- <a href="{{ route('legacy.index') }}"
                 class="flex items-center p-3 font-semibold underline transition-all duration-200 hover:bg-gray-100">Início</a> --}}
-            <x-nav-link href="{{ route('imobiliaria.index') }}" :active="request()->routeIs('imobiliaria.index')">
+            <x-nav-link href="{{ route('imobiliaria.index') }}" :active="request()->routeIs('imobiliaria.index')" wire:navigate>
                 Minha Imobiliaria
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+            <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" wire:navigate>
                 Dashboard
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.index')">
+            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.index')" wire:navigate>
                 Imóveis
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('imovel.index') }}" :active="request()->routeIs('imovel.index')">
+            <x-nav-link href="{{ route('imovel.index') }}" :active="request()->routeIs('imovel.index')" wire:navigate>
                 Clientes
             </x-nav-link>
         </li>
