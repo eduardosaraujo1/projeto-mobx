@@ -1,19 +1,19 @@
 <?php
-
-use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Imobiliaria;
+
+/**
+ *
+ * @return Collection<Imobiliaria>
+ */
+function getUserImobiliarias(): Collection
+{
+    return auth()->user()->imobiliarias;
+}
 
 new class extends Component {
-    public $test;
-    /**
-     * Log the current user out of the application.
-     */
-    public function logout(Logout $logout): void
-    {
-        $logout();
-
-        $this->redirect('/', navigate: true);
-    }
+    //
 }; ?>
 
 <!-- Navbar Lateral (Responsiva) -->
@@ -25,16 +25,16 @@ new class extends Component {
     </a>
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
-    <x-native-select label="Select Status" wire:model.change=''>
-        <option selected>Placeholder</option>
+    <x-native-select label="Imobiliaria Selecionada" wire:model.change=''>
+        @foreach (getUserImobiliarias() as $imobiliaria)
+            <option value="{{ $imobiliaria->id }}">{{ Str::limit($imobiliaria->name, 20) }}</option>
+        @endforeach
     </x-native-select>
 
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
     <!-- Links de navegação -->
     <ul>
         <li>
-            {{-- <a href="{{ route('legacy.index') }}"
-                class="flex items-center p-3 font-semibold underline transition-all duration-200 hover:bg-gray-100">Início</a> --}}
             <x-nav-link href="{{ route('imobiliaria.index') }}" :active="request()->routeIs('imobiliaria.index')" wire:navigate>
                 Minha Imobiliaria
             </x-nav-link>

@@ -31,6 +31,10 @@ Route::view('clientes', 'client.index')
     ->middleware(['auth', 'verified'])
     ->name('client.index');
 
+Route::view('admin', 'admin.index')
+    ->middleware(['auth'])
+    ->name('admin.index');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');

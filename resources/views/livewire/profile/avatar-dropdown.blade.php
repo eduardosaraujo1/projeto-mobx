@@ -25,14 +25,26 @@ new class extends Component {
             <div class="font-medium truncate">{{ auth()->user()->email }}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+            @if (auth()->user()->is_admin ?? false)
+                <li>
+                    <a href="{{ route('admin.index') }}" wire:navigate
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Painel Administrativo
+                    </a>
+                </li>
+            @endif
             <li>
                 <a href="#"
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Configurações</a>
+                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    Configurações
+                </a>
             </li>
         </ul>
         <div class="py-1">
             <a href="#" wire:click='logout'
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sair</a>
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                Sair
+            </a>
         </div>
     </div>
 
