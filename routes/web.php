@@ -32,7 +32,7 @@ Route::view('clientes', 'client.index')
     ->name('client.index');
 
 Route::view('admin', 'admin.index')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'admin'])
     ->name('admin.index');
 
 Route::view('profile', 'profile')
