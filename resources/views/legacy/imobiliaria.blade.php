@@ -2,16 +2,16 @@
     <!-- Conteúdo Principal -->
     <div class="flex-1 p-12 ml-64">
         <!-- Cabeçalho da Página -->
-        <header class="text-center mb-10">
+        <header class="mb-10 text-center">
             <h1 class="text-4xl font-bold text-gray-800">Sua Imobiliária</h1>
-            <p class="text-gray-500 mt-2">Informações detalhadas sobre a sua imobiliária</p>
+            <p class="mt-2 text-gray-500">Informações detalhadas sobre a sua imobiliária</p>
         </header>
 
         <!-- Informações da Imobiliária -->
-        <section class="bg-white p-8 rounded-lg shadow-md max-w-3xl mx-auto space-y-6">
+        <section class="max-w-3xl p-8 mx-auto space-y-6 bg-white rounded-lg shadow-md">
             <!-- Logo da Imobiliária -->
             <div class="flex justify-center mb-6">
-                <img src="{{ asset('images/casa1.jpg') }}" alt="Logo da Imobiliária" class="w-32 h-32 object-contain">
+                <img src="{{ asset('images/casa1.jpg') }}" alt="Logo da Imobiliária" class="object-contain w-32 h-32">
             </div>
 
             <div>

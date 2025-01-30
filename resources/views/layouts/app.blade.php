@@ -17,24 +17,12 @@
     <wireui:scripts />
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
-        <livewire:layout.navigation />
-
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white shadow">
-                <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
+<body class="flex min-h-screen overflow-scroll font-sans bg-gray-50">
+    <livewire:layout.sidebar />
+    <div class="flex-1 p-12 ml-64">
+        {{ $slot }}
     </div>
+    <livewire:layout.profile-bar />
 </body>
 
 </html>
