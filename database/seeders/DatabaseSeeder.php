@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
 
         // Imoveis
         $imoveis = Imovel::factory()
-            ->count(15)
+            ->count(150)
             ->recycle($clients)
             ->create();
 

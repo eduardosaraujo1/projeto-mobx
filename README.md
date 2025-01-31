@@ -518,6 +518,7 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 -   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
 -   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
+-   [ ] SEPARATE_SEEDERS - it's important
 -   [ ] FRONT - Montar estrutura de arquivos (views)
     -   [ ] Implementar gestão de usuários
 -   [ ] ROUTES - Montar rotas para as funcionalidades

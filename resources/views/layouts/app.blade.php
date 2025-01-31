@@ -20,8 +20,8 @@
 <body>
     <div class="flex min-h-screen bg-gray-50">
         <livewire:layout.sidebar />
-        <div class="flex-1">
-            <div class="px-6 py-12 mx-auto max-w-7xl">
+        <div class="flex-1 px-6 py-12 ">
+            <div {{ $attributes->merge(['class' => 'mx-auto max-w-7xl']) }}>
                 @isset($heading)
                     <h2 {{ $heading->attributes->merge(['class' => 'my-4 text-4xl font-semibold leading-tight']) }}>
                         {{ $heading }}

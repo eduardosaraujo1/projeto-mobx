@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Imobiliaria;
 use App\Services\ImobiliariaService;
 use Illuminate\Http\Request;
-use Session;
 
 class ImobiliariaController extends Controller
 {
+    public function __construct(
+        protected ImobiliariaService $service
+    ) {
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $imobiliarias = auth()->user()->imobiliarias->all();
-        $index_imobiliaria = Session::get('index_imobiliaria', 0);
-        $imobiliaria = $imobiliarias[$index_imobiliaria] ?? null;
+        $imobiliaria = $this->service->getSelectedImobiliaria();
 
         return view('pages.imobiliaria.index', [
             'imobiliaria' => $imobiliaria
