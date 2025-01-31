@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImobiliariaController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -17,7 +18,7 @@ Route::get('/', function () {
     return redirect(Auth::check() ? '/imobiliaria' : '/login');
 });
 
-Route::view('imobiliaria', 'pages.imobiliaria.index')
+Route::get('imobiliaria', [ImobiliariaController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('imobiliaria.index');
 

@@ -3,17 +3,26 @@ use Livewire\Volt\Component;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imobiliaria;
 
-/**
- *
- * @return Collection<Imobiliaria>
- */
-function getUserImobiliarias(): Collection
-{
-    return auth()->user()->imobiliarias;
-}
-
 new class extends Component {
-    //
+    /**
+     * @var Collection<Imobiliaria>
+     */
+    public $user_imobiliarias;
+    public $index_imobiliaria;
+
+    public function mount()
+    {
+        $this->user_imobiliarias = auth()->user()->imobiliarias;
+        $this->index_imobiliaria = Session::get('index_imobiliaria', 0);
+    }
+
+    public function updated($name, $value)
+    {
+        if ($name === 'index_imobiliaria') {
+            Session::put('index_imobiliaria', $value);
+            $this->js('window.location.reload()');
+        }
+    }
 }; ?>
 
 <!-- Navbar Lateral (Responsiva) -->
@@ -25,9 +34,12 @@ new class extends Component {
     </a>
     <hr>
 
-    <x-native-select label="Imobiliaria Selecionada" wire:model.change=''>
-        @foreach (getUserImobiliarias() as $imobiliaria)
-            <option value="{{ $imobiliaria->id }}">{{ Str::limit($imobiliaria->name, 20) }}</option>
+    <x-native-select label="Imobiliaria Selecionada" wire:model.change='index_imobiliaria' name="imobiliaria_select">
+        @foreach ($user_imobiliarias as $imobiliaria)
+            <option value="{{ $loop->index }}" @class([
+                'selected' => $loop->index === $index_imobiliaria,
+            ])>{{ Str::limit($imobiliaria->name, 20) }}
+            </option>
         @endforeach
     </x-native-select>
 
