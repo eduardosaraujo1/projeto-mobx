@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ImobiliariaController;
+use App\Http\Controllers\MissingPageController;
+use App\Http\Middleware\EnsureUserHasImobiliaria;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -18,22 +20,26 @@ Route::get('/', function () {
     return redirect(Auth::check() ? '/imobiliaria' : '/login');
 });
 
-// navbar
-Route::get('imobiliaria', [ImobiliariaController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('imobiliaria.index');
+Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
+    // navbar
+    Route::get('imobiliaria', [ImobiliariaController::class, 'index'])
+        ->name('imobiliaria.index');
 
-Route::view('imoveis', 'pages.imovel.index')
-    ->middleware(['auth', 'verified'])
-    ->name('imovel.index');
+    Route::view('imoveis', 'pages.imovel.index')
+        ->name('imovel.index');
 
-Route::view('clientes', 'pages.client.index')
-    ->middleware(['auth', 'verified'])
-    ->name('client.index');
+    Route::view('clientes', 'pages.client.index')
+        ->name('client.index');
 
-Route::view('dashboard', 'pages.imobiliaria.dashboard')
+    Route::view('dashboard', 'pages.imobiliaria.dashboard')
+        ->name('dashboard');
+});
+
+// imobiliaria error handling
+Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
     ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('imobiliaria.missing');
+
 
 
 // user dropdown nav
