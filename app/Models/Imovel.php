@@ -47,7 +47,7 @@ class Imovel extends Model
         ]);
     }
 
-    public function getStatusName()
+    public function statusName()
     {
         return match ($this->status) {
             ImovelStatus::LIVRE->value => 'Livre',

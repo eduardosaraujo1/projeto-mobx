@@ -12,8 +12,15 @@ function currencyFormat(float $number)
 function imovelSearch($imoveis, $searchString)
 {
     return $imoveis->filter(function ($imovel) use ($searchString) {
-        $searchValue = $imovel->fullAddress() . ' ' . $imovel->lado();
-        return str_contains(haystack: strtolower($searchValue), needle: strtolower($searchString ?? ''));
+        // data
+        $address = $imovel->fullAddress() ?? '';
+        $lado = $imovel->lado() ?? '';
+        $status = $imovel->statusName() ?? '';
+
+        // formatted queries
+        $haystack = strtolower("$address $lado $status");
+        $needle = strtolower($searchString ?? '');
+        return str_contains($haystack, $needle);
     });
 }
 
@@ -35,7 +42,7 @@ new class extends Component {
     <div class="flex gap-2">
         <input type="text" id="searchBar" wire:model.live.debounce='searchString'
             class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
-            placeholder="Pesquisar" />
+            placeholder="Pesquisar (Rua, localização ou status)" />
         <x-regular-button label="Cadastrar" />
     </div>
     <div class="h-full bg-white rounded shadow">
@@ -69,7 +76,7 @@ new class extends Component {
                                 </li>
                                 <li>
                                     <span class="font-bold">Status:</span>
-                                    <span>{{ $imovel->getStatusName() }}</span>
+                                    <span>{{ $imovel->statusName() }}</span>
                                 </li>
                             </ul>
                         </div>
