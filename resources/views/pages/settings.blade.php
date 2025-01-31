@@ -1,7 +1,7 @@
 <x-app-layout>
-    <h2 class="mx-auto mb-5 text-2xl font-semibold leading-tight text-gray-800">
+    <x-slot name="heading">
         Configurações
-    </h2>
+    </x-slot>
     <div class="p-8 bg-white shadow sm:rounded-lg">
         <div class="max-w-xl">
             <livewire:settings.update-profile-information-form />

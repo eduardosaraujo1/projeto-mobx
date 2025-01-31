@@ -1,3 +1,6 @@
 <x-app-layout>
-    Hello, Administrator!
+    <x-slot name="heading">
+        Painel Administrador
+    </x-slot>
+    <div>Hello, Administrator!</div>
 </x-app-layout>

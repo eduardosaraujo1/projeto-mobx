@@ -1,7 +1,7 @@
 <x-app-layout>
-    <h2 class="text-xl font-semibold leading-tight text-gray-800">
+    <x-slot name="heading">
         Clientes
-    </h2>
+    </x-slot>
     <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
             Hello, World!
