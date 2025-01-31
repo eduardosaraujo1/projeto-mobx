@@ -20,7 +20,7 @@
 <body>
     <div class="flex min-h-screen bg-gray-50">
         <livewire:layout.sidebar />
-        <div class="flex-1 p-12 ml-64">
+        <div class="flex-1">
             {{ $slot }}
         </div>
         <livewire:layout.profile-bar />

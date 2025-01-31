@@ -7,7 +7,9 @@ new class extends Component {
     //
 }; ?>
 
-<div class="w-12 min-h-screen px-2 py-2 space-y-4 bg-white shadow-lg">
-    <livewire:profile.avatar-dropdown />
-    <x-mini-button rounded icon="bell" flat interaction:solid black />
+<div class="sticky top-0 h-screen px-2 py-2 space-y-4 bg-white shadow-lg w-min">
+    <livewire:settings.avatar-dropdown />
+    <x-mini-button icon="bell" lg rounded black flat interaction:solid>
+        {{-- <x-icon name="bell" xl class="w-4 h-4 fill-white" /> --}}
+    </x-mini-button>
 </div>

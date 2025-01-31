@@ -17,26 +17,28 @@ Route::get('/', function () {
     return redirect(Auth::check() ? '/imobiliaria' : '/login');
 });
 
-Route::view('imobiliaria', 'imobiliaria.index')->name('imobiliaria.index');
-
-Volt::route('dashboard', 'pages.dashboard')
+Route::view('imobiliaria', 'pages.imobiliaria.index')
     ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('imobiliaria.index');
 
-Route::view('imoveis', 'imovel.index')
+Route::view('imoveis', 'pages.imovel.index')
     ->middleware(['auth', 'verified'])
     ->name('imovel.index');
 
-Route::view('clientes', 'client.index')
+Route::view('clientes', 'pages.client.index')
     ->middleware(['auth', 'verified'])
     ->name('client.index');
 
-Route::view('admin', 'admin.index')
-    ->middleware(['auth', 'admin'])
+Route::view('admin', 'pages.admin.index')
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('admin.index');
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
+Route::view('dashboard', 'pages.dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::view('configuracoes', 'pages.settings')
+    ->middleware(['auth', 'verified'])
+    ->name('settings');
 
 require __DIR__ . '/auth.php';

@@ -18,8 +18,8 @@ new class extends Component {
 
 <!-- Navbar Lateral (Responsiva) -->
 <nav
-    class="fixed z-50 flex flex-col w-64 h-full p-6 space-y-6 text-gray-800 bg-white border-r border-gray-200 shadow-lg sm:w-1/3 lg:w-64">
-    <a class="flex items-center" href="{{ route('imobiliaria.index') }}">
+    class="sticky top-0 flex flex-col w-64 h-screen p-6 space-y-6 text-gray-800 bg-white border-r border-gray-200 shadow-lg">
+    <a class="flex items-center" href="/">
         <img src="{{ asset('images/mobx.svg') }}" alt="Logo Mobx" class="w-12 h-12 mr-4 bg-black rounded shadow-md">
         <h2 class="text-2xl font-bold">Mobx</h2>
     </a>
@@ -45,12 +45,12 @@ new class extends Component {
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.index')" wire:navigate>
+            <x-nav-link href="{{ route('imovel.index') }}" :active="request()->routeIs('imovel.index')" wire:navigate>
                 Imóveis
             </x-nav-link>
         </li>
         <li>
-            <x-nav-link href="{{ route('imovel.index') }}" :active="request()->routeIs('imovel.index')" wire:navigate>
+            <x-nav-link href="{{ route('client.index') }}" :active="request()->routeIs('client.index')" wire:navigate>
                 Clientes
             </x-nav-link>
         </li>
