@@ -26,6 +26,7 @@ class ImovelFactory extends Factory
             'bairro' => fake()->word(),
             'is_lado_praia' => rand(0, 1),
             'client_id' => Client::factory(),
+            'photo_path' => 'https://picsum.photos/200/300',
         ];
     }
 }
