@@ -23,7 +23,7 @@ new class extends Component {
         <img src="{{ asset('images/mobx.svg') }}" alt="Logo Mobx" class="w-12 h-12 mr-4 bg-black rounded shadow-md">
         <h2 class="text-2xl font-bold">Mobx</h2>
     </a>
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+    <hr>
 
     <x-native-select label="Imobiliaria Selecionada" wire:model.change=''>
         @foreach (getUserImobiliarias() as $imobiliaria)
@@ -31,7 +31,7 @@ new class extends Component {
         @endforeach
     </x-native-select>
 
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+    <hr>
     <!-- Links de navegação -->
     <ul>
         <li>
