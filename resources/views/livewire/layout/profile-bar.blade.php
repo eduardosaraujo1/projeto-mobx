@@ -13,7 +13,7 @@ new class extends Component {
 }; ?>
 
 <div class="sticky top-0 h-screen p-2 space-y-4 bg-white shadow-lg w-min">
-    <x-dropdown>
+    <x-dropdown width="w-fit">
         <x-slot name="trigger">
             <div class="rounded-full cursor-pointer">
                 <x-avatar md class="!bg-black" />
@@ -44,7 +44,5 @@ new class extends Component {
             </ul>
         </x-slot>
     </x-dropdown>
-    <x-mini-button icon="bell" lg rounded black flat interaction:solid>
-        {{-- <x-icon name="bell" xl class="w-4 h-4 fill-white" /> --}}
-    </x-mini-button>
+    <x-mini-button icon="bell" lg rounded black flat interaction:solid />
 </div>
