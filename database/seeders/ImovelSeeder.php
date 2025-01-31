@@ -22,7 +22,7 @@ class ImovelSeeder extends Seeder
 
         // Imoveis
         $imoveis = Imovel::factory()
-            ->count(150)
+            ->count(75)
             ->recycle($clients)
             ->create();
 
@@ -32,7 +32,7 @@ class ImovelSeeder extends Seeder
                 ->recycle($imovel)
                 ->create();
             ImovelLog::factory()
-                ->count(5)
+                ->count(3)
                 ->recycle($imovel)
                 ->recycle($users)
                 ->create();

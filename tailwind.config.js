@@ -1,6 +1,7 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
 import wireuiConfig from "./vendor/wireui/wireui/tailwind.config.js";
+import colors from "tailwindcss/colors.js";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -16,6 +17,9 @@ export default {
     ],
     theme: {
         extend: {
+            colors: {
+                primary: colors.gray,
+            },
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },

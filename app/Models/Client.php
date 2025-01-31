@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ClientType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,5 +21,13 @@ class Client extends Model
     public function clients(): HasMany
     {
         return $this->hasMany(Imovel::class);
+    }
+
+    public function typeName()
+    {
+        return match (ClientType::from($this->type)) {
+            ClientType::LOCADOR => 'Locador',
+            ClientType::VENDEDOR => 'Vendedor',
+        };
     }
 }

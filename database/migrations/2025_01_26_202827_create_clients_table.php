@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('cpf', 11);
             $table->string('name');
-            $table->string('contact')->nullable();
+            $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->unsignedTinyInteger('type'); // rents or sells (locador ou vendedor)
             $table->timestamps();

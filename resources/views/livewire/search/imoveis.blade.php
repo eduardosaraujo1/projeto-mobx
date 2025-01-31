@@ -2,7 +2,6 @@
 
 use Livewire\Volt\Component;
 use App\Services\ImobiliariaService;
-use App\Models\Imobiliaria;
 
 function currencyFormat(float $number)
 {
