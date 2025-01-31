@@ -44,7 +44,7 @@ function clientSearch($clients, $searchString, $clientType = null)
 new class extends Component {
     /**
      * Summary of imoveis
-     * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Imovel>
+     * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Client>
      */
     public $clients;
     public $clientType;
@@ -69,7 +69,7 @@ new class extends Component {
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
             @foreach (clientSearch($clients, $searchString, $clientType) as $client)
-                <a href="#" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow min-h-16">
+                <a href="#" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
                         <x-avatar xl label="C" class="!bg-gray-700" />
                     </div>

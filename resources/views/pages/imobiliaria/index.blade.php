@@ -24,6 +24,5 @@
                 <span class="block text-gray-600">{{ $imobiliaria->contact }}</span>
             </li>
         </ul>
-
     </x-card>
 </x-app-layout>
