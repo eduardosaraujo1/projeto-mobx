@@ -9,24 +9,31 @@ function currencyFormat(float $number)
     return 'R$ ' . number_format($number, 2, ',', '.');
 }
 
+function imovelSearch($imoveis, $searchString)
+{
+    return $imoveis->filter(function ($imovel) use ($searchString) {
+        $searchValue = $imovel->fullAddress() . ' ' . $imovel->lado();
+        return str_contains(haystack: strtolower($searchValue), needle: strtolower($searchString ?? ''));
+    });
+}
+
 new class extends Component {
     /**
      * Summary of imoveis
      * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Imovel>
      */
     public $imoveis;
+    public $searchString;
     public function mount(ImobiliariaService $imobiliariaService)
     {
         $imobiliaria = $imobiliariaService->getSelectedImobiliaria();
         $this->imoveis = $imobiliaria->imoveis;
     }
-
-    public function imovelSearch() {}
 }; ?>
 
 <div class="flex flex-col h-full space-y-2">
     <div class="flex gap-2">
-        <input type="text" id="searchBar"
+        <input type="text" id="searchBar" wire:model.live.debounce='searchString'
             class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5"
             placeholder="Pesquisar" />
         <x-regular-button label="Cadastrar" />
@@ -34,7 +41,7 @@ new class extends Component {
     <div class="h-full bg-white rounded shadow">
         <div class="grid justify-center gap-4 p-4 overflow-scroll h-[40rem]"
             style="grid-template-columns: repeat(auto-fit, minmax(16rem, auto))">
-            @foreach ($imoveis as $imovel)
+            @foreach (imovelSearch($imoveis, $searchString) as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow-md hover:shadow-lg h-min">
                     <img src="{{ $imovel->photo_path }}" class="object-cover w-full h-48 rounded-md">
                     <p class="mt-4 text-xl font-semibold">{{ currencyFormat($imovel->value ?? 0) }}</p>

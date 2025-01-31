@@ -55,4 +55,9 @@ class Imovel extends Model
             ImovelStatus::VENDIDO->value => 'Vendido'
         };
     }
+
+    public function lado()
+    {
+        return $this->is_lado_praia ? 'Praia' : 'Morro';
+    }
 }
