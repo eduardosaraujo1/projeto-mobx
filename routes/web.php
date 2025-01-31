@@ -34,11 +34,11 @@ Route::view('admin', 'pages.admin.index')
     ->middleware(['auth', 'verified', 'admin'])
     ->name('admin.index');
 
-Route::view('dashboard', 'pages.dashboard')
+Route::view('dashboard', 'pages.imobiliaria.dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::view('configuracoes', 'pages.settings')
+Route::view('configuracoes', 'pages.user.settings')
     ->middleware(['auth', 'verified'])
     ->name('settings');
 
