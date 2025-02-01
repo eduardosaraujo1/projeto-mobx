@@ -68,31 +68,31 @@ new #[Layout('layouts.app')] class extends Component {
         <form class="flex flex-col h-full gap-1" wire:submit='save'>
             <x-errors class='mb-4' />
             <x-card>
-                <div class="flex items-center space-x-2">
+                <div>
                     <span class="block text-lg font-bold min-w-max">Nome:</span>
                     <x-input :disabled='!$edit' wire:model='name' required autofocus />
                 </div>
             </x-card>
             <x-card>
-                <div class="flex items-center space-x-2">
+                <div>
                     <span class="block text-lg font-bold min-w-max">CPF:</span>
                     <x-input :disabled='!$edit' wire:model='cpf' required autofocus />
                 </div>
             </x-card>
             <x-card>
-                <div class="flex items-center space-x-2">
+                <div>
                     <span class="block text-lg font-bold min-w-max">E-mail:</span>
                     <x-input :disabled='!$edit' wire:model='email' autofocus />
                 </div>
             </x-card>
             <x-card>
-                <div class="flex items-center space-x-2">
+                <div>
                     <span class="block text-lg font-bold min-w-max">Endereço:</span>
                     <x-input :disabled='!$edit' wire:model='address' autofocus />
                 </div>
             </x-card>
             <x-card>
-                <div class="flex items-center space-x-2">
+                <div>
                     <span class="block text-lg font-bold min-w-max">Tipo</span>
                     <x-select :disabled="!$edit" wire:model='type'>
                         <x-select.option value="0">Locador</x-select.option>
