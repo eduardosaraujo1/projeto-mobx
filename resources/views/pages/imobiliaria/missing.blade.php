@@ -1,10 +1,3 @@
-@php
-    $imobiliaria = current_imobiliaria();
-
-    if (isset($imobiliaria)) {
-        redirect()->route('imobiliaria.index');
-    }
-@endphp
 <x-app-layout>
     <x-slot name="heading">
         Nenhuma imobiliária encontrada

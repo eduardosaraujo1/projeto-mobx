@@ -1,4 +1,4 @@
-@props(['imobiliaria' => null])
+@props(['imobiliaria' => current_imobiliaria()])
 
 <x-app-layout>
     <x-slot name="heading">

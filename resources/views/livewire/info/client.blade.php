@@ -1,60 +1,61 @@
 <?php
 
 use Livewire\Volt\Component;
-use Livewire\Attributes\Layout;
 use App\Models\Client;
 use App\Enums\ClientType;
 use Illuminate\Validation\Rule;
 
-new #[Layout('layouts.app')] class extends Component {
+new class extends Component {
     public Client $client;
     public bool $edit = false;
 
     // client attributes
-    public string $clientName;
-    public string $clientCpf;
-    public string $clientEmail;
-    public string $clientAddress;
-    public string $clientType;
+    public string $name;
+    public string $cpf;
+    public string $email;
+    public string $address;
+    public string $type;
 
-    public function mount(Client $client)
+    public function mount(string $id)
     {
-        $this->client = $client;
+        $this->client = Client::find($id);
+        $this->authorize('view', $this->client);
         $this->rebindValues();
     }
 
     protected function rules()
     {
         return [
-            'clientName' => ['required', 'min:3', 'max:255'],
-            'clientCpf' => ['required', 'min:11', 'max:11'],
-            'clientEmail' => ['email', 'min:3', 'max:255'],
-            'clientAddress' => ['min:3', 'max:255'],
-            'clientType' => ['required', Rule::enum(ClientType::class)],
+            'name' => ['required', 'min:3', 'max:255'],
+            'cpf' => ['required', 'min:11', 'max:11'],
+            'email' => ['email', 'min:3', 'max:255'],
+            'address' => ['min:3', 'max:255'],
+            'type' => ['required', Rule::enum(ClientType::class)],
         ];
     }
 
     protected function rebindValues()
     {
-        $this->clientName = $this->client->name;
-        $this->clientCpf = $this->client->cpf;
-        $this->clientEmail = $this->client->email;
-        $this->clientAddress = $this->client->address;
-        $this->clientType = $this->client->type;
+        $this->name = $this->client->name;
+        $this->cpf = $this->client->cpf;
+        $this->email = $this->client->email;
+        $this->address = $this->client->address;
+        $this->type = $this->client->type;
     }
 
     public function save()
     {
         $this->validate();
         $this->client->update([
-            'name' => $this->clientName,
-            'cpf' => $this->clientCpf,
-            'email' => $this->clientEmail,
-            'address' => $this->clientAddress,
-            'type' => $this->clientType,
+            'name' => $this->name,
+            'cpf' => $this->cpf,
+            'email' => $this->email,
+            'address' => $this->address,
+            'type' => $this->type,
         ]);
         $this->edit = false;
     }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -76,35 +77,35 @@ new #[Layout('layouts.app')] class extends Component {
         <x-card>
             <div class="flex items-center space-x-2">
                 <span class="block text-lg font-bold min-w-max">Nome:</span>
-                <input type="text" @disabled(!$edit) wire:model='clientName' required
+                <input type="text" @disabled(!$edit) wire:model='name' required
                     class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
             </div>
         </x-card>
         <x-card>
             <div class="flex items-center space-x-2">
                 <span class="block text-lg font-bold min-w-max">Cpf:</span>
-                <input type="text" @disabled(!$edit) wire:model='clientCpf' required
+                <input type="text" @disabled(!$edit) wire:model='cpf' required
                     class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
             </div>
         </x-card>
         <x-card>
             <div class="flex items-center space-x-2">
                 <span class="block text-lg font-bold min-w-max">E-mail:</span>
-                <input type="text" @disabled(!$edit) wire:model='clientEmail' required
+                <input type="text" @disabled(!$edit) wire:model='email' required
                     class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
             </div>
         </x-card>
         <x-card>
             <div class="flex items-center space-x-2">
                 <span class="block text-lg font-bold min-w-max">Endereço:</span>
-                <input type="text" @disabled(!$edit) wire:model='clientAddress' required
+                <input type="text" @disabled(!$edit) wire:model='address' required
                     class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
             </div>
         </x-card>
         <x-card>
             <div class="flex items-center space-x-2">
                 <span class="block text-lg font-bold min-w-max">Tipo</span>
-                <select @disabled(!$edit) wire:model='clientType'
+                <select @disabled(!$edit) wire:model='type'
                     class="block py-0 border-transparent outline-none ring-0 {{ $edit ? 'border-b-black' : '' }}">
                     <option value="0">Locador</option>
                     <option value="1">Vendedor</option>

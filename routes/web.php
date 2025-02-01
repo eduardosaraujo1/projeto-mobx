@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
     // navbar
-    Route::get('imobiliaria', [ImobiliariaController::class, 'index'])
+    Route::view('imobiliaria', 'pages.imobiliaria.index')
         ->name('imobiliaria.index');
 
     Route::view('imoveis', 'pages.imovel.index')
@@ -68,11 +68,11 @@ Volt::route('usuario/novo', 'cadastro.user')
     ->name('user.new');
 
 // visualizacao e edicao
-Volt::route('imovel/{imovel}/info', 'info.imovel')
+Route::view('imovel/{imovel}/info', 'pages.imovel.info')
     ->middleware(['auth', 'verified'])
     ->name('imovel.info');
 
-Volt::route('cliente/{client}/info', 'info.client')
+Route::view('cliente/{client}/info', 'pages.client.info')
     ->middleware(['auth', 'verified'])
     ->name('client.info');
 
