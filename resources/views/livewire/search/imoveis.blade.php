@@ -48,7 +48,7 @@ new class extends Component {
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Rua, localização ou status)" />
-        <x-regular-button label="Cadastrar" href="{{ route('imovel.new') }}" />
+        <x-regular-button label="Cadastrar" href="{{ route('imovel.new') }}" wire:navigate />
     </div>
     <div class="h-full bg-white rounded shadow">
         <div class="grid justify-center gap-4 p-4 overflow-scroll h-[40rem]"
@@ -58,7 +58,7 @@ new class extends Component {
                     <img src="{{ $imovel->photo_path }}" class="object-cover w-full h-48 rounded-md">
                     <p class="mt-4 text-xl font-semibold">{{ currencyFormat($imovel->value ?? 0) }}</p>
                     <!-- Sobreposição de Informações -->
-                    <a href="#"
+                    <a href="{{ route('imovel.info', ['imovel' => $imovel->id]) }}" wire:navigate
                         class="absolute inset-0 flex flex-col justify-between p-4 transition-opacity duration-300 bg-white rounded-lg shadow-lg opacity-0 bg-opacity-90 hover:opacity-100">
                         <div>
                             <h3 class="mb-2 text-lg font-semibold">Detalhes do Imóvel</h3>

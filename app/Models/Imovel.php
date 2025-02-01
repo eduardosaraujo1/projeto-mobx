@@ -13,6 +13,16 @@ class Imovel extends Model
 {
     /** @use HasFactory<\Database\Factories\ImovelFactory> */
     use HasFactory;
+    protected $fillable = [
+        'address_name' ,
+        'address_number' ,
+        'bairro' ,
+        'is_lado_praia' ,
+        'value' ,
+        'iptu' ,
+        'status' ,
+        'photo_path' ,
+    ];
 
     protected $table = 'imoveis';
 
@@ -25,7 +35,7 @@ class Imovel extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Imovel::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function imovelDocuments(): HasMany
