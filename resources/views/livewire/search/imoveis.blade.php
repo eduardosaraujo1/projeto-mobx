@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Volt\Component;
+use App\Services\ImobiliariaService;
 
 function currencyFormat(float $number)
 {
@@ -31,7 +32,7 @@ new class extends Component {
     public $searchString;
     public function mount()
     {
-        $this->imoveis = current_imobiliaria()->imoveis;
+        $this->imoveis = ImobiliariaService::current_imobiliaria()->imoveis;
     }
 }; ?>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ImobiliariaService;
 use Illuminate\Http\Request;
 
 class MissingPageController extends Controller
@@ -11,7 +12,7 @@ class MissingPageController extends Controller
     }
     function index(Request $request)
     {
-        $imobiliaria = current_imobiliaria();
+        $imobiliaria = ImobiliariaService::current_imobiliaria();
 
         if (isset($imobiliaria)) {
             return redirect()->route('imobiliaria.index');

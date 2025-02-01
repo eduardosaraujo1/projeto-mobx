@@ -1,5 +1,7 @@
-@props(['imobiliaria' => current_imobiliaria()])
-
+@php
+    use App\Services\ImobiliariaService;
+    $imobiliaria = ImobiliariaService::current_imobiliaria();
+@endphp
 <x-app-layout>
     <x-slot name="heading">
         Minha Imobiliária

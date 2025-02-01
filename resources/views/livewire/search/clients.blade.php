@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Volt\Component;
+use App\Services\ImobiliariaService;
 
 function cpfFormat($value): string
 {
@@ -14,43 +15,51 @@ function cpfFormat($value): string
     return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', "\$1.\$2.\$3/\$4-\$5", $cnpj_cpf);
 }
 
-function clientSearch($clients, $searchString, $clientType = null)
-{
-    return $clients->filter(function ($client) use ($searchString, $clientType) {
-        $verdict = true;
-
-        // data
-        $name = $client->name ?? '';
-        $email = $client->email ?? '';
-        $cpf = $client->cpf ?? '';
-
-        // formatted queries
-        $haystack = preg_replace('[.,]', '', strtolower("$name $email $cpf"));
-        $needle = preg_replace('[.,]', '', strtolower($searchString ?? ''));
-
-        // search filter
-        $verdict = str_contains($haystack, $needle);
-
-        // type filter
-        if (isset($clientType)) {
-            $verdict = $verdict && (string) $client->type === (string) $clientType;
-        }
-
-        return $verdict;
-    });
-}
-
 new class extends Component {
     /**
      * Summary of imoveis
      * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Client>
      */
-    public $clients;
+    public $clientsFull;
     public $clientType;
     public $searchString;
+
     public function mount()
     {
-        $this->clients = current_imobiliaria()->clients;
+        $this->clientsFull = ImobiliariaService::current_imobiliaria()->clients;
+    }
+
+    public function with()
+    {
+        return [
+            'clients' => $this->clientSearch(),
+        ];
+    }
+
+    public function clientSearch()
+    {
+        return $this->clientsFull->filter(function ($client) {
+            $verdict = true;
+
+            // data
+            $name = $client->name ?? '';
+            $email = $client->email ?? '';
+            $cpf = $client->cpf ?? '';
+
+            // formatted queries
+            $haystack = preg_replace('[.,]', '', strtolower("$name $email $cpf"));
+            $needle = preg_replace('[.,]', '', strtolower($this->searchString ?? ''));
+
+            // search filter
+            $verdict = str_contains($haystack, $needle);
+
+            // type filter
+            if (isset($this->clientType)) {
+                $verdict = $verdict && (string) $client->type === (string) $this->clientType;
+            }
+
+            return $verdict;
+        });
     }
 }; ?>
 
@@ -66,8 +75,8 @@ new class extends Component {
     </div>
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
-            @foreach (clientSearch($clients, $searchString, $clientType) as $client)
-                <a href="{{ route('client.info', ['client' => $client->id]) }}"
+            @foreach ($clients as $client)
+                <a href="{{ route('client.info', ['client' => $client->id]) }}" wire:navigate
                     class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
                         <x-avatar xl label="C" class="!bg-gray-700" />

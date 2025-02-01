@@ -3,10 +3,11 @@ use Livewire\Volt\Component;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imobiliaria;
 use App\Enums\AccessLevel;
+use App\Services\ImobiliariaService;
 
 function getAccessLevel()
 {
-    $imobiliaria = current_imobiliaria();
+    $imobiliaria = ImobiliariaService::current_imobiliaria();
     return AccessLevel::nameFrom($imobiliaria->access->level);
 }
 
@@ -78,9 +79,4 @@ new class extends Component {
             </x-nav-link>
         </li>
     </ul>
-    <div class="flex flex-col justify-end flex-1">
-        <h1 class="overflow-hidden font-bold overflow-ellipsis">
-            {{ getAccessLevel() }}
-        </h1>
-    </div>
 </nav>

@@ -121,7 +121,6 @@ new class extends Component {
                             <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
                         @else
                             <x-regular-button label="Editar" wire:click='startEdit' />
-                            <x-button outline interaction:solid red label="Excluir" class="!ring-0" />
                         @endif
                     </div>
                 @endcan

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Enums\AccessLevel;
 use App\Models\Client;
 use App\Models\User;
+use App\Services\ImobiliariaService;
 
 class ClientPolicy
 {
@@ -21,7 +22,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return current_imobiliaria()->id === $client->imobiliaria->id;
+        return ImobiliariaService::current_imobiliaria()->id === $client->imobiliaria->id;
     }
 
     /**
@@ -37,8 +38,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        $access_level = current_imobiliaria()->access->level;
-        return AccessLevel::tryFrom($access_level) === AccessLevel::GERENTE;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
     }
 
     /**
@@ -46,7 +46,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return false;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
     }
 
     /**
