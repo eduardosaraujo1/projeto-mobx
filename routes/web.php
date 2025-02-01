@@ -51,19 +51,19 @@ Route::view('configuracoes', 'pages.user.settings')
     ->name('settings');
 
 // cadastro
-Volt::route('imobiliaria/novo', 'cadastro.imobiliaria')
+Route::view('imobiliaria/novo', 'pages.imobiliaria.create')
     ->middleware(['auth', 'verified'])
     ->name('imobiliaria.new');
 
-Volt::route('imovel/novo', 'cadastro.imovel')
+Route::view('imovel/novo', 'pages.imovel.create')
     ->middleware(['auth', 'verified'])
     ->name('imovel.new');
 
-Volt::route('cliente/novo', 'cadastro.client')
+Route::view('cliente/novo', 'pages.client.create')
     ->middleware(['auth', 'verified'])
     ->name('client.new');
 
-Volt::route('usuario/novo', 'cadastro.user')
+Route::view('usuario/novo', 'pages.user.create')
     ->middleware(['auth', 'verified'])
     ->name('user.new');
 

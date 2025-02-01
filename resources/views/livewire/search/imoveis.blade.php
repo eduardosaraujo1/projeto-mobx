@@ -8,31 +8,39 @@ function currencyFormat(float $number)
     return 'R$ ' . number_format($number, 2, ',', '.');
 }
 
-function imovelSearch($imoveis, $searchString)
-{
-    return $imoveis->filter(function ($imovel) use ($searchString) {
-        // data
-        $address = $imovel->fullAddress() ?? '';
-        $lado = $imovel->lado() ?? '';
-        $status = $imovel->statusName() ?? '';
-
-        // formatted queries
-        $haystack = strtolower("$address $lado $status");
-        $needle = strtolower($searchString ?? '');
-        return str_contains($haystack, $needle);
-    });
-}
-
 new class extends Component {
     /**
      * Summary of imoveis
      * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Imovel>
      */
-    public $imoveis;
+    public $imoveisFull;
     public $searchString;
+
     public function mount()
     {
-        $this->imoveis = ImobiliariaService::current_imobiliaria()->imoveis;
+        $this->imoveisFull = ImobiliariaService::current_imobiliaria()->imoveis;
+    }
+
+    public function with()
+    {
+        return [
+            'imoveis' => $this->imovelSearch(),
+        ];
+    }
+
+    public function imovelSearch()
+    {
+        return $this->imoveisFull->filter(function ($imovel) {
+            // data
+            $address = $imovel->fullAddress() ?? '';
+            $lado = $imovel->lado() ?? '';
+            $status = $imovel->statusName() ?? '';
+
+            // formatted queries
+            $haystack = strtolower("$address $lado $status");
+            $needle = strtolower($this->searchString ?? '');
+            return str_contains($haystack, $needle);
+        });
     }
 }; ?>
 
@@ -45,7 +53,7 @@ new class extends Component {
     <div class="h-full bg-white rounded shadow">
         <div class="grid justify-center gap-4 p-4 overflow-scroll h-[40rem]"
             style="grid-template-columns: repeat(auto-fit, minmax(16rem, auto))">
-            @foreach (imovelSearch($imoveis, $searchString) as $imovel)
+            @foreach ($imoveis as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow-md hover:shadow-lg h-min">
                     <img src="{{ $imovel->photo_path }}" class="object-cover w-full h-48 rounded-md">
                     <p class="mt-4 text-xl font-semibold">{{ currencyFormat($imovel->value ?? 0) }}</p>

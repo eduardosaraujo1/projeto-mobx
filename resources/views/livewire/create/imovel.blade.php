@@ -3,7 +3,7 @@
 use Livewire\Volt\Component;
 use Livewire\Attributes\Layout;
 
-new #[Layout('layouts.app')] class extends Component {
+new class extends Component {
     //
 }; ?>
 
@@ -12,3 +12,4 @@ new #[Layout('layouts.app')] class extends Component {
 </div>
 
 {{-- Must be live component because of error validation (no refreshing) --}}
+{{-- CSV Upload --}}
