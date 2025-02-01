@@ -19,7 +19,6 @@ new class extends Component {
     public function mount(string $id)
     {
         $this->client = Client::find($id);
-        $this->authorize('view', $this->client);
         $this->rebindValues();
     }
 
@@ -45,6 +44,7 @@ new class extends Component {
 
     public function save()
     {
+        $this->authorize('update', $this->client);
         $this->validate();
         $this->client->update([
             'name' => $this->name,
@@ -72,56 +72,62 @@ new class extends Component {
     <x-slot name="heading">
         Dados do Cliente
     </x-slot>
-    <form class="flex flex-col h-full space-y-1" wire:submit='save'>
-        <x-errors class='mb-4' />
-        <x-card>
-            <div class="flex items-center space-x-2">
-                <span class="block text-lg font-bold min-w-max">Nome:</span>
-                <input type="text" @disabled(!$edit) wire:model='name' required
-                    class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
+    @can('view', $client)
+        <form class="flex flex-col h-full space-y-1" wire:submit='save'>
+            <x-errors class='mb-4' />
+            <x-card>
+                <div class="flex items-center space-x-2">
+                    <span class="block text-lg font-bold min-w-max">Nome:</span>
+                    <input type="text" @disabled(!$edit) wire:model='name' required
+                        class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
+                </div>
+            </x-card>
+            <x-card>
+                <div class="flex items-center space-x-2">
+                    <span class="block text-lg font-bold min-w-max">Cpf:</span>
+                    <input type="text" @disabled(!$edit) wire:model='cpf' required
+                        class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
+                </div>
+            </x-card>
+            <x-card>
+                <div class="flex items-center space-x-2">
+                    <span class="block text-lg font-bold min-w-max">E-mail:</span>
+                    <input type="text" @disabled(!$edit) wire:model='email' required
+                        class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
+                </div>
+            </x-card>
+            <x-card>
+                <div class="flex items-center space-x-2">
+                    <span class="block text-lg font-bold min-w-max">Endereço:</span>
+                    <input type="text" @disabled(!$edit) wire:model='address' required
+                        class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
+                </div>
+            </x-card>
+            <x-card>
+                <div class="flex items-center space-x-2">
+                    <span class="block text-lg font-bold min-w-max">Tipo</span>
+                    <select @disabled(!$edit) wire:model='type'
+                        class="block py-0 border-transparent outline-none ring-0 {{ $edit ? 'border-b-black' : '' }}">
+                        <option value="0">Locador</option>
+                        <option value="1">Vendedor</option>
+                    </select>
+                </div>
+            </x-card>
+            <div class="flex flex-col items-start justify-end flex-1 mt-auto">
+                @can('update', $client)
+                    <div class="flex space-x-2">
+                        @if ($edit)
+                            <x-regular-button label="Salvar" type="submit" />
+                            <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
+                        @else
+                            <x-regular-button label="Editar" wire:click='startEdit' />
+                            <x-button outline interaction:solid red label="Excluir" class="!ring-0" />
+                        @endif
+                    </div>
+                @endcan
             </div>
-        </x-card>
-        <x-card>
-            <div class="flex items-center space-x-2">
-                <span class="block text-lg font-bold min-w-max">Cpf:</span>
-                <input type="text" @disabled(!$edit) wire:model='cpf' required
-                    class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
-            </div>
-        </x-card>
-        <x-card>
-            <div class="flex items-center space-x-2">
-                <span class="block text-lg font-bold min-w-max">E-mail:</span>
-                <input type="text" @disabled(!$edit) wire:model='email' required
-                    class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
-            </div>
-        </x-card>
-        <x-card>
-            <div class="flex items-center space-x-2">
-                <span class="block text-lg font-bold min-w-max">Endereço:</span>
-                <input type="text" @disabled(!$edit) wire:model='address' required
-                    class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
-            </div>
-        </x-card>
-        <x-card>
-            <div class="flex items-center space-x-2">
-                <span class="block text-lg font-bold min-w-max">Tipo</span>
-                <select @disabled(!$edit) wire:model='type'
-                    class="block py-0 border-transparent outline-none ring-0 {{ $edit ? 'border-b-black' : '' }}">
-                    <option value="0">Locador</option>
-                    <option value="1">Vendedor</option>
-                </select>
-            </div>
-        </x-card>
-        <div class="flex flex-col items-start justify-end flex-1 mt-auto">
-            <div class="flex space-x-2">
-                @if ($edit)
-                    <x-regular-button label="Salvar" type="submit" />
-                    <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
-                @else
-                    <x-regular-button label="Editar" wire:click='startEdit' />
-                    <x-button outline interaction:solid red label="Excluir" class="!ring-0" />
-                @endif
-            </div>
-        </div>
-    </form>
+        </form>
+    @else
+        <x-alert negative title="Você não tem acesso a esse recurso. " />
+    @endcan
 </div>

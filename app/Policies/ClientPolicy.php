@@ -20,7 +20,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return false;
+        return current_imobiliaria()->id === $client->imobiliaria->id;
     }
 
     /**
