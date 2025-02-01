@@ -2,6 +2,13 @@
 use Livewire\Volt\Component;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imobiliaria;
+use App\Enums\AccessLevel;
+
+function getAccessLevel()
+{
+    $imobiliaria = current_imobiliaria();
+    return AccessLevel::nameFrom($imobiliaria->access->level);
+}
 
 new class extends Component {
     /**
@@ -28,12 +35,16 @@ new class extends Component {
 <!-- Navbar Lateral (Responsiva) -->
 <nav
     class="sticky top-0 flex flex-col w-64 h-screen p-6 space-y-6 text-gray-800 bg-white border-r border-gray-200 shadow-lg">
-    <a class="flex items-center" href="/">
+    <a class="flex items-center overflow-hidden" href="/">
         <img src="{{ asset('images/mobx.svg') }}" alt="Logo Mobx" class="w-12 h-12 mr-4 bg-black rounded shadow-md">
-        <h2 class="text-2xl font-bold">Mobx</h2>
+        <div class="flex-1 overflow-hidden whitespace-nowrap">
+            <h2 class="overflow-hidden text-2xl font-bold">Mobx</h2>
+            <h3>
+                {{ getAccessLevel() }}
+            </h3>
+        </div>
     </a>
     <hr>
-
     <x-native-select label="Imobiliaria Selecionada" wire:model.change='index_imobiliaria' name="imobiliaria_select">
         @foreach ($user_imobiliarias as $imobiliaria)
             <option value="{{ $loop->index }}" @class([
@@ -67,4 +78,9 @@ new class extends Component {
             </x-nav-link>
         </li>
     </ul>
+    <div class="flex flex-col justify-end flex-1">
+        <h1 class="overflow-hidden font-bold overflow-ellipsis">
+            {{ getAccessLevel() }}
+        </h1>
+    </div>
 </nav>

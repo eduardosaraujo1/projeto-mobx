@@ -18,19 +18,16 @@ class ImobiliariaSeeder extends Seeder
      * @param \Illuminate\Database\Eloquent\Collection<int, Imobiliaria> $imobiliarias
      * @return \Illuminate\Support\Collection<int|string, array{level: int|string>}
      */
-    private static function generateUserImobiliarias(Collection $imobiliarias)
+    private static function generateUserImobiliarias(Collection $imobiliarias): array
     {
-        // Get random imobiliaria list with random length
-        $userImobiliarias = $imobiliarias->random(rand(min: 1, max: 3));
+        $levels = AccessLevel::cases();
+        $attachments = [];
 
-        // BelongsToMany->Attach only needs the IDs, so remove the unnecessary info with pluck
-        $ids = $userImobiliarias->pluck('id');
-
-        // BelongsToMany->Attach accepts associative array with the other properties of the pivot table
-        // read https://laravel.com/docs/11.x/eloquent-relationships#updating-many-to-many-relationships
-        $attachments = $ids->mapWithKeys(fn($id) => [
-            $id => ['level' => AccessLevel::randomId()]
-        ]);
+        foreach ($levels as $level) {
+            $imobiliaria = $imobiliarias->random();
+            $level_id = $level->value;
+            $attachments[$imobiliaria->id] = ['level' => $level_id];
+        }
 
         return $attachments;
     }
@@ -50,6 +47,8 @@ class ImobiliariaSeeder extends Seeder
                 function (User $user) use ($imobiliarias) {
                     $attachments = static::generateUserImobiliarias($imobiliarias);
                     // attach the imobiliarias to the user
+                    // attach object format:
+                    // [imobiliaria_id => ['level' => level_id]]
                     $user->imobiliarias()->attach($attachments);
                 }
             );

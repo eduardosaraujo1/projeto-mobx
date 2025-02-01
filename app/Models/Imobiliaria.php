@@ -27,7 +27,7 @@ class Imobiliaria extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_imobiliaria_access');
+        return $this->belongsToMany(User::class, 'user_imobiliaria_access')->as('access')->withPivot('level');
     }
 
     public function clients(): HasMany
