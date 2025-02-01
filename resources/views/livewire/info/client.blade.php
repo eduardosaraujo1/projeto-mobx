@@ -22,12 +22,7 @@ new #[Layout('layouts.app')] class extends Component {
         $this->rebindValues();
     }
 
-    protected function rules()
-    {
-        return Client::rules();
-    }
-
-    protected function rebindValues()
+    public function rebindValues()
     {
         $this->name = $this->client->name;
         $this->cpf = $this->client->cpf;
@@ -39,9 +34,10 @@ new #[Layout('layouts.app')] class extends Component {
     public function save()
     {
         $this->authorize('update', $this->client);
-        $validated = $this->validate();
+        $validated = $this->validate(Client::rules());
         $this->client->fill($validated);
         $this->client->save();
+        $this->rebindValues();
 
         $this->edit = false;
     }

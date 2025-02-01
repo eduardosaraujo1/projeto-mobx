@@ -19,10 +19,10 @@ class Imobiliaria extends Model
      */
 
     protected $fillable = [
-        'nome',
-        'endereco',
-        'logo_path',
-        'contato',
+        'name',
+        'address',
+        'email',
+        'contact',
     ];
 
     public function users(): BelongsToMany
@@ -38,5 +38,20 @@ class Imobiliaria extends Model
     public function imoveis(): HasManyThrough
     {
         return $this->hasManyThrough(Imovel::class, Client::class);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public static function rules()
+    {
+        return [
+            'name' => ['string', 'required', 'min:3', 'max:255'],
+            'address' => ['string', 'required', 'min:3', 'max:255'],
+            'email' => ['email', 'required', 'min:3', 'max:255'],
+            'contact' => ['string', 'required', 'min:3', 'max:255'],
+        ];
     }
 }

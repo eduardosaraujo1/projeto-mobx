@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
     Route::view('dashboard', 'pages.imobiliaria.dashboard')
         ->name('dashboard');
 
-    Route::view('imobiliaria', 'pages.imobiliaria.index')
+    Volt::route('imobiliaria', 'info.imobiliaria')
         ->name('imobiliaria.index');
 
     Route::view('imoveis', 'pages.imovel.index')
@@ -33,7 +33,6 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
 
     Volt::route('clientes', 'search.clients')
         ->name('client.index');
-
 
     // create
     Route::view('imovel/novo', 'pages.imovel.create')
@@ -54,7 +53,7 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
 });
 
 // imobiliaria error handling
-Route::middleware(['auth', 'verified'])->group(function() {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
         ->name('imobiliaria.missing');
     // user dropdown nav
