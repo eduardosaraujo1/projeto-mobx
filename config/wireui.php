@@ -125,5 +125,8 @@ return [
         'dropdown' => [
             'alias' => 'wui-dropdown',
         ],
+        'modal' => [
+            'alias' => 'wui-modal',
+        ],
     ]),
 ];
