@@ -28,7 +28,7 @@ new class extends Component {
             <ul>
                 @if (auth()->user()->is_admin ?? false)
                     <x-dropdown-link href="{{ route('admin.index') }}" wire:navigate
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        class="block px-4 py-2 hover:bg-gray-100">
                         Painel Administrativo
                     </x-dropdown-link>
                 @endif

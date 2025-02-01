@@ -11,13 +11,4 @@ enum AccessLevel: int
     {
         return array_rand(static::cases());
     }
-
-    public static function nameFrom(int $id)
-    {
-        return match (AccessLevel::tryFrom($id)) {
-            AccessLevel::COLABORADOR => 'Colaborador',
-            AccessLevel::GERENTE => 'Gerente',
-            default => 'undefined'
-        };
-    }
 }

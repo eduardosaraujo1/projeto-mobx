@@ -16,6 +16,6 @@ class ImobiliariaService
 
     public static function current_access_level(): AccessLevel|null
     {
-        return AccessLevel::tryFrom(static::current_imobiliaria()->access->level);
+        return AccessLevel::tryFrom(static::current_imobiliaria()->access->level ?? null);
     }
 }
