@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\AccessLevel;
 use App\Models\Client;
 use App\Models\User;
 
@@ -36,7 +37,8 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return false;
+        $access_level = current_imobiliaria()->access->level;
+        return AccessLevel::tryFrom($access_level) === AccessLevel::GERENTE;
     }
 
     /**

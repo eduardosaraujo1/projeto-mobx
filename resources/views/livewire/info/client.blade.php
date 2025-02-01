@@ -84,7 +84,7 @@ new class extends Component {
             </x-card>
             <x-card>
                 <div class="flex items-center space-x-2">
-                    <span class="block text-lg font-bold min-w-max">Cpf:</span>
+                    <span class="block text-lg font-bold min-w-max">CPF:</span>
                     <input type="text" @disabled(!$edit) wire:model='cpf' required
                         class="block w-full p-1 border-transparent outline-none {{ $edit ? 'border-b-black' : '' }} focus:ring-0">
                 </div>
