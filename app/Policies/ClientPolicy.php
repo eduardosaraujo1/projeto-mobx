@@ -4,14 +4,13 @@ namespace App\Policies;
 
 use App\Models\Client;
 use App\Models\User;
-use App\Services\ImobiliariaService;
 
 class ClientPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, ImobiliariaService $service): bool
+    public function viewAny(User $user): bool
     {
         return false;
     }

@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Imobiliaria;
-use App\Services\ImobiliariaService;
 use Illuminate\Http\Request;
 
 class ImobiliariaController extends Controller
 {
     public function __construct(
-        protected ImobiliariaService $service
     ) {
     }
     /**
@@ -17,7 +15,7 @@ class ImobiliariaController extends Controller
      */
     public function index()
     {
-        $imobiliaria = $this->service->getSelectedImobiliaria();
+        $imobiliaria = current_imobiliaria();
 
         return view('pages.imobiliaria.index', [
             'imobiliaria' => $imobiliaria

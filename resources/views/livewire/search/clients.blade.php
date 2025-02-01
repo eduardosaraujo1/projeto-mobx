@@ -1,7 +1,6 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Services\ImobiliariaService;
 
 function cpfFormat($value): string
 {
@@ -49,10 +48,9 @@ new class extends Component {
     public $clients;
     public $clientType;
     public $searchString;
-    public function mount(ImobiliariaService $imobiliariaService)
+    public function mount()
     {
-        $imobiliaria = $imobiliariaService->getSelectedImobiliaria();
-        $this->clients = $imobiliaria->clients;
+        $this->clients = current_imobiliaria()->clients;
     }
 }; ?>
 

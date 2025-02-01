@@ -41,7 +41,6 @@ Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
     ->name('imobiliaria.missing');
 
 
-
 // user dropdown nav
 Route::view('admin', 'pages.admin.index')
     ->middleware(['auth', 'verified', 'admin'])

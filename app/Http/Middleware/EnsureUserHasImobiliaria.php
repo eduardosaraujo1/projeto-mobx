@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\ImobiliariaService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureUserHasImobiliaria
 {
     public function __construct(
-        protected ImobiliariaService $service
     ) {
     }
     /**
@@ -20,7 +18,7 @@ class EnsureUserHasImobiliaria
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $hasImobiliaria = $this->service->getSelectedImobiliaria();
+        $hasImobiliaria = current_imobiliaria();
 
         if (isset($hasImobiliaria)) {
             return $next($request);
