@@ -29,7 +29,8 @@ new #[Layout('layouts.guest')] class extends Component {
 
     <form wire:submit="login">
         <!-- Email Address -->
-        <x-input type="email" wire:model='form.email' label='Email' />
+        <x-input type="email" wire:model='form.email' label='Email' name="email" id="email"
+            value="{{ old('email') }}" />
 
         <!-- Password -->
         <div class="mt-4">
@@ -37,13 +38,13 @@ new #[Layout('layouts.guest')] class extends Component {
         </div>
 
         <!-- Remember Me -->
-        {{-- <div class="block mt-4">
+        <div class="block mt-4">
             <label for="remember" class="inline-flex items-center">
                 <input wire:model="form.remember" id="remember" type="checkbox"
                     class="text-indigo-600 border-gray-300 rounded shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="text-sm text-gray-600 ms-2">Lembrar dispositivo</span>
+                <span class="text-sm text-gray-600 ms-2">Lembrar desse dispositivo</span>
             </label>
-        </div> --}}
+        </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
