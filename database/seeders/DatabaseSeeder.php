@@ -29,6 +29,13 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
+        // Generic user
+        User::factory()->create([
+            'name' => 'Generic',
+            'email' => 'generic@mobx.com',
+            'password' => bcrypt('1234'),
+        ]);
+
         $this->call([
             UserSeeder::class,
             ImobiliariaSeeder::class,

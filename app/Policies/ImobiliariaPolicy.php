@@ -23,7 +23,7 @@ class ImobiliariaPolicy
      */
     public function view(User $user, Imobiliaria $imobiliaria): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $imobiliaria->id;
+        return ImobiliariaService::current_imobiliaria()->id === $imobiliaria->id || $user->is_admin;
     }
 
     /**
@@ -39,7 +39,7 @@ class ImobiliariaPolicy
      */
     public function update(User $user, Imobiliaria $imobiliaria): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
     }
 
     /**

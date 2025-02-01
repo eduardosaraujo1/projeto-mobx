@@ -23,7 +23,7 @@ class ImovelPolicy
      */
     public function view(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $imovel->client->imobiliaria->id;
+        return ImobiliariaService::current_imobiliaria()->id === $imovel->client->imobiliaria->id || $user->is_admin;
     }
 
     /**
@@ -31,7 +31,7 @@ class ImovelPolicy
      */
     public function create(User $user): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
     }
 
     /**
@@ -39,7 +39,7 @@ class ImovelPolicy
      */
     public function update(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
     }
 
     /**
@@ -47,7 +47,7 @@ class ImovelPolicy
      */
     public function delete(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE;
+        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
     }
 
     /**

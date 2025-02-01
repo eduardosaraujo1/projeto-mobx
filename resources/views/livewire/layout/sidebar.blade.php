@@ -19,8 +19,12 @@ new class extends Component {
 
     public function getAccessLevelName()
     {
-        $level = ImobiliariaService::current_access_level()->name ?? 'visitante';
-        return Str::title($level);
+        if (auth()->user()->is_admin) {
+            return 'Administrador';
+        } else {
+            $level = ImobiliariaService::current_access_level()->name ?? 'Visitante';
+            return Str::title($level);
+        }
     }
     public function mount()
     {
