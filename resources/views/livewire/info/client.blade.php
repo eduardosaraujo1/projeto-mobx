@@ -73,7 +73,7 @@ new class extends Component {
         Dados do Cliente
     </x-slot>
     @can('view', $client)
-        <form class="flex flex-col h-full space-y-1" wire:submit='save'>
+        <form class="flex flex-col h-full gap-1" wire:submit='save'>
             <x-errors class='mb-4' />
             <x-card>
                 <div class="flex items-center space-x-2">
@@ -113,18 +113,16 @@ new class extends Component {
                     </select>
                 </div>
             </x-card>
-            <div class="flex flex-col items-start justify-end flex-1 mt-auto">
-                @can('update', $client)
-                    <div class="flex space-x-2">
-                        @if ($edit)
-                            <x-regular-button label="Salvar" type="submit" />
-                            <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
-                        @else
-                            <x-regular-button label="Editar" wire:click='startEdit' />
-                        @endif
-                    </div>
-                @endcan
-            </div>
+            @can('update', $client)
+                <div class="flex mt-auto space-x-2">
+                    @if ($edit)
+                        <x-regular-button label="Salvar" type="submit" />
+                        <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
+                    @else
+                        <x-regular-button label="Editar" wire:click='startEdit' />
+                    @endif
+                </div>
+            @endcan
         </form>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />

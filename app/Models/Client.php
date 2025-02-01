@@ -19,6 +19,7 @@ class Client extends Model
         'email',
         'address',
         'type',
+        'imobiliaria_id'
     ];
 
     public function imobiliaria(): BelongsTo

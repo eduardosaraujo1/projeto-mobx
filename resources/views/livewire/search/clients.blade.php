@@ -2,6 +2,7 @@
 
 use Livewire\Volt\Component;
 use App\Services\ImobiliariaService;
+use App\Models\Client;
 
 function cpfFormat($value): string
 {
@@ -71,7 +72,9 @@ new class extends Component {
             <x-select.option label="Locador" value="0" />
             <x-select.option label="Vendedor" value="1" />
         </x-select>
-        <x-regular-button label="Cadastrar" href="{{ route('client.new') }}" />
+        @can('create', Client::class)
+            <x-regular-button label="Cadastrar" href="{{ route('client.new') }}" />
+        @endcan
     </div>
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
