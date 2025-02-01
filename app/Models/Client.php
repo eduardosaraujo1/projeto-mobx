@@ -13,6 +13,14 @@ class Client extends Model
     /** @use HasFactory<\Database\Factories\ClientFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'cpf',
+        'name',
+        'email',
+        'address',
+        'type',
+    ];
+
     public function imobiliaria(): BelongsTo
     {
         return $this->belongsTo(Imobiliaria::class);

@@ -56,7 +56,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col h-full space-y-2">
+<div class="flex flex-col space-y-2">
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Nome, CPF, E-mail)" />
@@ -69,7 +69,8 @@ new class extends Component {
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
             @foreach (clientSearch($clients, $searchString, $clientType) as $client)
-                <a href="#" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
+                <a href="{{ route('client.info', ['client' => $client->id]) }}"
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
                         <x-avatar xl label="C" class="!bg-gray-700" />
                     </div>

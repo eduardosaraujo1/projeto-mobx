@@ -1,4 +1,4 @@
-<x-app-layout class="flex flex-col h-full">
+<x-app-layout>
     <x-slot name="heading">
         Imóveis Cadastrados
     </x-slot>

@@ -68,4 +68,13 @@ Volt::route('usuario/novo', 'cadastro.user')
     ->middleware(['auth', 'verified'])
     ->name('user.new');
 
+// visualizacao e edicao
+Volt::route('imovel/{imovel}/info', 'info.imovel')
+    ->middleware(['auth', 'verified'])
+    ->name('imovel.info');
+
+Volt::route('cliente/{client}/info', 'info.client')
+    ->middleware(['auth', 'verified'])
+    ->name('client.info');
+
 require __DIR__ . '/auth.php';

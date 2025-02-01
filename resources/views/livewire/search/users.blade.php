@@ -50,7 +50,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col h-full space-y-2">
+<div class="flex flex-col space-y-2">
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Nome ou E-mail)" />
