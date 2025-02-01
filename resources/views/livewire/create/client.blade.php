@@ -1,12 +1,11 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Enums\ClientType;
-use Illuminate\Validation\Rule;
 use App\Models\Client;
 use App\Services\ImobiliariaService;
+use Livewire\Attributes\Layout;
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     public string $name;
     public string $cpf;
     public string $email;
@@ -15,32 +14,17 @@ new class extends Component {
 
     protected function rules()
     {
-        return [
-            'name' => ['required', 'min:3', 'max:255'],
-            'cpf' => ['required', 'min:11', 'max:11'],
-            'email' => ['email', 'min:3', 'max:255'],
-            'address' => ['min:3', 'max:255'],
-            'type' => ['required', Rule::enum(ClientType::class)],
-        ];
+        return Client::rules();
     }
 
     public function create()
     {
-        $this->validate();
+        $validated = $this->validate();
 
-        $imobiliaria = ImobiliariaService::current_imobiliaria();
-        if (!isset($imobiliaria)) {
-            abort(500);
-        }
+        // get current imobiliaria id
+        $imobiliaria_id = ImobiliariaService::current_imobiliaria()->id ?? abort(500);
 
-        $client = Client::create([
-            'name' => $this->name,
-            'cpf' => $this->cpf,
-            'email' => $this->email,
-            'address' => $this->address,
-            'type' => $this->type,
-            'imobiliaria_id' => $imobiliaria->id,
-        ]);
+        $client = Client::create([...$validated, 'imobiliaria_id' => $imobiliaria_id]);
 
         if ($client) {
             session()->flash('message', 'Cliente cadastrado com sucesso');
@@ -51,10 +35,13 @@ new class extends Component {
     }
 }; ?>
 
-<div class="flex-1">
+<x-slot name="heading">
+    Novo Cliente
+</x-slot>
+<div>
     @can('create', Client::class)
-        <form class="flex flex-col items-start h-full gap-2 p-4 bg-white rounded shadow " wire:submit='create'>
-            <x-errors class="mb-4" />
+        <x-errors class="mb-4" />
+        <form class="flex flex-col items-start gap-2 p-4 bg-white rounded shadow " wire:submit='create'>
             <x-input errorless label="Nome: " wire:model='name' />
             <x-maskable errorless mask="###.###.###-##" placeholder="123.456.789-10" label="CPF: " wire:model='cpf' />
             <x-input errorless label="E-mail: " wire:model='email' />
@@ -63,11 +50,9 @@ new class extends Component {
                 <x-select.option selected value="0">Locador</x-select.option>
                 <x-select.option value="1">Vendedor</x-select.option>
             </x-select>
-            <x-button type="submit" class="!ring-0 mt-auto" black label="Cadastrar" />
+            <x-primary-button class="mt-4" type="submit">Cadastrar</x-primary-button>
         </form>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
 </div>
-
-{{-- Must be live component because of error validation (no refreshing) --}}

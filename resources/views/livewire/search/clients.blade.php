@@ -3,6 +3,7 @@
 use Livewire\Volt\Component;
 use App\Services\ImobiliariaService;
 use App\Models\Client;
+use Livewire\Attributes\Layout;
 
 function cpfFormat($value): string
 {
@@ -16,7 +17,7 @@ function cpfFormat($value): string
     return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', "\$1.\$2.\$3/\$4-\$5", $cnpj_cpf);
 }
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     /**
      * Summary of imoveis
      * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Client>
@@ -65,6 +66,9 @@ new class extends Component {
 }; ?>
 
 <div class="flex flex-col space-y-2">
+    <x-slot name="heading">
+        Clientes
+    </x-slot>
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Nome, CPF, E-mail)" />
@@ -73,7 +77,7 @@ new class extends Component {
             <x-select.option label="Vendedor" value="1" />
         </x-select>
         @can('create', Client::class)
-            <x-regular-button label="Cadastrar" href="{{ route('client.new') }}" />
+            <x-primary-button href="{{ route('client.new') }}">Cadastrar</x-primary-button>
         @endcan
     </div>
     <div class="h-full bg-white rounded shadow">

@@ -116,10 +116,10 @@ new class extends Component {
             @can('update', $client)
                 <div class="flex mt-auto space-x-2">
                     @if ($edit)
-                        <x-regular-button label="Salvar" type="submit" />
-                        <x-button outline interaction:solid label="Cancelar" wire:click='cancelEdit' class="!ring-0" />
+                        <x-primary-button type="submit">Salvar</x-primary-button>
+                        <x-secondary-button wire:click='cancelEdit'>Cancelar</x-secondary-button>
                     @else
-                        <x-regular-button label="Editar" wire:click='startEdit' />
+                        <x-primary-button wire:click='startEdit'>Editar</x-primary-button>
                     @endif
                 </div>
             @endcan

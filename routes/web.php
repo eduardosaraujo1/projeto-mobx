@@ -22,58 +22,52 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
     // navbar
+    Route::view('dashboard', 'pages.imobiliaria.dashboard')
+        ->name('dashboard');
+
     Route::view('imobiliaria', 'pages.imobiliaria.index')
         ->name('imobiliaria.index');
 
     Route::view('imoveis', 'pages.imovel.index')
         ->name('imovel.index');
 
-    Route::view('clientes', 'pages.client.index')
+    Volt::route('clientes', 'search.clients')
         ->name('client.index');
 
-    Route::view('dashboard', 'pages.imobiliaria.dashboard')
-        ->name('dashboard');
+
+    // create
+    Route::view('imovel/novo', 'pages.imovel.create')
+        ->name('imovel.new');
+
+    Volt::route('cliente/novo', 'create.client')
+        ->name('client.new');
+
+    Route::view('usuario/novo', 'pages.user.create')
+        ->name('user.new');
+
+    // visualizacao e edicao
+    Route::view('imovel/{imovel}/info', 'pages.imovel.info')
+        ->name('imovel.info');
+
+    Volt::route('cliente/{client}/info', 'info.client')
+        ->name('client.info');
 });
 
 // imobiliaria error handling
-Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('imobiliaria.missing');
+Route::middleware(['auth', 'verified'])->group(function() {
+    Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
+        ->name('imobiliaria.missing');
+    // user dropdown nav
+    Route::view('admin', 'pages.admin.index')
+        ->middleware(['admin'])
+        ->name('admin.index');
 
+    Route::view('configuracoes', 'pages.user.settings')
+        ->name('settings');
 
-// user dropdown nav
-Route::view('admin', 'pages.admin.index')
-    ->middleware(['auth', 'verified', 'admin'])
-    ->name('admin.index');
-
-Route::view('configuracoes', 'pages.user.settings')
-    ->middleware(['auth', 'verified'])
-    ->name('settings');
-
-// cadastro
-Route::view('imobiliaria/novo', 'pages.imobiliaria.create')
-    ->middleware(['auth', 'verified'])
-    ->name('imobiliaria.new');
-
-Route::view('imovel/novo', 'pages.imovel.create')
-    ->middleware(['auth', 'verified'])
-    ->name('imovel.new');
-
-Route::view('cliente/novo', 'pages.client.create')
-    ->middleware(['auth', 'verified'])
-    ->name('client.new');
-
-Route::view('usuario/novo', 'pages.user.create')
-    ->middleware(['auth', 'verified'])
-    ->name('user.new');
-
-// visualizacao e edicao
-Route::view('imovel/{imovel}/info', 'pages.imovel.info')
-    ->middleware(['auth', 'verified'])
-    ->name('imovel.info');
-
-Route::view('cliente/{client}/info', 'pages.client.info')
-    ->middleware(['auth', 'verified'])
-    ->name('client.info');
+    // cadastro
+    Route::view('imobiliaria/novo', 'pages.imobiliaria.create')
+        ->name('imobiliaria.new');
+});
 
 require __DIR__ . '/auth.php';

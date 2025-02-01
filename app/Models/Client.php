@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\Rule;
 
 class Client extends Model
 {
@@ -38,5 +39,15 @@ class Client extends Model
             ClientType::LOCADOR => 'Locador',
             ClientType::VENDEDOR => 'Vendedor',
         };
+    }
+
+    public static function rules() {
+        return [
+            'name' => ['required', 'min:3', 'max:255'],
+            'cpf' => ['required', 'min:11', 'max:11'],
+            'email' => ['nullable', 'email', 'min:3', 'max:255'],
+            'address' => ['nullable', 'min:3', 'max:255'],
+            'type' => ['required', Rule::enum(ClientType::class)],
+        ];
     }
 }
