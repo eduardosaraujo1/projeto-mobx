@@ -76,7 +76,11 @@ new #[Layout('layouts.app')] class extends Component {
         <div class="grid grid-cols-auto-fill-64 justify-center gap-4 p-4 overflow-scroll h-[40rem] auto-rows-min">
             @foreach ($imoveis as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow">
-                    <img src="{{ $imovel->photo_path }}" class="object-cover w-full h-48 rounded-md">
+                    <div>
+                        <img src="{{ $imovel->photo_path }}"
+                            class="object-cover w-full h-48 bg-gray-300 bg-center bg-contain rounded-md aspect-square "
+                            style="background-image:url('{{ asset('images/placeholder-image.svg') }}');">
+                    </div>
                     <span class="inline mt-4 text-base">
                         <b>{{ $imovel->bairro }}</b> -
                         <span>{{ Str::limit($imovel->address_number . ' ' . $imovel->address_name, 20) }}</span>

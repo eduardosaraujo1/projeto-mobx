@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
         ->name('user.new');
 
     // visualizacao e edicao
-    Route::view('imovel/{imovel}/info', 'pages.imovel.info')
+    Volt::route('imovel/{imovel}/info', 'info.imovel')
         ->name('imovel.info');
 
     Volt::route('cliente/{client}/info', 'info.client')
