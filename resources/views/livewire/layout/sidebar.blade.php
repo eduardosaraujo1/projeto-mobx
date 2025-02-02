@@ -18,7 +18,7 @@ new class extends Component {
     public function mount()
     {
         // get or define current imobiliaria
-        $this->user_imobiliarias = auth()->user()->imobiliarias;
+        $this->user_imobiliarias = ImobiliariaService::user_imobiliarias();
         $this->index_imobiliaria = Session::get('index_imobiliaria', 0);
 
         // define the array elements
@@ -59,12 +59,12 @@ new class extends Component {
             ? [
                 'label' => 'Painel Administrativo',
                 'active' => $this->routeMatches('admin'),
-                'href' => route('admin.index'),
+                'href' => route('home'),
             ]
             : [
                 'label' => 'Minha Imobiliária',
                 'active' => $this->routeMatches('imobiliaria'),
-                'href' => route('imobiliaria.home'),
+                'href' => route('home'),
             ];
 
         $dashboard = [
@@ -112,9 +112,8 @@ new class extends Component {
     <hr>
     <x-native-select label="Imobiliaria Selecionada" wire:model.change='index_imobiliaria' name="imobiliaria_select">
         @foreach ($user_imobiliarias as $imobiliaria)
-            <option value="{{ $loop->index }}" @class([
-                'selected' => $loop->index === $index_imobiliaria,
-            ])>{{ Str::limit($imobiliaria->name, 20) }}
+            <option value="{{ $loop->index }}" @class(['selected' => $loop->index === $index_imobiliaria])>
+                {{ Str::limit($imobiliaria->name, 20) }}
             </option>
         @endforeach
     </x-native-select>

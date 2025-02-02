@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => UserIsAdmin::class,
-            'hasImobiliaria' => EnsureUserHasImobiliaria::class
+            'has-imobiliaria' => EnsureUserHasImobiliaria::class
         ]);
         $middleware->redirectUsersTo('/imobiliaria');
     })

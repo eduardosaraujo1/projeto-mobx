@@ -3,15 +3,29 @@
 namespace App\Services;
 
 use App\Enums\AccessLevel;
+use Illuminate\Database\Eloquent\Collection;
 use Session;
 use App\Models\Imobiliaria;
 
 class ImobiliariaService
 {
+    /**
+     * Summary of user_imobiliarias
+     * @return Collection<Imobiliaria>
+     */
+    public static function user_imobiliarias(): Collection
+    {
+        $user = auth()->user();
+
+        // get user imobiliarias
+        return $user->is_admin
+            ? Imobiliaria::all()
+            : $user->imobiliarias;
+    }
     public static function current_imobiliaria(): Imobiliaria|null
     {
         // get user imobiliarias
-        $imobiliarias = auth()->user()->imobiliarias->all();
+        $imobiliarias = static::user_imobiliarias();
 
         // get stored index
         $index_imobiliaria = Session::get('index_imobiliaria', 0);

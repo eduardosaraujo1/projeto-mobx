@@ -3,6 +3,7 @@
 use App\Http\Controllers\ImobiliariaController;
 use App\Http\Controllers\MissingPageController;
 use App\Http\Middleware\EnsureUserHasImobiliaria;
+use App\Services\ImobiliariaService;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -17,10 +18,15 @@ Route::prefix('legacy')->name('legacy.')->group(
 );
 
 Route::get('/', function () {
-    return redirect(Auth::check() ? '/imobiliaria' : '/login');
+    return redirect(Auth::check() ? '/home' : '/login');
 });
 
-Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
+
+Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
+    Route::get('/home', function () {
+        $is_admin = auth()->user()->is_admin ?? false;
+        return redirect($is_admin ? route('admin.index') : route('imobiliaria.home'));
+    })->name('home');
     // navbar
     Route::view('dashboard', 'pages.imobiliaria.dashboard')
         ->name('dashboard');
@@ -50,12 +56,20 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
 
     Volt::route('cliente/{client}/info', 'info.client')
         ->name('client.info');
+
+    // missing imobiliaria
+    Route::get('missing-imobiliaria', function () {
+        $imobiliaria = ImobiliariaService::current_imobiliaria();
+
+        if (isset($imobiliaria)) {
+            return redirect()->route('imobiliaria.home');
+        }
+
+        return view('pages.imobiliaria.missing');
+    })->name('imobiliaria.missing');
 });
 
-// imobiliaria error handling
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('missing-imobiliaria', [MissingPageController::class, 'index'])
-        ->name('imobiliaria.missing');
     // user dropdown nav
     Route::view('admin', 'pages.admin.index')
         ->middleware(['admin'])
