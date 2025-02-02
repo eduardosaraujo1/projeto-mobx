@@ -26,14 +26,7 @@ new class extends Component {
             </div>
             <hr class="my-2">
             <ul>
-                @if (auth()->user()->is_admin ?? false)
-                    <x-dropdown-link href="{{ route('admin.index') }}" wire:navigate
-                        class="block px-4 py-2 hover:bg-gray-100">
-                        Painel Administrativo
-                    </x-dropdown-link>
-                @endif
-                <x-dropdown-link href="{{ route('settings') }}" wire:navigate
-                    class="block px-4 py-2 hover:bg-gray-100 ">
+                <x-dropdown-link href="{{ route('settings') }}" wire:navigate class="block px-4 py-2 hover:bg-gray-100 ">
                     Configurações
                 </x-dropdown-link>
                 <hr class="my-2">

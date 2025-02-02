@@ -4,33 +4,25 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imobiliaria;
 use App\Services\ImobiliariaService;
 
-function routeMatches(string $pattern): bool
-{
-    $routeName = Route::currentRouteName();
-    return str_contains($routeName, $pattern);
-}
-
 new class extends Component {
     /**
      * @var Collection<Imobiliaria>
      */
     public Collection $user_imobiliarias;
     public ?int $index_imobiliaria;
+    /**
+     * @var array<array{label: string, active: bool, href: string}>
+     */
+    public $navbar;
 
-    public function getAccessLevelName()
-    {
-        if (auth()->user()->is_admin) {
-            return 'Administrador';
-        } else {
-            $level = ImobiliariaService::current_access_level()->name ?? 'Visitante';
-            return Str::title($level);
-        }
-    }
     public function mount()
     {
         // get or define current imobiliaria
         $this->user_imobiliarias = auth()->user()->imobiliarias;
         $this->index_imobiliaria = Session::get('index_imobiliaria', 0);
+
+        // define the array elements
+        $this->navbar = $this->defineNavbar();
     }
 
     public function with()
@@ -47,6 +39,61 @@ new class extends Component {
             Session::put('index_imobiliaria', $value);
             $this->js('window.location.reload()');
         }
+    }
+
+    public function getAccessLevelName()
+    {
+        if (auth()->user()->is_admin) {
+            return 'Administrador';
+        } else {
+            $level = ImobiliariaService::current_access_level()->name ?? 'Visitante';
+            return Str::title($level);
+        }
+    }
+
+    public function defineNavbar()
+    {
+        $is_admin = auth()->user()->is_admin ?? false;
+
+        $home = $is_admin
+            ? [
+                'label' => 'Painel Administrativo',
+                'active' => $this->routeMatches('admin'),
+                'href' => route('admin.index'),
+            ]
+            : [
+                'label' => 'Minha Imobiliária',
+                'active' => $this->routeMatches('imobiliaria'),
+                'href' => route('imobiliaria.home'),
+            ];
+
+        $dashboard = [
+            'label' => 'Dashboard',
+            'active' => $this->routeMatches('dashboard'),
+            'href' => route('dashboard'),
+        ];
+
+        $imoveis = [
+            'label' => 'Imóveis',
+            'active' => $this->routeMatches('imove'),
+            'href' => route('imovel.index'),
+        ];
+
+        $clients = [
+            'label' => 'Clientes',
+            'active' => $this->routeMatches('client'),
+            'href' => route('client.index'),
+        ];
+
+        $navbar = [$home, $dashboard, $imoveis, $clients];
+
+        return $navbar;
+    }
+
+    public function routeMatches(string $pattern): bool
+    {
+        $routeName = Route::currentRouteName();
+        return str_contains($routeName, $pattern);
     }
 }; ?>
 
@@ -75,25 +122,12 @@ new class extends Component {
     <hr>
     <!-- Links de navegação -->
     <ul>
-        <li>
-            <x-nav-link href="{{ route('imobiliaria.home') }}" :active="routeMatches('imobiliaria')" wire:navigate>
-                Minha Imobiliaria
-            </x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="{{ route('dashboard') }}" :active="routeMatches('dashboard')" wire:navigate>
-                Dashboard
-            </x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="{{ route('imovel.index') }}" :active="routeMatches('imove')" wire:navigate>
-                Imóveis
-            </x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="{{ route('client.index') }}" :active="routeMatches('client')" wire:navigate>
-                Clientes
-            </x-nav-link>
-        </li>
+        @foreach ($navbar as $nav_item)
+            <li>
+                <x-nav-link :href="$nav_item['href'] ?? '/'" :active="$nav_item['active'] ?? false" wire:navigate>
+                    {{ $nav_item['label'] ?? 'undefined' }}
+                </x-nav-link>
+            </li>
+        @endforeach
     </ul>
 </nav>
