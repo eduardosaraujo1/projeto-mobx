@@ -11,26 +11,37 @@ new #[Layout('layouts.app')] class extends Component {
     public string $email;
     public string $address;
     public string $type;
+    public int $imobiliaria_id;
 
-    protected function rules()
+    public function mount()
+    {
+        $this->imobiliaria_id = ImobiliariaService::current_imobiliaria()->id;
+    }
+
+    public function rules()
     {
         return Client::rules();
     }
 
     public function create()
     {
+        // Ensure authorization (even if redundant)
+        $this->authorize('create', Client::class);
+
+        // validate fields
         $validated = $this->validate();
 
-        // get current imobiliaria id
-        $imobiliaria_id = ImobiliariaService::current_imobiliaria()->id ?? abort(500);
+        // create instance
+        $client = Client::create($validated);
 
-        $client = Client::create([...$validated, 'imobiliaria_id' => $imobiliaria_id]);
-
+        // display user message
         if ($client) {
             session()->flash('message', 'Cliente cadastrado com sucesso');
         } else {
             session()->flash('error', 'Não foi possivel cadastrar o cliente');
         }
+
+        // redirect to main page
         $this->redirect(route('client.index'));
     }
 }; ?>

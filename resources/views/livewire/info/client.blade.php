@@ -3,6 +3,7 @@
 use Livewire\Volt\Component;
 use App\Models\Client;
 use Livewire\Attributes\Layout;
+use App\Services\ImobiliariaService;
 
 new #[Layout('layouts.app')] class extends Component {
     public Client $client;
@@ -13,6 +14,7 @@ new #[Layout('layouts.app')] class extends Component {
     public string $email;
     public string $address;
     public string $type;
+    public int $imobiliaria_id;
 
     // component state
     public bool $edit = false;
@@ -22,6 +24,11 @@ new #[Layout('layouts.app')] class extends Component {
         $this->rebindValues();
     }
 
+    public function rules()
+    {
+        return Client::rules();
+    }
+
     public function rebindValues()
     {
         $this->name = $this->client->name;
@@ -29,17 +36,23 @@ new #[Layout('layouts.app')] class extends Component {
         $this->email = $this->client->email ?? '';
         $this->address = $this->client->address ?? '';
         $this->type = $this->client->type;
+        $this->imobiliaria_id = $this->client->imobiliaria->id;
     }
 
     public function save()
     {
+        // ensure curent user can edit
         $this->authorize('update', $this->client);
-        $validated = $this->validate(Client::rules());
+
+        // validate the form values
+        $validated = $this->validate();
+
+        // save the validated values into the new client
         $this->client->fill($validated);
         $this->client->save();
-        $this->rebindValues();
 
-        $this->edit = false;
+        // stop the edit after finishing save
+        $this->stopEdit();
     }
 
     public function startEdit()
@@ -47,11 +60,10 @@ new #[Layout('layouts.app')] class extends Component {
         $this->edit = true;
     }
 
-    public function cancelEdit()
+    public function stopEdit()
     {
         $this->rebindValues();
         $this->clearValidation();
-
         $this->edit = false;
     }
 }; ?>
@@ -61,46 +73,36 @@ new #[Layout('layouts.app')] class extends Component {
         Dados do Cliente
     </x-slot>
     @can('view', $client)
+        <x-errors class='mb-4' />
         <form class="flex flex-col h-full gap-1" wire:submit='save'>
-            <x-errors class='mb-4' />
             <x-card>
-                <div>
-                    <span class="block text-lg font-bold min-w-max">Nome:</span>
-                    <x-input :disabled='!$edit' wire:model='name' required autofocus />
-                </div>
+                <span class="block text-lg font-bold min-w-max">Nome:</span>
+                <x-input :disabled='!$edit' wire:model='name' required autofocus />
             </x-card>
             <x-card>
-                <div>
-                    <span class="block text-lg font-bold min-w-max">CPF:</span>
-                    <x-input :disabled='!$edit' wire:model='cpf' required autofocus />
-                </div>
+                <span class="block text-lg font-bold min-w-max">CPF:</span>
+                <x-maskable mask="###.###.###-##" :disabled='!$edit' wire:model='cpf' required autofocus />
             </x-card>
             <x-card>
-                <div>
-                    <span class="block text-lg font-bold min-w-max">E-mail:</span>
-                    <x-input :disabled='!$edit' wire:model='email' autofocus />
-                </div>
+                <span class="block text-lg font-bold min-w-max">E-mail:</span>
+                <x-input :disabled='!$edit' wire:model='email' autofocus />
             </x-card>
             <x-card>
-                <div>
-                    <span class="block text-lg font-bold min-w-max">Endereço:</span>
-                    <x-input :disabled='!$edit' wire:model='address' autofocus />
-                </div>
+                <span class="block text-lg font-bold min-w-max">Endereço:</span>
+                <x-input :disabled='!$edit' wire:model='address' autofocus />
             </x-card>
             <x-card>
-                <div>
-                    <span class="block text-lg font-bold min-w-max">Tipo</span>
-                    <x-select :disabled="!$edit" wire:model='type'>
-                        <x-select.option value="0">Locador</x-select.option>
-                        <x-select.option value="1">Vendedor</x-select.option>
-                    </x-select>
-                </div>
+                <span class="block text-lg font-bold min-w-max">Tipo</span>
+                <x-select :disabled="!$edit" wire:model='type'>
+                    <x-select.option value="0">Locador</x-select.option>
+                    <x-select.option value="1">Vendedor</x-select.option>
+                </x-select>
             </x-card>
             @can('update', $client)
                 <div class="flex mt-4 space-x-2">
                     @if ($edit)
                         <x-primary-button type="submit">Salvar</x-primary-button>
-                        <x-secondary-button wire:click.prevent='cancelEdit'>Cancelar</x-secondary-button>
+                        <x-secondary-button wire:click.prevent='stopEdit'>Cancelar</x-secondary-button>
                     @else
                         <x-primary-button label="Editar" wire:click.prevent='startEdit'>Editar</x-primary-button>
                     @endif

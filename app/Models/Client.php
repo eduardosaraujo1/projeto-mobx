@@ -41,13 +41,15 @@ class Client extends Model
         };
     }
 
-    public static function rules() {
+    public static function rules()
+    {
         return [
             'name' => ['required', 'min:3', 'max:255'],
             'cpf' => ['required', 'min:11', 'max:11'],
             'email' => ['nullable', 'email', 'min:3', 'max:255'],
             'address' => ['nullable', 'min:3', 'max:255'],
             'type' => ['required', Rule::enum(ClientType::class)],
+            'imobiliaria_id' => ['exists:imobiliarias,id'],
         ];
     }
 }
