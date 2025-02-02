@@ -15,7 +15,7 @@ class MissingPageController extends Controller
         $imobiliaria = ImobiliariaService::current_imobiliaria();
 
         if (isset($imobiliaria)) {
-            return redirect()->route('imobiliaria.index');
+            return redirect()->route('imobiliaria.home');
         }
 
         return view('pages.imobiliaria.missing');

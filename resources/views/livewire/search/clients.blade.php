@@ -65,7 +65,7 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col space-y-2">
+<div class="space-y-2">
     <x-slot name="heading">
         Clientes
     </x-slot>

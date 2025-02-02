@@ -17,6 +17,21 @@ export default {
     ],
     theme: {
         extend: {
+            gridTemplateColumns: ({ theme }) => {
+                const sizes = [6, 12, 24, 36, 42, 64]; // Define allowed sizes (in rem)
+                const object = {};
+
+                for (const size of sizes) {
+                    object[`auto-fit-${size}`] = `repeat(auto-fit, minmax(${
+                        size / 4
+                    }rem, auto))`;
+                    object[`auto-fill-${size}`] = `repeat(auto-fill, minmax(${
+                        size / 4
+                    }rem, auto))`;
+                }
+
+                return object;
+            },
             colors: {
                 primary: colors.gray,
             },

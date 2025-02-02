@@ -25,10 +25,10 @@ Route::middleware(['auth', 'verified', 'hasImobiliaria'])->group(function () {
     Route::view('dashboard', 'pages.imobiliaria.dashboard')
         ->name('dashboard');
 
-    Volt::route('imobiliaria', 'info.imobiliaria')
-        ->name('imobiliaria.index');
+    Volt::route('minha-imobiliaria', 'info.imobiliaria')
+        ->name('imobiliaria.home');
 
-    Route::view('imoveis', 'pages.imovel.index')
+    Volt::route('imoveis', 'search.imoveis')
         ->name('imovel.index');
 
     Volt::route('clientes', 'search.clients')

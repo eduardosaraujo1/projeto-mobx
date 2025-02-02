@@ -76,7 +76,7 @@ new class extends Component {
     <!-- Links de navegação -->
     <ul>
         <li>
-            <x-nav-link href="{{ route('imobiliaria.index') }}" :active="routeMatches('imobiliaria')" wire:navigate>
+            <x-nav-link href="{{ route('imobiliaria.home') }}" :active="routeMatches('imobiliaria')" wire:navigate>
                 Minha Imobiliaria
             </x-nav-link>
         </li>
