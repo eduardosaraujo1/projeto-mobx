@@ -21,7 +21,7 @@ class ClientFactory extends Factory
         return [
             'cpf' => fake()->bothify('###########'),
             'name' => fake()->name(),
-            'contact' => fake()->email(),
+            'email' => fake()->email(),
             'address' => fake()->address(),
             'type' => ClientType::randomId(),
             'imobiliaria_id' => Imobiliaria::factory()

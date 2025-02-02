@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->decimal('value', 15, 2)->nullable();
             $table->decimal('iptu', 11, 2)->nullable();
             $table->unsignedTinyInteger('status'); // livre, alugado ou vendido
+            $table->text('photo_path')->nullable();
             $table->timestamps();
             $table->foreignId('client_id')->constrained()->restrictOnDelete();
         });

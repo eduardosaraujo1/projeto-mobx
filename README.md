@@ -518,10 +518,12 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 -   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
 -   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
--   [ ] FRONT - Montar estrutura de arquivos (views)
--   [ ] ROUTES - Montar rotas para as funcionalidades
--   [ ] PERMISSIONS - Criar Gates e Policies e Middlewares para restringir acessos (authenticaiton and authorization)
+-   [x] FRONT - Montar estrutura de arquivos (views)
+-   [ ] CADASTRO - mecanismo de cadastro de usuários
+-   [ ] Switch to [MaryUi](https://mary-ui.com/docs/components/calendar)
+-   [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada
 -   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
     -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
+    -   Fazer apenas se der tempo
 -   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
     -   Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário

@@ -19,7 +19,8 @@ class ImobiliariaFactory extends Factory
         return [
             'name' => fake()->company(),
             'address' => fake()->address(),
-            'contact' => fake()->email(),
+            'email' => fake()->email(),
+            'contact' => fake()->phoneNumber(),
         ];
     }
 }

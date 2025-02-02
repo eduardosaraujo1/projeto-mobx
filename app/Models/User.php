@@ -44,12 +44,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean'
+            'is_admin' => 'boolean',
         ];
     }
 
     public function imobiliarias(): BelongsToMany
     {
-        return $this->belongsToMany(Imobiliaria::class, 'user_imobiliaria_access');
+        return $this->belongsToMany(Imobiliaria::class, 'user_imobiliaria_access')
+            ->as('access')
+            ->withPivot('level');
     }
 }
