@@ -58,7 +58,7 @@ new class extends Component {
             <x-select.option label="Administrador" value="1" />
             <x-select.option label="Regular" value="0" />
         </x-select>
-        <x-regular-button label="Cadastrar" href="{{ route('user.new') }}" />
+        <x-primary-button href="{{ route('user.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">

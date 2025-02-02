@@ -48,7 +48,7 @@ new class extends Component {
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Nome, Contato ou E-mail)" />
-        <x-regular-button label="Cadastrar" href="{{ route('imobiliaria.new') }}" />
+        <x-primary-button href="{{ route('imobiliaria.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
