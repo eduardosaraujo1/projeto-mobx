@@ -2,13 +2,14 @@
 
 use Livewire\Volt\Component;
 use App\Models\Imovel;
-use App\Enums\ImovelStatus;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\WithFileUploads;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithFileUploads;
+
     public Imovel $imovel;
-    public bool $edit = false;
 
     // client attributes
     public string $address_name;
@@ -18,11 +19,23 @@ new #[Layout('layouts.app')] class extends Component {
     public ?string $value;
     public ?string $iptu;
     public string $status;
-    public string $photo_path;
+    public ?string $photo_path;
     public int $client_id;
+
+    // other attributes
+    #[Validate('nullable|image|max:4096')]
+    public $uploaded_photo;
+    public bool $edit = false;
+
+    public ?string $stored_photo_cache = null;
+    public ?string $stored_photo = null;
 
     public function mount()
     {
+        // get currently stored photo (if any)
+        $this->stored_photo_cache = $this->getImageAsBase64($this->imovel->photo_path);
+
+        // bind variables to value from imovel
         $this->rebindValues();
     }
 
@@ -49,6 +62,37 @@ new #[Layout('layouts.app')] class extends Component {
         $this->status = $this->imovel->status;
         $this->photo_path = $this->imovel->photo_path;
         $this->client_id = $this->imovel->client->id;
+        $this->stored_photo = $this->stored_photo_cache;
+    }
+
+    protected function getImageAsBase64(?string $photo_path): string|null
+    {
+        if (empty($photo_path) || Storage::disk('local')->missing($photo_path)) {
+            return null;
+        }
+
+        $mime_types = [
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'bmp' => 'image/bmp',
+            'svg' => 'image/svg+xml',
+        ];
+
+        // get file extension
+        $extension = strtolower(pathinfo($photo_path, PATHINFO_EXTENSION));
+
+        // get mime type of stored file
+        $mime_type = $mime_types[$extension] ?? 'image/png';
+
+        // read the image as base64
+        $photo_bin = Storage::disk('local')->get($photo_path);
+        $base64 = base64_encode($photo_bin);
+
+        // append mime type and return
+        return "data:{$mime_type};base64,{$base64}";
     }
 
     public function save()
@@ -57,9 +101,17 @@ new #[Layout('layouts.app')] class extends Component {
         $this->authorize('update', $this->imovel);
 
         // validate form
+        $this->validate();
+
+        // store photo and save path
+        if ($this->uploaded_photo) {
+            $this->photo_path = Storage::disk('local')->put('imobiliaria/images', $this->uploaded_photo);
+        }
+
+        // validate once again, accounting for file path
         $validated = $this->validate();
 
-        // Convert empty strings to null
+        // convert empty strings to null
         foreach ($validated as $key => $value) {
             $validated[$key] = match ($value) {
                 '' => null,
@@ -67,17 +119,12 @@ new #[Layout('layouts.app')] class extends Component {
             };
         }
 
-        if (($validated['iptu'] ?? null) === '') {
-            $validated['iptu'] = null;
-        }
-
-        if (($validated['value'] ?? null) === '') {
-            $validated['value'] = null;
-        }
-
         // save changes to object
         $this->imovel->fill($validated);
         $this->imovel->save();
+
+        // revalidate cache since image may now be different
+        $this->stored_photo_cache = $this->getImageAsBase64($this->imovel->photo_path);
 
         // stop the edit after save is finished
         $this->stopEdit();
@@ -93,6 +140,13 @@ new #[Layout('layouts.app')] class extends Component {
         $this->rebindValues();
         $this->clearValidation();
         $this->edit = false;
+    }
+
+    public function clearPhoto()
+    {
+        $this->uploaded_photo = null;
+        $this->stored_photo = null;
+        $this->photo_path = null;
     }
 }; ?>
 
@@ -119,12 +173,21 @@ new #[Layout('layouts.app')] class extends Component {
             <div class="grid grid-cols-3 gap-1">
                 <x-card class='row-span-4'>
                     <div class="grid items-center gap-2">
-                        <img src="{{ $photo_path }}" alt="" class="w-full bg-center bg-cover aspect-square"
+                        <img src="{{ isset($uploaded_photo) ? $uploaded_photo->temporaryUrl() : $stored_photo }}"
+                            alt="" class="w-full bg-center bg-cover border border-gray-300 aspect-square"
                             style="background-image:url('{{ asset('images/placeholder-image.svg') }}')">
-                        <div class="grid items-center w-full gap-2">
-                            <span class="block text-lg font-bold min-w-max">Caminho Foto:</span>
-                            <x-input :disabled="!$edit" wire:model='photo_path' />
-                        </div>
+                        @if ($edit)
+                            <div class="grid items-center w-full min-w-0 gap-2">
+                                <form class="flex gap-2">
+                                    <x-primary-button x-on:click.prevent="$refs.photo.click()">
+                                        Alterar Foto
+                                    </x-primary-button>
+                                    <x-secondary-button wire:click='clearPhoto'>Limpar</x-secondary-button>
+                                    <input x-ref="photo" type="file" accept="image/png, image/gif, image/jpeg"
+                                        wire:model='uploaded_photo' :disabled="!$edit" class="hidden" />
+                                </form>
+                            </div>
+                        @endif
                     </div>
                 </x-card>
                 <div class="flex col-span-2 gap-1">
