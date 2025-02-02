@@ -29,8 +29,7 @@ new #[Layout('layouts.guest')] class extends Component {
 
     <form wire:submit="login">
         <!-- Email Address -->
-        <x-input type="email" wire:model='form.email' label='Email' name="email" id="email"
-            value="{{ old('email') }}" />
+        <x-input type="email" wire:model='form.email' label='Email' />
 
         <!-- Password -->
         <div class="mt-4">
