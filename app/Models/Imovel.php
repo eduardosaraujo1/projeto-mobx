@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ImovelStatus;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,7 +31,7 @@ class Imovel extends Model
     protected function casts(): array
     {
         return [
-            'is_lado_praia' => 'boolean'
+            'is_lado_praia' => 'boolean',
         ];
     }
 
@@ -78,9 +79,9 @@ class Imovel extends Model
             'address_name' => ['required', 'min:3', 'max:255'],
             'address_number' => ['integer', 'required', 'max_digits:4'],
             'bairro' => ['required', 'min:3', 'max:255'],
-            'is_lado_praia' => ['boolean', 'required', 'decimal:0,2'],
-            'value' => ['nullable', 'decimal:0,2'],
-            'iptu' => ['nullable', 'between:1,8'],
+            'is_lado_praia' => ['boolean', 'required'],
+            'value' => ['nullable', 'numeric'],
+            'iptu' => ['nullable', 'numeric'],
             'status' => ['required', Rule::enum(ImovelStatus::class)],
             'photo_path' => ['nullable'],
             'client_id' => ['exists:clients,id'],
