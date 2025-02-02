@@ -70,11 +70,24 @@ new #[Layout('layouts.app')] class extends Component {
 
 <div>
     <x-slot name="heading">
-        Dados do Cliente
+        Gerenciar Cliente
     </x-slot>
     @can('view', $client)
         <x-errors class='mb-4' />
-        <form class="flex flex-col h-full gap-1" wire:submit='save'>
+        <div class="flex flex-col h-full gap-1">
+            <div class="flex justify-between">
+                <span class="block text-2xl">Dados do Imóvel</span>
+                @can('update', $client)
+                    <div class="flex gap-2 grid-span-3">
+                        @if ($edit)
+                            <x-primary-button wire:click='save'>Salvar</x-primary-button>
+                            <x-secondary-button wire:click.prevent='stopEdit'>Cancelar</x-secondary-button>
+                        @else
+                            <x-primary-button label="Editar" wire:click.prevent='startEdit'>Editar</x-primary-button>
+                        @endif
+                    </div>
+                @endcan
+            </div>
             <x-card>
                 <span class="block text-lg font-bold min-w-max">Nome:</span>
                 <x-input :disabled='!$edit' wire:model='name' required autofocus />
@@ -98,17 +111,7 @@ new #[Layout('layouts.app')] class extends Component {
                     <x-select.option value="1">Vendedor</x-select.option>
                 </x-select>
             </x-card>
-            @can('update', $client)
-                <div class="flex mt-4 space-x-2">
-                    @if ($edit)
-                        <x-primary-button type="submit">Salvar</x-primary-button>
-                        <x-secondary-button wire:click.prevent='stopEdit'>Cancelar</x-secondary-button>
-                    @else
-                        <x-primary-button label="Editar" wire:click.prevent='startEdit'>Editar</x-primary-button>
-                    @endif
-                </div>
-            @endcan
-        </form>
+        </div>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
