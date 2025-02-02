@@ -3,8 +3,8 @@
 use Livewire\Volt\Component;
 use App\Services\ImobiliariaService;
 use Livewire\Attributes\Layout;
-use App\Enums\ImovelStatus;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\Imovel;
 
 function currencyFormat(float $number)
 {
@@ -22,7 +22,8 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount()
     {
-        $this->imoveisFull = ImobiliariaService::current_imobiliaria()->imoveis;
+        $isAdmin = auth()->user()->is_admin;
+        $this->imoveisFull = $isAdmin ? Imovel::all() : ImobiliariaService::current_imobiliaria()->imoveis;
     }
 
     public function with()

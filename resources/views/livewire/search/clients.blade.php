@@ -28,7 +28,8 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount()
     {
-        $this->clientsFull = ImobiliariaService::current_imobiliaria()->clients;
+        $isAdmin = auth()->user()->is_admin;
+        $this->clientsFull = $isAdmin ? Client::all() : ImobiliariaService::current_imobiliaria()->clients;
     }
 
     public function with()
