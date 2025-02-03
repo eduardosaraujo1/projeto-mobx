@@ -98,8 +98,7 @@ new class extends Component {
 }; ?>
 
 <!-- Navbar Lateral (Responsiva) -->
-<nav
-    class="sticky top-0 flex flex-col w-64 h-screen p-6 space-y-6 text-gray-800 bg-white border-r border-gray-200 shadow-lg">
+<nav class="flex flex-col w-64 h-screen p-6 space-y-6 text-gray-800 bg-white border-r border-gray-200 shadow-lg">
     <a class="flex items-center overflow-hidden" href="/">
         <img src="{{ asset('images/mobx.svg') }}" alt="Logo Mobx" class="w-12 h-12 mr-4 bg-black rounded shadow-md">
         <div class="flex-1 overflow-hidden whitespace-nowrap">

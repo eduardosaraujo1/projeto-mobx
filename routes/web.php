@@ -21,12 +21,14 @@ Route::get('/', function () {
     return redirect(Auth::check() ? '/home' : '/login');
 });
 
-
 Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
+    // Home redirect middleware
     Route::get('/home', function () {
-        $is_admin = auth()->user()->is_admin ?? false;
-        return redirect($is_admin ? route('admin.index') : route('imobiliaria.home'));
+        $redirect_route = auth()->user()->is_admin ? route('admin.index') : route('imobiliaria.home');
+
+        return redirect($redirect_route);
     })->name('home');
+
     // navbar
     Route::view('dashboard', 'pages.imobiliaria.dashboard')
         ->name('dashboard');
@@ -41,7 +43,7 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
         ->name('client.index');
 
     // create
-    Route::view('imovel/novo', 'pages.imovel.create')
+    Volt::route('imovel/novo', 'create.imovel')
         ->name('imovel.new');
 
     Volt::route('cliente/novo', 'create.client')

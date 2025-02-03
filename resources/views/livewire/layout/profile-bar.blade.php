@@ -12,7 +12,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="sticky top-0 h-screen p-2 space-y-4 bg-white shadow-lg w-min">
+<div class="h-screen p-2 space-y-4 bg-white shadow-lg w-min">
     <x-dropdown width="w-fit">
         <x-slot name="trigger">
             <div class="rounded-full cursor-pointer">

@@ -18,10 +18,10 @@
 </head>
 
 <body>
-    <div class="flex min-h-screen bg-gray-50">
+    <div class="flex max-h-screen overflow-hidden bg-gray-50">
         <livewire:layout.sidebar />
-        <div class="flex-1 px-6 py-12 ">
-            <div class="flex flex-col h-full mx-auto max-w-7xl">
+        <div class="flex-1 overflow-scroll">
+            <div class="flex flex-col h-full px-6 py-12 mx-auto max-w-7xl">
                 @if ($message = session('message'))
                     <x-alert info title="{{ $message }}" />
                 @elseif ($message = session('error'))
