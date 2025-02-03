@@ -181,6 +181,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <td>{{ $row['status'] ?? 'ERROR' }}</td>
                             </tr>
                         @empty
+                            {{-- Blank table rows --}}
                             @for ($i = 0; $i < 10; $i++)
                                 <tr class="*:px-3 *:py-4 border-b-2 border-gray-100">
                                     <td>&nbsp;</td>

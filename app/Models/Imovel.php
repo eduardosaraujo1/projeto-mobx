@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\Rule;
+use Storage;
 
 class Imovel extends Model
 {
@@ -71,6 +72,39 @@ class Imovel extends Model
     public function lado()
     {
         return $this->is_lado_praia ? 'Praia' : 'Morro';
+    }
+
+    public function base64Image()
+    {
+        if (!isset($this->photo_path) || Storage::disk('local')->missing($this->photo_path)) {
+            return null;
+        }
+
+        $mime_types = [
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'bmp' => 'image/bmp',
+            'svg' => 'image/svg+xml',
+        ];
+
+        // access photo more easily
+        $photo_path = $this->photo_path;
+
+        // get file extension
+        $extension = strtolower(pathinfo($photo_path, PATHINFO_EXTENSION));
+
+        // get mime type of stored file
+        $mime_type = $mime_types[$extension] ?? 'image/png';
+
+        // read the image as base64
+        $photo_bin = Storage::disk('local')->get($photo_path);
+        $base64 = base64_encode($photo_bin);
+
+        // append mime type and return
+        return "data:{$mime_type};base64,{$base64}";
     }
 
     public static function rules()

@@ -77,7 +77,7 @@ new #[Layout('layouts.app')] class extends Component {
             <x-select.option label="Vendedor" value="1" />
         </x-select>
         @can('create', Client::class)
-            <x-primary-button href="{{ route('client.new') }}">Cadastrar</x-primary-button>
+            <x-primary-button href="{{ route('client.new') }}" wire:navigate>Cadastrar</x-primary-button>
         @endcan
     </div>
     <div class="h-full bg-white rounded shadow">

@@ -77,9 +77,9 @@ new #[Layout('layouts.app')] class extends Component {
             @foreach ($imoveis as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow">
                     <div>
-                        <img src="{{ $imovel->photo_path }}"
-                            class="object-cover w-full h-48 bg-gray-300 bg-center bg-contain rounded-md aspect-square "
-                            style="background-image:url('{{ asset('images/placeholder-image.svg') }}');">
+                        <div class="w-full h-48 bg-gray-200 bg-center bg-cover aspect-square"
+                            style="background-image:url('{{ empty($imovel->base64Image()) ? asset('images/placeholder-image.svg') : $imovel->base64Image() }}')">
+                        </div>
                     </div>
                     <span class="inline mt-4 text-base">
                         <b>{{ $imovel->bairro }}</b> -

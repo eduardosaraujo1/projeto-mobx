@@ -33,7 +33,7 @@ new #[Layout('layouts.app')] class extends Component {
     public function mount()
     {
         // get currently stored photo (if any)
-        $this->stored_photo_cache = $this->getImageAsBase64($this->imovel->photo_path);
+        $this->stored_photo_cache = $this->imovel->base64Image();
 
         // bind variables to value from imovel
         $this->rebindValues();
@@ -51,7 +51,27 @@ new #[Layout('layouts.app')] class extends Component {
         ];
     }
 
-    protected function rebindValues()
+    public function with()
+    {
+        return [
+            'display_image' => $this->resolveImage(),
+        ];
+    }
+
+    public function resolveImage()
+    {
+        if (isset($this->stored_photo)) {
+            return $this->stored_photo;
+        }
+
+        if (isset($this->uploaded_photo)) {
+            return $this->uploaded_photo->temporaryUrl();
+        }
+
+        return asset('images/placeholder-image.svg');
+    }
+
+    public function rebindValues()
     {
         $this->address_name = $this->imovel->address_name;
         $this->address_number = $this->imovel->address_number;
@@ -63,36 +83,6 @@ new #[Layout('layouts.app')] class extends Component {
         $this->photo_path = $this->imovel->photo_path;
         $this->client_id = $this->imovel->client->id;
         $this->stored_photo = $this->stored_photo_cache;
-    }
-
-    protected function getImageAsBase64(?string $photo_path): string|null
-    {
-        if (empty($photo_path) || Storage::disk('local')->missing($photo_path)) {
-            return null;
-        }
-
-        $mime_types = [
-            'png' => 'image/png',
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'gif' => 'image/gif',
-            'webp' => 'image/webp',
-            'bmp' => 'image/bmp',
-            'svg' => 'image/svg+xml',
-        ];
-
-        // get file extension
-        $extension = strtolower(pathinfo($photo_path, PATHINFO_EXTENSION));
-
-        // get mime type of stored file
-        $mime_type = $mime_types[$extension] ?? 'image/png';
-
-        // read the image as base64
-        $photo_bin = Storage::disk('local')->get($photo_path);
-        $base64 = base64_encode($photo_bin);
-
-        // append mime type and return
-        return "data:{$mime_type};base64,{$base64}";
     }
 
     public function save()
@@ -124,7 +114,7 @@ new #[Layout('layouts.app')] class extends Component {
         $this->imovel->save();
 
         // revalidate cache since image may now be different
-        $this->stored_photo_cache = $this->getImageAsBase64($this->imovel->photo_path);
+        $this->stored_photo_cache = $this->imovel->base64Image();
 
         // stop the edit after save is finished
         $this->stopEdit();
@@ -173,9 +163,8 @@ new #[Layout('layouts.app')] class extends Component {
             <div class="grid grid-cols-3 gap-1">
                 <x-card class='row-span-4'>
                     <div class="grid items-center gap-2">
-                        <img src="{{ isset($uploaded_photo) ? $uploaded_photo->temporaryUrl() : $stored_photo }}"
-                            alt="" class="w-full bg-center bg-cover border border-gray-300 aspect-square"
-                            style="background-image:url('{{ asset('images/placeholder-image.svg') }}')">
+                        <div class="w-full bg-gray-200 bg-center bg-cover border border-gray-300 aspect-square"
+                            style="background-image:url('{{ $display_image }}')"></div>
                         @if ($edit)
                             <div class="grid items-center w-full min-w-0 gap-2">
                                 <form class="flex gap-2">
