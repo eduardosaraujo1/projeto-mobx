@@ -25,9 +25,10 @@ new #[Layout('layouts.app')] class extends Component {
         $this->excelService = $excelService;
     }
 
-    public function updating(string $name, UploadedFile $value)
+    // this lifecycle hook will run as soon as a form field is updated, and before rendering
+    public function updating(string $name, ?UploadedFile $value)
     {
-        if ($name === 'file') {
+        if ($name === 'file' && !empty($value->path())) {
             $this->parsedTable = $this->parseFile($value->path());
         }
     }
@@ -72,11 +73,11 @@ new #[Layout('layouts.app')] class extends Component {
         $processed = [];
 
         foreach ($rows as $rowIndex => $row) {
-            // Normalize the current row
-            $normalized = $this->excelService->parseRow($row);
+            // parse the current row
+            $parsed = $this->excelService->parseRow($row);
 
-            // Validate the normalized row
-            $errors = $this->excelService->getRowErrors($normalized);
+            // validate the normalized row
+            $errors = $this->excelService->getRowErrors($parsed);
 
             if ($errors) {
                 // loop over errors and add them with the row information
@@ -89,60 +90,66 @@ new #[Layout('layouts.app')] class extends Component {
                 break;
             }
 
-            $processed[] = $normalized; // alternative to array_push
+            $processed[] = $parsed; // alternative to array_push
         }
 
-        // Optionally, convert the array to a collection if needed:
         return $processed;
     }
 }; ?>
 
-<div class="space-y-3.5">
+<div class="flex flex-col h-full gap-4">
     <x-slot name="heading">
         Upload de Planilha Excel
     </x-slot>
     @can('create', Imovel::class)
-        <div class="space-y-1">
-            <x-alert secondary title="Cadastrando Imóveis">
-                <x-slot name="slot">
-                    <ol class="space-y-2 list-decimal">
-                        <li>
-                            <strong>Cabeçalho Obrigatório:</strong> A primeira linha da planilha deve conter um cabeçalho,
-                            pois será ignorada na importação.
-                        </li>
-                        <li>
-                            <strong>Ordem das Colunas:</strong> Certifique-se de que as colunas seguem a mesma ordem da
-                            pré-visualização abaixo.
-                        </li>
-                        <li>
-                            <strong>Regras de Formatação (valores inválidos serão rejeitados):</strong>
-                            <ul class="ml-6 space-y-1 list-disc">
-                                <li>
-                                    <strong>Localização:</strong> Deve ser
-                                    <pre class="inline px-1 bg-gray-100 rounded">Morro</pre> ou
-                                    <pre class="inline px-1 bg-gray-100 rounded">Praia</pre>.
-                                </li>
-                                <li>
-                                    <strong>Status:</strong> Deve ser
-                                    <pre class="inline px-1 bg-gray-100 rounded">Livre</pre>,
-                                    <pre class="inline px-1 bg-gray-100 rounded">Alugado</pre> ou
-                                    <pre class="inline px-1 bg-gray-100 rounded">Vendido</pre>.
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <strong>Confirmação:</strong> Revise os dados na pré-visualização antes de finalizar a
-                            importação.
-                        </li>
-                    </ol>
-                </x-slot>
-            </x-alert>
-            <input type="file" id="fileInput" name="file" accept=".xlsx" wire:model='file'
-                class="w-full p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md">
-            <x-errors outline />
+        <div>
+            <div x-data="{ expanded: true }">
+                <x-alert info class="relative cursor-pointer *:p-0" secondary x-on:click="expanded = ! expanded">
+                    <x-slot name="title">
+                        Instruções
+                        <x-icon name="chevron-down" class="absolute transition top-4 right-4 size-5 shrink-0"
+                            ::class="expanded ? 'rotate-180' : ''" x-bind:class="isExpanded ? 'rotate-180' : ''" />
+                    </x-slot>
+                    <x-slot name="slot" class="mt-4" x-cloak x-show="expanded" x-collapse>
+                        <ol class="space-y-2 list-decimal">
+                            <li>
+                                <strong>Cabeçalho Obrigatório:</strong> A primeira linha da planilha deve conter um
+                                cabeçalho,
+                                pois será ignorada na importação.
+                            </li>
+                            <li>
+                                <strong>Ordem das Colunas:</strong> Certifique-se de que as colunas seguem a mesma ordem
+                                da
+                                pré-visualização abaixo.
+                            </li>
+                            <li>
+                                <strong>Regras de Formatação (valores inválidos serão rejeitados):</strong>
+                                <ul class="ml-6 space-y-1 list-disc">
+                                    <li>
+                                        <strong>Localização:</strong> Deve ser
+                                        <pre class="inline px-1 bg-gray-100 rounded">Morro</pre> ou
+                                        <pre class="inline px-1 bg-gray-100 rounded">Praia</pre>.
+                                    </li>
+                                    <li>
+                                        <strong>Status:</strong> Deve ser
+                                        <pre class="inline px-1 bg-gray-100 rounded">Livre</pre>,
+                                        <pre class="inline px-1 bg-gray-100 rounded">Alugado</pre> ou
+                                        <pre class="inline px-1 bg-gray-100 rounded">Vendido</pre>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>Confirmação:</strong> Revise os dados na pré-visualização antes de finalizar a
+                                importação.
+                            </li>
+                        </ol>
+                    </x-slot>
+                </x-alert>
+            </div>
         </div>
+        <x-errors outline />
         <div class="space-y-1">
-            <span class="text-2xl font-medium">Preview</span>
+            <span class="text-2xl font-medium">Pré-visualização</span>
             <div class="overflow-auto bg-white rounded h-96">
                 <table class="min-w-full table-auto w-max">
                     <thead class="sticky top-0 bg-white">
@@ -199,12 +206,10 @@ new #[Layout('layouts.app')] class extends Component {
                 </table>
             </div>
         </div>
-        <x-primary-button disabled class="disabled:opacity-75">Cadastrar</x-primary-button>
+        <input type="file" id="fileInput" name="file" accept=".xlsx" wire:model='file'
+            class="w-full p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md">
+        <x-primary-button disabled class="mt-auto disabled:opacity-75 w-min">Cadastrar</x-primary-button>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
 </div>
-
-
-{{-- Must be live component because of error validation (no refreshing) --}}
-{{-- CSV Upload --}}
