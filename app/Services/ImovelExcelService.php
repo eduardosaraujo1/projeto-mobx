@@ -61,6 +61,16 @@ class ImovelExcelService
 
     private function normalizeRow(array $row)
     {
+        // strip max length of all to 255
+        $row = array_map(
+            callback: fn($cell): string => substr(
+                string: (string) $cell,
+                offset: 0,
+                length: 255
+            ),
+            array: $row
+        );
+
         // remove forbidden characters from numero
         $row['address_number'] = preg_replace('[^0-9]', '', $row['address_number']);
 

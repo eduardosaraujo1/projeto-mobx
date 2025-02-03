@@ -105,33 +105,34 @@ new #[Layout('layouts.app')] class extends Component {
         <div class="space-y-1">
             <x-alert secondary title="Cadastrando Imóveis">
                 <x-slot name="slot">
-                    <ol class="list-decimal">
+                    <ol class="space-y-2 list-decimal">
                         <li>
-                            A planilha deve incluir um <strong>cabeçalho</strong> em sua primeira linha, pois o programa irá
-                            remove-la
+                            <strong>Cabeçalho Obrigatório:</strong> A primeira linha da planilha deve conter um cabeçalho,
+                            pois será ignorada na importação.
                         </li>
                         <li>
-                            Certifique-se que a planilha possui colunas na <strong>mesma ordem</strong> que a
-                            pré-visualização abaixo
+                            <strong>Ordem das Colunas:</strong> Certifique-se de que as colunas seguem a mesma ordem da
+                            pré-visualização abaixo.
                         </li>
-                        <li class="">
-                            <strong>IMPORTANTE:</strong> as seguintes não seguirem essas normas
-                            <ul>
+                        <li>
+                            <strong>Regras de Formatação (valores inválidos serão rejeitados):</strong>
+                            <ul class="ml-6 space-y-1 list-disc">
                                 <li>
-                                    <strong>Localização:</strong> deve ser
-                                    <pre class="inline">Morro</pre> ou
-                                    <pre class="inline">Praia</pre>
+                                    <strong>Localização:</strong> Deve ser
+                                    <pre class="inline px-1 bg-gray-100 rounded">Morro</pre> ou
+                                    <pre class="inline px-1 bg-gray-100 rounded">Praia</pre>.
                                 </li>
                                 <li>
-                                    <strong>Status:</strong> deve ser
-                                    <pre class="inline">Livre</pre> ou
-                                    <pre class="inline">Alugado</pre> ou
-                                    <pre class="inline">Vendido</pre>
+                                    <strong>Status:</strong> Deve ser
+                                    <pre class="inline px-1 bg-gray-100 rounded">Livre</pre>,
+                                    <pre class="inline px-1 bg-gray-100 rounded">Alugado</pre> ou
+                                    <pre class="inline px-1 bg-gray-100 rounded">Vendido</pre>.
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            Verifique as informações através da pré-visualização antes de confirmar a importação
+                            <strong>Confirmação:</strong> Revise os dados na pré-visualização antes de finalizar a
+                            importação.
                         </li>
                     </ol>
                 </x-slot>
@@ -142,7 +143,7 @@ new #[Layout('layouts.app')] class extends Component {
         </div>
         <div class="space-y-1">
             <span class="text-2xl font-medium">Preview</span>
-            <div class="overflow-scroll bg-white rounded h-96">
+            <div class="overflow-auto bg-white rounded h-96">
                 <table class="min-w-full table-auto w-max">
                     <thead class="sticky top-0 bg-white">
                         <tr class="text-left bg-emerald-800 text-gray-50 *:px-3 *:py-4">
@@ -199,6 +200,8 @@ new #[Layout('layouts.app')] class extends Component {
             </div>
         </div>
         <x-primary-button disabled class="disabled:opacity-75">Cadastrar</x-primary-button>
+    @else
+        <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
 </div>
 
