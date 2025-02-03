@@ -84,7 +84,7 @@ class Imovel extends Model
             'iptu' => ['nullable', 'numeric'],
             'status' => ['required', Rule::enum(ImovelStatus::class)],
             'photo_path' => ['nullable'],
-            'client_id' => ['exists:clients,id'],
+            'client_id' => ['nullable', 'exists:clients,id'],
         ];
     }
 }
