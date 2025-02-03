@@ -20,7 +20,7 @@
 <body>
     <div class="flex max-h-screen overflow-hidden bg-gray-50">
         <livewire:layout.sidebar />
-        <div class="flex-1 overflow-scroll">
+        <div class="flex-1 overflow-x-hidden overflow-y-auto">
             <div class="flex flex-col h-full px-6 py-12 mx-auto max-w-7xl">
                 @if ($message = session('message'))
                     <x-alert info title="{{ $message }}" />
