@@ -80,9 +80,9 @@ new #[Layout('layouts.app')] class extends Component {
             <x-primary-button href="{{ route('client.new') }}" wire:navigate>Cadastrar</x-primary-button>
         @endcan
     </div>
-    <div class="h-full bg-white rounded shadow">
-        <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
-            @foreach ($clients as $client)
+    <div class="bg-white rounded shadow h-[40rem]">
+        <div class="flex flex-col h-full gap-4 p-4 overflow--x-hidden">
+            @forelse ($clients as $client)
                 <a href="{{ route('client.info', ['client' => $client->id]) }}" wire:navigate
                     class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
@@ -105,7 +105,9 @@ new #[Layout('layouts.app')] class extends Component {
                         <span class="block">{{ $client->typeName() }}</span>
                     </div>
                 </a>
-            @endforeach
+            @empty
+                <x-alert title="Nenhum cliente foi encontrado" />
+            @endforelse
         </div>
     </div>
 </div>

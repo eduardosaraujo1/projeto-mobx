@@ -70,11 +70,13 @@ new #[Layout('layouts.app')] class extends Component {
             <x-select.option label="Alugado" value="1" />
             <x-select.option label="Vendido" value="2" />
         </x-select>
-        <x-primary-button href="{{ route('imovel.new') }}" wire:navigate>Cadastrar</x-primary-button>
+        @can('create', Imovel::class)
+            <x-primary-button href="{{ route('imovel.new') }}" wire:navigate>Cadastrar</x-primary-button>
+        @endcan
     </div>
-    <div class="h-full bg-white rounded shadow">
-        <div class="grid grid-cols-auto-fill-64 justify-center gap-4 p-4 overflow-scroll h-[40rem] auto-rows-min">
-            @foreach ($imoveis as $imovel)
+    <div class="h-[40rem] bg-white rounded shadow">
+        <div class="grid justify-center h-full gap-4 px-6 py-4 overflow-x-hidden grid-cols-auto-fill-64 auto-rows-min">
+            @forelse ($imoveis as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow">
                     <div>
                         <div class="w-full h-48 bg-gray-200 bg-center bg-cover aspect-square"
@@ -117,7 +119,9 @@ new #[Layout('layouts.app')] class extends Component {
                         <x-primary-button>Acessar Imóvel</x-primary-button>
                     </a>
                 </article>
-            @endforeach
+            @empty
+                <x-alert title="Nenhum imóvel foi encontrado" class="col-span-full" />
+            @endforelse
         </div>
     </div>
 </div>
