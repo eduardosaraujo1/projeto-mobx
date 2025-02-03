@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Str;
+
 enum AccessLevel: int
 {
     case COLABORADOR = 0;
@@ -10,5 +12,10 @@ enum AccessLevel: int
     public static function randomId()
     {
         return array_rand(static::cases());
+    }
+
+    public function getName()
+    {
+        return Str::title($this->name);
     }
 }

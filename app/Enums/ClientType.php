@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Str;
+
 enum ClientType: int
 {
     case LOCADOR = 0;
@@ -10,5 +12,10 @@ enum ClientType: int
     public static function randomId()
     {
         return array_rand(static::cases());
+    }
+
+    public function getName()
+    {
+        return Str::title($this->name);
     }
 }

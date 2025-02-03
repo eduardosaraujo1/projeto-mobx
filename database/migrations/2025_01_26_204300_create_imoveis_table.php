@@ -15,10 +15,10 @@ return new class extends Migration {
             $table->string('address_name');
             $table->string('address_number', 4);
             $table->string('bairro');
-            $table->boolean('is_lado_praia')->default(false);
+            $table->unsignedTinyInteger('location_reference')->nullable(); // 0 is praia, 1 is morro see ImovelLocation enum
             $table->decimal('value', 15, 2)->nullable();
             $table->decimal('iptu', 11, 2)->nullable();
-            $table->unsignedTinyInteger('status')->default(0); // livre, alugado ou vendido
+            $table->unsignedTinyInteger('status')->default(0); // livre, alugado ou vendido see ImovelStatus enum
             $table->text('photo_path')->nullable();
             $table->timestamps();
             $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();

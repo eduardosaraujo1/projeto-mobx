@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ImovelLocation;
 use App\Enums\ImovelStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ class Imovel extends Model
         'address_name',
         'address_number',
         'bairro',
-        'is_lado_praia',
+        'location_reference',
         'value',
         'iptu',
         'status',
@@ -32,7 +33,8 @@ class Imovel extends Model
     protected function casts(): array
     {
         return [
-            'is_lado_praia' => 'boolean',
+            'status' => ImovelStatus::class,
+            'location_reference' => ImovelLocation::class,
         ];
     }
 
@@ -60,21 +62,7 @@ class Imovel extends Model
         ]);
     }
 
-    public function statusName()
-    {
-        return match ($this->status) {
-            ImovelStatus::LIVRE->value => 'Livre',
-            ImovelStatus::ALUGADO->value => 'Alugado',
-            ImovelStatus::VENDIDO->value => 'Vendido'
-        };
-    }
-
-    public function lado()
-    {
-        return $this->is_lado_praia ? 'Praia' : 'Morro';
-    }
-
-    public function base64Image()
+    public function base64Image(): string|null
     {
         if (!isset($this->photo_path) || Storage::disk('local')->missing($this->photo_path)) {
             return null;
@@ -113,10 +101,10 @@ class Imovel extends Model
             'address_name' => ['required', 'min:3', 'max:255'],
             'address_number' => ['integer', 'required', 'max_digits:4'],
             'bairro' => ['required', 'min:3', 'max:255'],
-            'is_lado_praia' => ['boolean', 'required'],
+            'location_reference' => ['nullable', Rule::enum(ImovelLocation::class)],
             'value' => ['nullable', 'numeric'],
             'iptu' => ['nullable', 'numeric'],
-            'status' => ['required', Rule::enum(ImovelStatus::class)],
+            'status' => ['nullable', Rule::enum(ImovelStatus::class)],
             'photo_path' => ['nullable'],
             'client_id' => ['nullable', 'exists:clients,id'],
         ];

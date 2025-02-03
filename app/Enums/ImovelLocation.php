@@ -4,11 +4,10 @@ namespace App\Enums;
 
 use Str;
 
-enum ImovelStatus: int
+enum ImovelLocation: int
 {
-    case LIVRE = 0;
-    case ALUGADO = 1;
-    case VENDIDO = 2;
+    case PRAIA = 0;
+    case MORRO = 1;
 
     public static function randomId()
     {

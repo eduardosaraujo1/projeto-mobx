@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@mobx.com',
-            'password' => bcrypt('12345678'),
+            'password' => bcrypt('admin'),
             'is_admin' => true,
         ]);
 
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Generic',
             'email' => 'generic@mobx.com',
-            'password' => bcrypt('1234'),
+            'password' => bcrypt('generic'),
         ]);
 
         $this->call([
