@@ -15,13 +15,13 @@ return new class extends Migration {
             $table->string('address_name');
             $table->string('address_number', 4);
             $table->string('bairro');
-            $table->boolean('is_lado_praia');
+            $table->boolean('is_lado_praia')->default(false);
             $table->decimal('value', 15, 2)->nullable();
             $table->decimal('iptu', 11, 2)->nullable();
-            $table->unsignedTinyInteger('status'); // livre, alugado ou vendido
+            $table->unsignedTinyInteger('status')->default(0); // livre, alugado ou vendido
             $table->text('photo_path')->nullable();
             $table->timestamps();
-            $table->foreignId('client_id')->constrained()->restrictOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 

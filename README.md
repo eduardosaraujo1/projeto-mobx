@@ -520,7 +520,7 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 -   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
 -   [x] FRONT - Montar estrutura de arquivos (views)
 -   [ ] CADASTRO - mecanismo de cadastro de usuários
--   [ ] Switch to [MaryUi](https://mary-ui.com/docs/components/calendar)
+-   [ ] Mecanismo de ver data de aluguel do dashboard
 -   [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada
 -   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
     -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
