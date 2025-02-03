@@ -75,7 +75,7 @@ new #[Layout('layouts.app')] class extends Component {
         @endcan
     </div>
     <div class="h-[40rem] bg-white rounded shadow">
-        <div class="grid justify-center h-full gap-4 px-6 py-4 overflow-x-hidden grid-cols-auto-fill-64 auto-rows-min">
+        <div class="grid justify-center h-full gap-4 px-6 py-4 overflow-x-hidden grid-cols-fill-64 auto-rows-min">
             @forelse ($imoveis as $imovel)
                 <article class="relative w-64 p-5 bg-white rounded-lg shadow">
                     <div>

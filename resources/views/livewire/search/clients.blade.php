@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use App\Services\ImobiliariaService;
 use App\Models\Client;
 use Livewire\Attributes\Layout;
+use Illuminate\Database\Eloquent\Collection;
 
 function cpfFormat($value): string
 {
@@ -20,9 +21,9 @@ function cpfFormat($value): string
 new #[Layout('layouts.app')] class extends Component {
     /**
      * Summary of imoveis
-     * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Client>
+     * @var Collection<Client>
      */
-    public $clientsFull;
+    public Collection $clientsFull;
     public $clientType;
     public $searchString;
 
@@ -38,7 +39,7 @@ new #[Layout('layouts.app')] class extends Component {
         ];
     }
 
-    public function clientSearch()
+    public function clientSearch(): Collection
     {
         return $this->clientsFull->filter(function ($client) {
             $verdict = true;

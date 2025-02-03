@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => UserIsAdmin::class,
             'has-imobiliaria' => EnsureUserHasImobiliaria::class
         ]);
-        $middleware->redirectUsersTo('/imobiliaria');
+        $middleware->redirectUsersTo('/home');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
