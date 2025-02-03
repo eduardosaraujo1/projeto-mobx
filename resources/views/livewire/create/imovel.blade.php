@@ -67,6 +67,17 @@ new #[Layout('layouts.app')] class extends Component {
         return $formatted;
     }
 
+    public function getRowErrors($row)
+    {
+        $validator = Validator::make($row, Imovel::rules());
+
+        if ($validator->fails()) {
+            return $validator->errors()->messages();
+        }
+
+        return null;
+    }
+
     public function parseFile($file_path)
     {
         $rows = SimpleExcelReader::create($file_path)->getRows();
@@ -77,20 +88,22 @@ new #[Layout('layouts.app')] class extends Component {
             $parsed = $this->excelService->parseRow($row);
 
             // validate the normalized row
-            $errors = $this->excelService->getRowErrors($parsed);
+            $errors = $this->getRowErrors($parsed);
 
-            if ($errors) {
-                // loop over errors and add them with the row information
-                foreach ($errors as $field => $messages) {
-                    foreach ($messages as $message) {
-                        $this->addError($field, 'Row ' . ($rowIndex + 1) . ': ' . $message);
-                    }
-                }
-
-                break;
+            if (!$errors) {
+                $processed[] = $parsed; // alternative to array_push
+                continue;
             }
 
-            $processed[] = $parsed; // alternative to array_push
+            // loop over errors and add them with the row information
+            foreach ($errors as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, 'Linha ' . ($rowIndex + 1) . ': ' . $message);
+                }
+            }
+
+            // stop reading subsequent rows
+            break;
         }
 
         return $processed;
@@ -147,7 +160,9 @@ new #[Layout('layouts.app')] class extends Component {
                 </x-alert>
             </div>
         </div>
-        <x-errors outline />
+        <x-errors title="O sistema não conseguiu ler sua planilha" outline />
+        <input type="file" id="fileInput" name="file" accept=".xlsx" wire:model='file'
+            class="w-full p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md">
         <div class="space-y-1">
             <span class="text-2xl font-medium">Pré-visualização</span>
             <div class="overflow-auto bg-white rounded h-96">
@@ -183,7 +198,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <td>{{ $row['address_name'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['address_number'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['bairro'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['is_lado_praia'] ? 'Praia' : 'Morro' }}</td>
+                                <td>{{ $row['is_lado_praia'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['value'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['iptu'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['status'] ?? 'ERROR' }}</td>
@@ -206,8 +221,6 @@ new #[Layout('layouts.app')] class extends Component {
                 </table>
             </div>
         </div>
-        <input type="file" id="fileInput" name="file" accept=".xlsx" wire:model='file'
-            class="w-full p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md">
         <x-primary-button disabled class="mt-auto disabled:opacity-75 w-min">Cadastrar</x-primary-button>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />

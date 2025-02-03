@@ -28,7 +28,7 @@ class ImovelExcelService
         $values = array_slice($row, 0, count($values));
 
         // put null in missing keys
-        $values = array_pad($row, count($values), null); //
+        $values = array_pad($row, count($values), null);
 
         // create associative array from the two arrays
         return array_combine(keys: $cols, values: $values);
@@ -59,6 +59,37 @@ class ImovelExcelService
         return $value;
     }
 
+    /**
+     * Search a word in the string and return if it is valid
+     * @param ?string $str
+     * @param array{string:mixed} $match
+     * @return ?string
+     */
+    private function fuzzyMatch(?string $str, array $match): mixed
+    {
+        // handle null or empty
+        if (empty($str) || empty($match)) {
+            return null;
+        }
+
+        // remove casing from search string
+        $str = strtolower(trim($str));
+
+        // remove irrelevent characters
+        $keys = array_keys($match);
+        $pattern = strtolower("[^" . implode($keys) . "]");
+        $str = preg_replace($pattern, '', $str);
+
+        // match string to key
+        foreach ($match as $key => $value) {
+            if (str_contains($str, $key)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
     private function normalizeRow(array $row)
     {
         // strip max length of all to 255
@@ -71,12 +102,16 @@ class ImovelExcelService
             array: $row
         );
 
-        // remove forbidden characters from numero
+        // remove forbidden characters from address number
         $row['address_number'] = preg_replace('[^0-9]', '', $row['address_number']);
 
-        // turn is_lado_praia into boolean
-        $lado = trim(strtolower($row['is_lado_praia']));
-        $lado = $lado === 'praia';
+        // turn is_lado_praia into boolean or null
+        $lado = $row['is_lado_praia'];
+        $lado = $this->fuzzyMatch($lado, [
+            'praia' => true,
+            'morro' => false
+        ]);
+
         $row['is_lado_praia'] = $lado;
 
         // strip non numeric values from 'value' and 'iptu'
@@ -88,15 +123,13 @@ class ImovelExcelService
         $iptu = $this->validateDecimal($iptu);
         $row['iptu'] = $iptu;
 
-        // parse 'status' into then int
+        // parse 'status' into int
         $status = $row['status'];
-        $status = trim(strtolower($status));
-        $status = match ($status) {
+        $status = $this->fuzzyMatch($status, [
             'livre' => ImovelStatus::LIVRE->value,
             'alugado' => ImovelStatus::ALUGADO->value,
             'vendido' => ImovelStatus::VENDIDO->value,
-            default => null
-        };
+        ]);
         $row['status'] = $status;
 
         // return row
@@ -112,16 +145,5 @@ class ImovelExcelService
         $normalized = $this->normalizeRow($headered);
 
         return $normalized;
-    }
-
-    public function getRowErrors(array $row): array|null
-    {
-        $validator = Validator::make($row, $this->rules);
-
-        if ($validator->fails()) {
-            return $validator->errors()->messages(); // Return errors instead of throwing
-        }
-
-        return null; // No errors
     }
 }
