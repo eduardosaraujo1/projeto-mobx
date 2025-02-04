@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Enums\ImovelLocation;
 use App\Enums\ImovelStatus;
 use App\Models\Imovel;
 use Str;
@@ -17,24 +18,8 @@ class ImovelExcelService
     {
         $this->rules = Imovel::rules();
     }
-    private function applyHeadersToRow(array $row): array
-    {
-        $cols = ['address_name', 'address_number', 'bairro', 'is_lado_praia', 'value', 'iptu', 'status'];
 
-        // remove original keys
-        $values = array_values($row);
-
-        // cut array to key length
-        $values = array_slice($row, 0, count($values));
-
-        // put null in missing keys
-        $values = array_pad($row, count($values), null);
-
-        // create associative array from the two arrays
-        return array_combine(keys: $cols, values: $values);
-    }
-
-    private function validateDecimal(string $value = '')
+    private function validateCurrency(string $value = '')
     {
         if (empty($value)) {
             return -1;
@@ -90,6 +75,23 @@ class ImovelExcelService
         return null;
     }
 
+    private function applyHeadersToRow(array $row): array
+    {
+        $cols = ['address_name', 'address_number', 'bairro', 'location_reference', 'value', 'iptu', 'status'];
+
+        // remove original keys
+        $values = array_values($row);
+
+        // cut array to key length
+        $values = array_slice($row, 0, count($values));
+
+        // put null in missing keys
+        $values = array_pad($row, count($values), null);
+
+        // create associative array from the two arrays
+        return array_combine(keys: $cols, values: $values);
+    }
+
     private function normalizeRow(array $row)
     {
         // strip max length of all to 255
@@ -105,30 +107,29 @@ class ImovelExcelService
         // remove forbidden characters from address number
         $row['address_number'] = preg_replace('[^0-9]', '', $row['address_number']);
 
-        // turn is_lado_praia into boolean or null
-        $lado = $row['is_lado_praia'];
-        $lado = $this->fuzzyMatch($lado, [
-            'praia' => true,
-            'morro' => false
+        // turn location_reference into enum
+        $location_reference = $row['location_reference'];
+        $location_reference = $this->fuzzyMatch($location_reference, [
+            'praia' => ImovelLocation::PRAIA,
+            'morro' => ImovelLocation::MORRO
         ]);
-
-        $row['is_lado_praia'] = $lado;
+        $row['location_reference'] = $location_reference;
 
         // strip non numeric values from 'value' and 'iptu'
         $value = $row['value'];
-        $value = $this->validateDecimal($value);
+        $value = $this->validateCurrency($value);
         $row['value'] = $value;
 
         $iptu = $row['iptu'];
-        $iptu = $this->validateDecimal($iptu);
+        $iptu = $this->validateCurrency($iptu);
         $row['iptu'] = $iptu;
 
         // parse 'status' into int
         $status = $row['status'];
         $status = $this->fuzzyMatch($status, [
-            'livre' => ImovelStatus::LIVRE->value,
-            'alugado' => ImovelStatus::ALUGADO->value,
-            'vendido' => ImovelStatus::VENDIDO->value,
+            'livre' => ImovelStatus::LIVRE,
+            'alugado' => ImovelStatus::ALUGADO,
+            'vendido' => ImovelStatus::VENDIDO,
         ]);
         $row['status'] = $status;
 
@@ -136,7 +137,7 @@ class ImovelExcelService
         return $row;
     }
 
-    public function parseRow(array $row)
+    public function parseExcelRow(array $row)
     {
         // change header names and remove overflow
         $headered = $this->applyHeadersToRow($row);

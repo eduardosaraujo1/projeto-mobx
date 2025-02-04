@@ -15,7 +15,7 @@ new #[Layout('layouts.app')] class extends Component {
     public string $address_name;
     public int $address_number;
     public string $bairro;
-    public string $is_lado_praia;
+    public ?string $location_reference;
     public ?string $value;
     public ?string $iptu;
     public string $status;
@@ -44,13 +44,6 @@ new #[Layout('layouts.app')] class extends Component {
         return Imovel::rules();
     }
 
-    protected function messages()
-    {
-        return [
-            'is_lado_praia.boolean' => "Field localização must be 'Morro' or 'Praia' \"",
-        ];
-    }
-
     public function with()
     {
         return [
@@ -76,10 +69,10 @@ new #[Layout('layouts.app')] class extends Component {
         $this->address_name = $this->imovel->address_name;
         $this->address_number = $this->imovel->address_number;
         $this->bairro = $this->imovel->bairro;
-        $this->is_lado_praia = $this->imovel->is_lado_praia ? '1' : '0';
+        $this->location_reference = $this->imovel->location_reference->value ?? null;
         $this->value = $this->imovel->value;
         $this->iptu = $this->imovel->iptu;
-        $this->status = $this->imovel->status;
+        $this->status = $this->imovel->status->value;
         $this->photo_path = $this->imovel->photo_path;
         $this->client_id = $this->imovel->client->id;
         $this->stored_photo = $this->stored_photo_cache;
@@ -196,7 +189,7 @@ new #[Layout('layouts.app')] class extends Component {
                 <x-card class="grid items-center col-span-2">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Localização:</span>
-                        <x-select :disabled="!$edit" wire:model='is_lado_praia'>
+                        <x-select :disabled="!$edit" wire:model='location_reference'>
                             <x-select.option value="0">Morro</x-select.option>
                             <x-select.option value="1">Praia</x-select.option>
                         </x-select>

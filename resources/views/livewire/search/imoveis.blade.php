@@ -39,10 +39,11 @@ new #[Layout('layouts.app')] class extends Component {
 
             // data
             $address = $imovel->fullAddress() ?? '';
-            $lado = $imovel->lado() ?? '';
+            $value = $imovel->value ?? '';
+            $iptu = $imovel->iptu ?? '';
 
             // formatted queries
-            $haystack = strtolower("$address $lado");
+            $haystack = strtolower("$address $value $iptu");
             $needle = strtolower($this->searchString ?? '');
 
             // perform search
@@ -50,7 +51,7 @@ new #[Layout('layouts.app')] class extends Component {
 
             // category filter
             if (isset($this->imovelStatus)) {
-                $verdict = $verdict && (string) $imovel->status === (string) $this->imovelStatus;
+                $verdict = $verdict && (string) $imovel->status->value === $this->imovelStatus;
             }
 
             return $verdict;
@@ -112,7 +113,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 </li>
                                 <li>
                                     <span class="font-bold">Status:</span>
-                                    <span>{{ $imovel->statusName() }}</span>
+                                    <span>{{ $imovel->status->getName() }}</span>
                                 </li>
                             </ul>
                         </div>

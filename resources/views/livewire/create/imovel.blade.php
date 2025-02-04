@@ -12,17 +12,24 @@ use App\Services\ImovelExcelService;
 new #[Layout('layouts.app')] class extends Component {
     use WithFileUploads;
 
+    // file upload
     #[Validate('file|max:32768')]
     public $file;
 
+    // component state
     public array $parsedTable = [];
-
-    // dependency injection
     private ImovelExcelService $excelService;
 
     public function boot(ImovelExcelService $excelService)
     {
         $this->excelService = $excelService;
+    }
+
+    public function with()
+    {
+        return [
+            'table' => $this->getFormattedTable(),
+        ];
     }
 
     // this lifecycle hook will run as soon as a form field is updated, and before rendering
@@ -33,34 +40,32 @@ new #[Layout('layouts.app')] class extends Component {
         }
     }
 
-    public function with()
-    {
-        return [
-            'table' => $this->getFormattedTable(),
-        ];
-    }
-
     public function getFormattedTable()
     {
+        function formatCurrencyField($value): string
+        {
+            if (!isset($value) || $value < 0) {
+                return '';
+            }
+
+            return number_format($value, 2);
+        }
+
         $table = $this->parsedTable;
         $formatted = [];
 
         foreach ($table as $row) {
-            $row['is_lado_praia'] = $row['is_lado_praia'] ? 'Praia' : 'Morro';
+            // parse location name (null friendly)
+            $row['location_reference'] = $row['location_reference']?->getName() ?? '';
 
-            $row['value'] = $row['value'] ?? 0;
-            $row['value'] = $row['value'] < 0 ? '' : number_format(num: $row['value'], decimals: 2);
+            // parse currency values (null friendly)
+            $row['value'] = formatCurrencyField($row['value']);
+            $row['iptu'] = formatCurrencyField($row['iptu']);
 
-            $row['iptu'] = $row['iptu'] ?? 0;
-            $row['iptu'] = $row['iptu'] < 0 ? '' : number_format(num: $row['iptu'], decimals: 2);
+            // parse status name (null friendly)
+            $row['status'] = $row['status']?->getName() ?? '';
 
-            $row['status'] = match ($row['status']) {
-                0 => 'Livre',
-                1 => 'Alugado',
-                2 => 'Vendido',
-                default => '',
-            };
-
+            // push changes to formatted table array
             $formatted[] = $row;
         }
 
@@ -78,6 +83,15 @@ new #[Layout('layouts.app')] class extends Component {
         return null;
     }
 
+    public function addRowErrors(array $errors, int $rowNumber = 0)
+    {
+        foreach ($errors as $field => $messages) {
+            foreach ($messages as $message) {
+                $this->addError($field, "Linha $rowNumber:  $message");
+            }
+        }
+    }
+
     public function parseFile($file_path)
     {
         $rows = SimpleExcelReader::create($file_path)->getRows();
@@ -85,25 +99,17 @@ new #[Layout('layouts.app')] class extends Component {
 
         foreach ($rows as $rowIndex => $row) {
             // parse the current row
-            $parsed = $this->excelService->parseRow($row);
+            $parsed = $this->excelService->parseExcelRow($row);
 
             // validate the normalized row
             $errors = $this->getRowErrors($parsed);
 
-            if (!$errors) {
-                $processed[] = $parsed; // alternative to array_push
-                continue;
+            if ($errors) {
+                $this->addRowErrors($errors, $rowIndex + 1);
+                break; // stop adding new rows after declaring the errors
             }
 
-            // loop over errors and add them with the row information
-            foreach ($errors as $field => $messages) {
-                foreach ($messages as $message) {
-                    $this->addError($field, 'Linha ' . ($rowIndex + 1) . ': ' . $message);
-                }
-            }
-
-            // stop reading subsequent rows
-            break;
+            $processed[] = $parsed;
         }
 
         return $processed;
@@ -116,7 +122,7 @@ new #[Layout('layouts.app')] class extends Component {
     </x-slot>
     @can('create', Imovel::class)
         <div>
-            <div x-data="{ expanded: true }">
+            <div x-data="{ expanded: false }">
                 <x-alert info class="relative cursor-pointer *:p-0" secondary x-on:click="expanded = ! expanded">
                     <x-slot name="title">
                         Instruções
@@ -198,7 +204,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <td>{{ $row['address_name'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['address_number'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['bairro'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['is_lado_praia'] ?? 'ERROR' }}</td>
+                                <td>{{ $row['location_reference'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['value'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['iptu'] ?? 'ERROR' }}</td>
                                 <td>{{ $row['status'] ?? 'ERROR' }}</td>
