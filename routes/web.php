@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
-    // Home redirect middleware
+    // Home redirect
     Route::get('/home', function () {
         $redirect_route = auth()->user()->is_admin ? route('admin.index') : route('imobiliaria.home');
 
@@ -52,23 +52,13 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Route::view('usuario/novo', 'pages.user.create')
         ->name('user.new');
 
-    // visualizacao e edicao
+    // info/edit
     Volt::route('imovel/{imovel}/info', 'info.imovel')
         ->name('imovel.info');
 
     Volt::route('cliente/{client}/info', 'info.client')
         ->name('client.info');
 
-    // missing imobiliaria
-    Route::get('missing-imobiliaria', function () {
-        $imobiliaria = ImobiliariaService::current_imobiliaria();
-
-        if (isset($imobiliaria)) {
-            return redirect()->route('imobiliaria.home');
-        }
-
-        return view('pages.imobiliaria.missing');
-    })->name('imobiliaria.missing');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -80,9 +70,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('configuracoes', 'pages.user.settings')
         ->name('settings');
 
-    // cadastro
+    // create
     Route::view('imobiliaria/novo', 'pages.imobiliaria.create')
         ->name('imobiliaria.new');
+
+    // missing imobiliaria
+    Route::get('error', function () {
+        $imobiliaria = ImobiliariaService::current_imobiliaria();
+
+        if (isset($imobiliaria)) {
+            return redirect()->route('home');
+        }
+
+        return view('pages.imobiliaria.missing');
+    })->name('imobiliaria.missing');
 });
 
 require __DIR__ . '/auth.php';
