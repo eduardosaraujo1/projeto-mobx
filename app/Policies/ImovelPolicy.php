@@ -23,7 +23,7 @@ class ImovelPolicy
      */
     public function view(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $imovel->client->imobiliaria->id || $user->is_admin;
+        return ImobiliariaService::current_imobiliaria()->id === $imovel->imobiliaria->id || $user->is_admin;
     }
 
     /**

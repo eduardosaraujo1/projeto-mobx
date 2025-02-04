@@ -20,7 +20,7 @@ new #[Layout('layouts.app')] class extends Component {
     public ?string $iptu;
     public string $status;
     public ?string $photo_path;
-    public int $client_id;
+    public ?int $client_id;
 
     // other attributes
     #[Validate('nullable|image|max:4096')]
@@ -69,12 +69,12 @@ new #[Layout('layouts.app')] class extends Component {
         $this->address_name = $this->imovel->address_name;
         $this->address_number = $this->imovel->address_number;
         $this->bairro = $this->imovel->bairro;
-        $this->location_reference = $this->imovel->location_reference->value ?? null;
+        $this->location_reference = $this->imovel->location_reference?->value ?? null;
         $this->value = $this->imovel->value;
         $this->iptu = $this->imovel->iptu;
         $this->status = $this->imovel->status->value;
         $this->photo_path = $this->imovel->photo_path;
-        $this->client_id = $this->imovel->client->id;
+        $this->client_id = $this->imovel->client?->id;
         $this->stored_photo = $this->stored_photo_cache;
     }
 

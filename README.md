@@ -439,6 +439,7 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 -   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
 -   [x] FRONT - Montar estrutura de arquivos (views)
 -   [x] MODELAGEM - Um imovel, apesar de ser de um cliente, foi cadastrada por um usuario que pertence a uma imobiliaria. Portanto, imovel pertence à imobiliaria e imovel pertence a cliente, e cliente também pertence à imobiliaria
+-   [ ] Seleção de clientes para imóvel - API de pesquisa e dropdown
 -   [ ] CADASTRO - mecanismo de cadastro de usuários
 -   [ ] Mecanismo de ver data de aluguel do dashboard
 -   [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada

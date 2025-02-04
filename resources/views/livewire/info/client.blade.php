@@ -3,7 +3,6 @@
 use Livewire\Volt\Component;
 use App\Models\Client;
 use Livewire\Attributes\Layout;
-use App\Services\ImobiliariaService;
 
 new #[Layout('layouts.app')] class extends Component {
     public Client $client;

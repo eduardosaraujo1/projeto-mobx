@@ -22,6 +22,11 @@ class ImobiliariaService
             ? Imobiliaria::all()
             : $user->imobiliarias;
     }
+    /**
+     * Returns the imobiliaria the user currently has selected
+     * Middleware 'has-imobiliaria' will ensure the return value is not null
+     * @return Imobiliaria|null
+     */
     public static function current_imobiliaria(): Imobiliaria|null
     {
         // get user imobiliarias
