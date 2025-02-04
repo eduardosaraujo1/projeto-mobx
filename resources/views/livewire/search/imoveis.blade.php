@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 use Livewire\Attributes\Layout;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imovel;
@@ -22,7 +22,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount()
     {
-        $this->imoveisFull = ImobiliariaService::current_imobiliaria()->imoveis;
+        $this->imoveisFull = SelectedImobiliaria::get(auth()->user())?->imoveis;
     }
 
     public function with()

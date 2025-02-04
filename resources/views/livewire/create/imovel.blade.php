@@ -8,7 +8,7 @@ use App\Models\Imovel;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Http\UploadedFile;
 use App\Services\ImovelService;
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 
 new #[Layout('layouts.app')] class extends Component {
     use WithFileUploads;
@@ -61,7 +61,7 @@ new #[Layout('layouts.app')] class extends Component {
                 session()->flash('error', 'upload error');
                 return;
             } else {
-                Imovel::create([...$row, 'imobiliaria_id' => ImobiliariaService::current_imobiliaria()->id]);
+                Imovel::create([...$row, 'imobiliaria_id' => SelectedImobiliaria::get(auth()->user())->id]);
             }
 
             // flash success message

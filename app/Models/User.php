@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,5 +55,16 @@ class User extends Authenticatable
             ->using(Role::class)
             ->as('role') // 'role' pivot model reference (user->imobiliarias->role)
             ->withPivot('role'); // 'role' attribute name
+    }
+
+    /**
+     * Gets the imobiliarias the user has access to. If the user is an administrator he will have all imobiliarias
+     * @return void
+     */
+    protected function allImobiliarias(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->is_admin ? Imobiliaria::all() : $this->imobiliarias
+        );
     }
 }

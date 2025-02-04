@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Enums\UserRole;
 use App\Models\Client;
 use App\Models\User;
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 
 class ClientPolicy
 {
@@ -22,7 +22,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $client->imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $client->imobiliaria->id || $user->is_admin;
     }
 
     /**
@@ -30,7 +30,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
+        return SelectedImobiliaria::get($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -38,7 +38,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
+        return SelectedImobiliaria::get($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

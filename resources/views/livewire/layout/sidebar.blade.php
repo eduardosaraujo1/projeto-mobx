@@ -2,7 +2,7 @@
 use Livewire\Volt\Component;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Imobiliaria;
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 
 new class extends Component {
     /**
@@ -17,9 +17,8 @@ new class extends Component {
 
     public function mount()
     {
-        // get or define current imobiliaria
-        $this->user_imobiliarias = ImobiliariaService::user_imobiliarias();
-        $this->index_imobiliaria = Session::get('index_imobiliaria', 0);
+        $this->user_imobiliarias = auth()->user()->all_imobiliarias;
+        $this->index_imobiliaria = SelectedImobiliaria::getIndex();
 
         // define the array elements
         $this->navbar = $this->defineNavbar();
@@ -36,7 +35,7 @@ new class extends Component {
     public function updated($name, $value)
     {
         if ($name === 'index_imobiliaria') {
-            Session::put('index_imobiliaria', $value);
+            SelectedImobiliaria::set($value);
             $this->js('window.location.reload()');
         }
     }
@@ -46,8 +45,7 @@ new class extends Component {
         if (auth()->user()->is_admin) {
             return 'Administrador';
         } else {
-            $level = ImobiliariaService::current_access_level()->name ?? 'Visitante';
-            return Str::title($level);
+            return SelectedImobiliaria::accessLevel(auth()->user())->getName() ?? 'Visitante';
         }
     }
 

@@ -1,10 +1,10 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Services\ImobiliariaService;
 use App\Models\Client;
 use Livewire\Attributes\Layout;
 use Illuminate\Database\Eloquent\Collection;
+use App\Facades\SelectedImobiliaria;
 
 function cpfFormat($value): string
 {
@@ -28,7 +28,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount()
     {
-        $this->clientsFull = ImobiliariaService::current_imobiliaria()->clients;
+        $this->clientsFull = SelectedImobiliaria::get(auth()->user())->clients;
     }
 
     public function with()

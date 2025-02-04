@@ -2,7 +2,7 @@
 use Livewire\Volt\Component;
 use App\Models\Imobiliaria;
 use Livewire\Attributes\Layout;
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 
 new #[Layout('layouts.app')] class extends Component {
     // client attributes
@@ -18,7 +18,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function mount()
     {
-        $this->imobiliaria = ImobiliariaService::current_imobiliaria();
+        $this->imobiliaria = SelectedImobiliaria::get(auth()->user());
         $this->rebindValues();
     }
 

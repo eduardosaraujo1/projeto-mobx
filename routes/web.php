@@ -1,8 +1,8 @@
 <?php
 
+use App\Facades\SelectedImobiliaria;
 use App\Http\Controllers\Search\SearchClients;
 use App\Http\Controllers\Search\SearchImobiliarias;
-use App\Services\ImobiliariaService;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -78,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // missing imobiliaria
     Route::get('error', function () {
-        $imobiliaria = ImobiliariaService::current_imobiliaria();
+        $imobiliaria = SelectedImobiliaria::get(auth()->user());
 
         if (isset($imobiliaria)) {
             return redirect()->route('home');

@@ -18,7 +18,7 @@ class ImobiliariaSeeder extends Seeder
      * @param \Illuminate\Database\Eloquent\Collection<int, Imobiliaria> $imobiliarias
      * @return \Illuminate\Support\Collection<int|string, array{level: int|string>}
      */
-    private static function generateUserImobiliarias(): array
+    private static function generateallImobiliarias(): array
     {
         // $imobiliarias = Imobiliaria::factory()->count($count)->create();
         $levels = UserRole::cases();
@@ -45,7 +45,7 @@ class ImobiliariaSeeder extends Seeder
         // For each user, create imobiliarias and attach access level
         $users->skip(1)->each(
             function (User $user) {
-                $attachments = static::generateUserImobiliarias();
+                $attachments = static::generateallImobiliarias();
                 // attach imobiliarias to the user's imobiliaria list (aquired through user->imobiliarias())
                 // object format:
                 // [imobiliaria_id => ['level' => level_id], ...]
