@@ -28,7 +28,7 @@ class Client extends Model
         return $this->belongsTo(Imobiliaria::class);
     }
 
-    public function clients(): HasMany
+    public function imoveis(): HasMany
     {
         return $this->hasMany(Imovel::class);
     }

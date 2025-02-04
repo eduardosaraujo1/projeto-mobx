@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Client;
+use App\Models\Imobiliaria;
 use App\Models\Imovel;
 use App\Models\ImovelDocument;
 use App\Models\ImovelLog;
@@ -18,21 +19,21 @@ class ImovelSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::all();
-        $clients = Client::all();
-        $imoveis = collect();
-
         // Imoveis
-        $clients->each(function (Client $client) use (&$imoveis) {
+        $imoveis = collect();
+        $imobiliarias = Imobiliaria::all();
+        $imobiliarias->each(function (Imobiliaria $imobiliaria) use (&$imoveis) {
             $imovel = Imovel::factory()
                 ->count(5)
-                ->recycle($client)
+                ->recycle($imobiliaria)
                 ->create();
 
+            // insert into imoveis collection with duplicate prevention
             $imoveis->merge($imovel);
         });
 
         // Fake documents
+        $users = User::all();
         $imoveis->each(function ($imovel) use ($users) {
             ImovelDocument::factory()
                 ->recycle($imovel)

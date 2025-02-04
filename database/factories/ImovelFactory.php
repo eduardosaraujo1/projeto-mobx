@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\ImovelLocation;
 use App\Enums\ImovelStatus;
 use App\Models\Client;
+use App\Models\Imobiliaria;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,6 +29,7 @@ class ImovelFactory extends Factory
             'bairro' => fake()->city(),
             'location_reference' => ImovelLocation::randomId(),
             'client_id' => Client::factory(),
+            'imobiliaria_id' => Imobiliaria::factory(),
         ];
     }
 }

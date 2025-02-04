@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->text('photo_path')->nullable();
             $table->timestamps();
             $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('imobiliaria_id')->constrained()->cascadeOnDelete();
         });
     }
 

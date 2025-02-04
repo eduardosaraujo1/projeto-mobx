@@ -50,6 +50,11 @@ class Imovel extends Model
         return $this->hasMany(ImovelLog::class);
     }
 
+    public function imobiliaria()
+    {
+        return $this->belongsTo(Imobiliaria::class);
+    }
+
     public function fullAddress()
     {
         return implode(', ', [
