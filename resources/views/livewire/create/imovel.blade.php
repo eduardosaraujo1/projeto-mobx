@@ -7,7 +7,7 @@ use Livewire\Attributes\Validate;
 use App\Models\Imovel;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Http\UploadedFile;
-use App\Services\ImovelExcelService;
+use App\Services\ImovelService;
 
 new #[Layout('layouts.app')] class extends Component {
     use WithFileUploads;
@@ -18,9 +18,9 @@ new #[Layout('layouts.app')] class extends Component {
 
     // component state
     public array $parsedTable = [];
-    private ImovelExcelService $excelService;
+    private ImovelService $excelService;
 
-    public function boot(ImovelExcelService $excelService)
+    public function boot(ImovelService $excelService)
     {
         $this->excelService = $excelService;
     }

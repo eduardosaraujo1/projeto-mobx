@@ -10,7 +10,7 @@ use Validator;
 /**
  * Service with tools for validating an excel uploaded from the Imovel create form
  */
-class ImovelExcelService
+class ImovelService
 {
     private $rules;
 
@@ -19,6 +19,12 @@ class ImovelExcelService
         $this->rules = Imovel::rules();
     }
 
+    /**
+     * Takes a string and treats it so that it is a valid currency representation
+     * Note that it does not validate against the database, meaning it will allow a number that surpasses the decimal constraints. This is a known issue that will be fixed when I figure out how Laravel deals with those constraints
+     * @param string $value
+     * @return int|string
+     */
     private function validateCurrency(string $value = '')
     {
         if (empty($value)) {
@@ -34,7 +40,7 @@ class ImovelExcelService
         // Keep only the last dot as the decimal separator
         if (substr_count($value, '.') > 1) {
             $parts = explode('.', $value);
-            $lastPart = array_pop($parts);
+            $lastPart = array_pop($parts); // ampersand means "pass-by-reference"
             $value = implode('', $parts) . '.' . $lastPart;
         }
 
@@ -62,7 +68,7 @@ class ImovelExcelService
 
         // remove irrelevent characters
         $keys = array_keys($match);
-        $pattern = strtolower("[^" . implode($keys) . "]");
+        $pattern = strtolower("/[^" . implode($keys) . "]/");
         $str = preg_replace($pattern, '', $str);
 
         // match string to key
@@ -75,7 +81,28 @@ class ImovelExcelService
         return null;
     }
 
-    private function applyHeadersToRow(array $row): array
+    /**
+     * Truncate all string values in the row to a maximum length.
+     */
+    private function truncateRowValues(array $row, int $maxLength): array
+    {
+        return array_map(fn($cell): string => substr((string) $cell, 0, $maxLength), $row);
+    }
+
+    /**
+     * Extract only numeric characters from a string.
+     */
+    private function extractNumbers(string $value): string
+    {
+        return preg_replace('/[^0-9]/', '', $value);
+    }
+
+    /**
+     * Modify the passed array to make the keys of the entries match their database counterparts
+     * @param array $row
+     * @return array
+     */
+    private function applyExcelHeaders(array $row): array
     {
         $cols = ['address_name', 'address_number', 'bairro', 'location_reference', 'value', 'iptu', 'status'];
 
@@ -92,58 +119,41 @@ class ImovelExcelService
         return array_combine(keys: $cols, values: $values);
     }
 
-    private function normalizeRow(array $row)
+    private function normalizeExcelRow(array $row)
     {
-        // strip max length of all to 255
-        $row = array_map(
-            callback: fn($cell): string => substr(
-                string: (string) $cell,
-                offset: 0,
-                length: 255
-            ),
-            array: $row
-        );
+        // Limit all string values to 255 characters
+        $row = $this->truncateRowValues($row, 255);
 
-        // remove forbidden characters from address number
-        $row['address_number'] = preg_replace('[^0-9]', '', $row['address_number']);
+        // Normalize 'address_number' by removing non-numeric characters
+        $row['address_number'] = $this->extractNumbers($row['address_number']);
 
-        // turn location_reference into enum
-        $location_reference = $row['location_reference'];
-        $location_reference = $this->fuzzyMatch($location_reference, [
+        // Convert 'location_reference' into enum using fuzzy matching
+        $row['location_reference'] = $this->fuzzyMatch($row['location_reference'], [
             'praia' => ImovelLocation::PRAIA,
             'morro' => ImovelLocation::MORRO
         ]);
-        $row['location_reference'] = $location_reference;
 
-        // strip non numeric values from 'value' and 'iptu'
-        $value = $row['value'];
-        $value = $this->validateCurrency($value);
-        $row['value'] = $value;
+        // Validate and normalize currency values
+        $row['value'] = $this->validateCurrency($row['value']);
+        $row['iptu'] = $this->validateCurrency($row['iptu']);
 
-        $iptu = $row['iptu'];
-        $iptu = $this->validateCurrency($iptu);
-        $row['iptu'] = $iptu;
-
-        // parse 'status' into int
-        $status = $row['status'];
-        $status = $this->fuzzyMatch($status, [
+        // Convert 'status' into enum using fuzzy matching
+        $row['status'] = $this->fuzzyMatch($row['status'], [
             'livre' => ImovelStatus::LIVRE,
             'alugado' => ImovelStatus::ALUGADO,
             'vendido' => ImovelStatus::VENDIDO,
         ]);
-        $row['status'] = $status;
 
-        // return row
         return $row;
     }
 
     public function parseExcelRow(array $row)
     {
         // change header names and remove overflow
-        $headered = $this->applyHeadersToRow($row);
+        $with_headers = $this->applyExcelHeaders($row);
 
         // parse row props from user friendly to database
-        $normalized = $this->normalizeRow($headered);
+        $normalized = $this->normalizeExcelRow($with_headers);
 
         return $normalized;
     }
