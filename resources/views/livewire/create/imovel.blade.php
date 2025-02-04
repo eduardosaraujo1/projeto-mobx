@@ -15,6 +15,7 @@ new #[Layout('layouts.app')] class extends Component {
     // file upload
     #[Validate('file|max:32768')]
     public $file;
+    public bool $hasErrors = false;
 
     // component state
     public array $parsedTable = [];
@@ -40,36 +41,59 @@ new #[Layout('layouts.app')] class extends Component {
         }
     }
 
-    public function getFormattedTable()
+    public function save()
     {
-        function formatCurrencyField($value): string
-        {
-            if (!isset($value) || $value < 0) {
-                return '';
+        // check if user has permission to create new imoveis
+        $this->authorize('create', Imovel::class);
+
+        // If currently has errors, do not proceed
+        if ($this->hasErrors) {
+            session()->flash('error', 'upload error');
+            return;
+        }
+
+        foreach ($this->parsedTable as $row) {
+            // validate row one last time
+            $errors = $this->getRowErrors($row);
+
+            if ($errors) {
+                session()->flash('error', 'upload error');
+                return;
+            } else {
+                Imovel::create($row);
             }
 
-            return number_format($value, 2);
+            // flash success message
+            session()->flash('message', 'Importação concluida com sucesso');
+            $this->redirect(route('imovel.index'));
+        }
+    }
+
+    public function parseFile($file_path)
+    {
+        $rows = SimpleExcelReader::create($file_path)->getRows();
+        $processed = [];
+
+        foreach ($rows as $rowIndex => $row) {
+            // parse the current row
+            $parsed = $this->excelService->parseExcelRow($row);
+
+            // validate the normalized row
+            $errors = $this->getRowErrors($parsed);
+
+            if ($errors) {
+                $this->hasErrors = true;
+                $this->addRowErrors($errors, $rowIndex + 1);
+                break; // stop adding new rows after declaring the errors
+            }
+
+            // track the error state (if this code runs there were no errors on the column)
+            $this->hasErrors = false;
+
+            $processed[] = $parsed;
         }
 
-        $table = $this->parsedTable;
-        $formatted = [];
-
-        foreach ($table as $row) {
-            // parse location name (null friendly)
-            $row['location_reference'] = $row['location_reference']?->getName() ?? '';
-
-            // parse currency values (null friendly)
-            $row['value'] = formatCurrencyField($row['value']);
-            $row['iptu'] = formatCurrencyField($row['iptu']);
-
-            // parse status name (null friendly)
-            $row['status'] = $row['status']?->getName() ?? '';
-
-            // push changes to formatted table array
-            $formatted[] = $row;
-        }
-
-        return $formatted;
+        return $processed;
     }
 
     public function getRowErrors($row)
@@ -92,27 +116,45 @@ new #[Layout('layouts.app')] class extends Component {
         }
     }
 
-    public function parseFile($file_path)
+    public function getFormattedTable()
     {
-        $rows = SimpleExcelReader::create($file_path)->getRows();
-        $processed = [];
-
-        foreach ($rows as $rowIndex => $row) {
-            // parse the current row
-            $parsed = $this->excelService->parseExcelRow($row);
-
-            // validate the normalized row
-            $errors = $this->getRowErrors($parsed);
-
-            if ($errors) {
-                $this->addRowErrors($errors, $rowIndex + 1);
-                break; // stop adding new rows after declaring the errors
+        function formatCurrencyField($value): string
+        {
+            if (!isset($value) || (float) $value < 0) {
+                return '';
             }
 
-            $processed[] = $parsed;
+            return number_format((float) $value, 2);
         }
 
-        return $processed;
+        $table = $this->parsedTable;
+        $formatted = [];
+
+        foreach ($table as $row) {
+            // parse location name (unset friendly)
+            if (isset($row['location_reference'])) {
+                $row['location_reference'] = $row['location_reference']?->getName();
+            }
+
+            // parse currency values (unset friendly)
+            if (isset($row['value'])) {
+                $row['value'] = formatCurrencyField($row['value']);
+            }
+
+            if (isset($row['iptu'])) {
+                $row['iptu'] = formatCurrencyField($row['iptu']);
+            }
+
+            // parse status name (unset friendly)
+            if (isset($row['status'])) {
+                $row['status'] = $row['status']?->getName();
+            }
+
+            // push changes to formatted table array
+            $formatted[] = $row;
+        }
+
+        return $formatted;
     }
 }; ?>
 
@@ -201,13 +243,13 @@ new #[Layout('layouts.app')] class extends Component {
                     <tbody>
                         @forelse ($table as $row)
                             <tr class="*:px-3 *:py-4 border-b-2 border-gray-100">
-                                <td>{{ $row['address_name'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['address_number'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['bairro'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['location_reference'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['value'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['iptu'] ?? 'ERROR' }}</td>
-                                <td>{{ $row['status'] ?? 'ERROR' }}</td>
+                                <td>{{ $row['address_name'] ?? '' }}</td>
+                                <td>{{ $row['address_number'] ?? '' }}</td>
+                                <td>{{ $row['bairro'] ?? '' }}</td>
+                                <td>{{ $row['location_reference'] ?? '' }}</td>
+                                <td>{{ $row['value'] ?? '' }}</td>
+                                <td>{{ $row['iptu'] ?? '' }}</td>
+                                <td>{{ $row['status'] ?? '' }}</td>
                             </tr>
                         @empty
                             {{-- Blank table rows --}}
@@ -227,7 +269,16 @@ new #[Layout('layouts.app')] class extends Component {
                 </table>
             </div>
         </div>
-        <x-primary-button disabled class="mt-auto disabled:opacity-75 w-min">Cadastrar</x-primary-button>
+        <div class="flex items-center gap-4">
+            <x-primary-button :disabled="empty($parsedTable)" class="mt-auto disabled:opacity-75 w-min"
+                wire:click='save'>Cadastrar</x-primary-button>
+            @if (session()->exists('error'))
+                <div class="flex items-center gap-1 text-sm text-negative-700">
+                    <x-icon name="exclamation-circle" class="inline w-4 h-4" />
+                    <span>Não é possível cadastrar essa planilha. Tente novamente mais tarde.</span>
+                </div>
+            @endif
+        </div>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan

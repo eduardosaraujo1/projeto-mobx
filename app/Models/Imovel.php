@@ -16,19 +16,16 @@ class Imovel extends Model
 {
     /** @use HasFactory<\Database\Factories\ImovelFactory> */
     use HasFactory;
-    protected $fillable = [
-        'address_name',
-        'address_number',
-        'bairro',
-        'location_reference',
-        'value',
-        'iptu',
-        'status',
-        'photo_path',
-        'client_id',
-    ];
 
     protected $table = 'imoveis';
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at'
+    ];
+    protected $attributes = [
+        'status' => 0
+    ];
 
     protected function casts(): array
     {
@@ -104,7 +101,7 @@ class Imovel extends Model
             'location_reference' => ['nullable', Rule::enum(ImovelLocation::class)],
             'value' => ['nullable', 'numeric'],
             'iptu' => ['nullable', 'numeric'],
-            'status' => ['nullable', Rule::enum(ImovelStatus::class)],
+            'status' => [Rule::enum(ImovelStatus::class)],
             'photo_path' => ['nullable'],
             'client_id' => ['nullable', 'exists:clients,id'],
         ];

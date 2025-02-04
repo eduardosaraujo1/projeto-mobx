@@ -28,7 +28,7 @@ class ImovelService
     private function validateCurrency(string $value = '')
     {
         if (empty($value)) {
-            return -1;
+            return null;
         }
 
         // Remove all characters except numbers, dots, and commas
@@ -48,6 +48,16 @@ class ImovelService
         $value = (string) floatval($value);
 
         return $value;
+    }
+
+    private function unsetNullEntries(array $row)
+    {
+        foreach ($row as $key => $value) {
+            if (empty($value)) {
+                unset($row[$key]);
+            }
+        }
+        return $row;
     }
 
     /**
@@ -155,6 +165,9 @@ class ImovelService
         // parse row props from user friendly to database
         $normalized = $this->normalizeExcelRow($with_headers);
 
-        return $normalized;
+        // unset null instances
+        $parsedRow = $this->unsetNullEntries($normalized);
+
+        return $parsedRow;
     }
 }
