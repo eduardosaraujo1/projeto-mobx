@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use App\Models\Client;
 use App\Models\User;
 use App\Services\ImobiliariaService;
@@ -30,7 +30,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -38,7 +38,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

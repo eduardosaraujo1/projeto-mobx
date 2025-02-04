@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Collection;
 use Session;
 use App\Models\Imobiliaria;
@@ -11,6 +11,7 @@ class ImobiliariaService
 {
     /**
      * Summary of user_imobiliarias
+     * TODO: This should be an accessor from the User model
      * @return Collection<Imobiliaria>
      */
     public static function user_imobiliarias(): Collection
@@ -39,8 +40,8 @@ class ImobiliariaService
         return $imobiliarias[$index_imobiliaria] ?? null;
     }
 
-    public static function current_access_level(): AccessLevel|null
+    public static function current_access_level(): UserRole|null
     {
-        return AccessLevel::tryFrom(static::current_imobiliaria()->access->level ?? null);
+        return UserRole::tryFrom(static::current_imobiliaria()->access->level ?? null);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Imovel;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use App\Services\ImobiliariaService;
 
 class ImovelPolicy
@@ -31,7 +31,7 @@ class ImovelPolicy
      */
     public function create(User $user): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -39,7 +39,7 @@ class ImovelPolicy
      */
     public function update(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -47,7 +47,7 @@ class ImovelPolicy
      */
     public function delete(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

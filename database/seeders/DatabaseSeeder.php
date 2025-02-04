@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use App\Models\Client;
 use App\Models\Imobiliaria;
 use App\Models\Imovel;

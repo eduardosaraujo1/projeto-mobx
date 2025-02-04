@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use Str;
 
-enum AccessLevel: int
+enum UserRole: int
 {
     case COLABORADOR = 0;
     case GERENTE = 1;

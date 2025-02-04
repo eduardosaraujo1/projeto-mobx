@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use App\Models\Imobiliaria;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -39,7 +39,7 @@ class ImobiliariaPolicy
      */
     public function update(User $user, Imobiliaria $imobiliaria): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return ImobiliariaService::current_access_level() === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

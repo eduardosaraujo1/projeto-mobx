@@ -10,10 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_imobiliaria_access', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+        Schema::create('imobiliaria_user', function (Blueprint $table) {
             $table->foreignId('imobiliaria_id')->constrained()->cascadeOnDelete();
-            $table->unsignedSmallInteger('level');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedSmallInteger('role');
+            $table->unique(['user_id', 'imobiliaria_id']);
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_imobiliaria_access');
+        Schema::dropIfExists('imobiliaria_user');
     }
 };

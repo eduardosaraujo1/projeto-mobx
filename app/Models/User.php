@@ -50,8 +50,9 @@ class User extends Authenticatable
 
     public function imobiliarias(): BelongsToMany
     {
-        return $this->belongsToMany(Imobiliaria::class, 'user_imobiliaria_access')
-            ->as('access')
-            ->withPivot('level');
+        return $this->belongsToMany(Imobiliaria::class, 'imobiliaria_user')
+            ->using(Role::class)
+            ->as('role') // 'role' pivot model reference (user->imobiliarias->role)
+            ->withPivot('role'); // 'role' attribute name
     }
 }
