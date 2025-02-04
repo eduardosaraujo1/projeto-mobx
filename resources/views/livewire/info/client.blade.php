@@ -12,7 +12,6 @@ new #[Layout('layouts.app')] class extends Component {
     public string $cpf;
     public string $email;
     public string $address;
-    public string $type;
     public int $imobiliaria_id;
 
     // component state
@@ -34,7 +33,6 @@ new #[Layout('layouts.app')] class extends Component {
         $this->cpf = $this->client->cpf;
         $this->email = $this->client->email ?? '';
         $this->address = $this->client->address ?? '';
-        $this->type = $this->client->type;
         $this->imobiliaria_id = $this->client->imobiliaria->id;
     }
 
@@ -102,13 +100,6 @@ new #[Layout('layouts.app')] class extends Component {
             <x-card>
                 <span class="block text-lg font-bold min-w-max">Endereço:</span>
                 <x-input :disabled='!$edit' wire:model='address' autofocus />
-            </x-card>
-            <x-card>
-                <span class="block text-lg font-bold min-w-max">Tipo</span>
-                <x-select :disabled="!$edit" wire:model='type'>
-                    <x-select.option value="0">Locador</x-select.option>
-                    <x-select.option value="1">Vendedor</x-select.option>
-                </x-select>
             </x-card>
         </div>
     @else

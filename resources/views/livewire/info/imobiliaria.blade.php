@@ -8,6 +8,7 @@ new #[Layout('layouts.app')] class extends Component {
     // client attributes
     public Imobiliaria $imobiliaria;
     public string $name;
+    public string $cnpj;
     public string $address;
     public string $email;
     public string $contact;
@@ -25,6 +26,7 @@ new #[Layout('layouts.app')] class extends Component {
     {
         $this->name = $this->imobiliaria->name;
         $this->address = $this->imobiliaria->address;
+        $this->cnpj = $this->imobiliaria->cnpj;
         $this->email = $this->imobiliaria->email;
         $this->contact = $this->imobiliaria->contact;
     }
@@ -71,6 +73,12 @@ new #[Layout('layouts.app')] class extends Component {
                 <div>
                     <span class="block text-lg font-bold min-w-max">Nome:</span>
                     <x-input :disabled='!$edit' wire:model='name' required autofocus />
+                </div>
+            </x-card>
+            <x-card>
+                <div>
+                    <span class="block text-lg font-bold min-w-max">CNPJ:</span>
+                    <x-input :disabled='!$edit' wire:model='cnpj' required autofocus />
                 </div>
             </x-card>
             <x-card>

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('imobiliarias', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->char('cnpj', 14);
             $table->string('address');
             $table->string('email');
             $table->string('contact');

@@ -24,7 +24,6 @@ new #[Layout('layouts.app')] class extends Component {
      * @var Collection<Client>
      */
     public Collection $clientsFull;
-    public $clientType;
     public $searchString;
 
     public function mount()
@@ -56,11 +55,6 @@ new #[Layout('layouts.app')] class extends Component {
             // search filter
             $verdict = str_contains($haystack, $needle);
 
-            // type filter
-            if (isset($this->clientType)) {
-                $verdict = $verdict && (string) $client->type === (string) $this->clientType;
-            }
-
             return $verdict;
         });
     }
@@ -73,10 +67,6 @@ new #[Layout('layouts.app')] class extends Component {
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
             placeholder="Pesquisar (Nome, CPF, E-mail)" />
-        <x-select placeholder="Selecione" wire:model.live='clientType' class="w-min">
-            <x-select.option label="Locador" value="0" />
-            <x-select.option label="Vendedor" value="1" />
-        </x-select>
         @can('create', Client::class)
             <x-primary-button href="{{ route('client.new') }}" wire:navigate>Cadastrar</x-primary-button>
         @endcan
@@ -100,10 +90,6 @@ new #[Layout('layouts.app')] class extends Component {
                     <div class="flex-1">
                         <span class="block font-bold">E-mail:</span>
                         <span class="block">{{ Str::limit($client->email, 22) }}</span>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block font-bold">Tipo: </span>
-                        <span class="block">{{ $client->typeName() }}</span>
                     </div>
                 </a>
             @empty

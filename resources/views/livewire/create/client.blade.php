@@ -10,7 +10,6 @@ new #[Layout('layouts.app')] class extends Component {
     public string $cpf;
     public string $email;
     public string $address;
-    public string $type;
     public int $imobiliaria_id;
 
     public function mount()
@@ -57,10 +56,6 @@ new #[Layout('layouts.app')] class extends Component {
             <x-maskable errorless mask="###.###.###-##" placeholder="123.456.789-10" label="CPF: " wire:model='cpf' />
             <x-input errorless label="E-mail: " wire:model='email' />
             <x-input errorless label="Endereço: " wire:model='address' />
-            <x-select errorless label="Tipo: " placeholder="Selecione" class="py-0" wire:model='type'>
-                <x-select.option selected value="0">Locador</x-select.option>
-                <x-select.option value="1">Vendedor</x-select.option>
-            </x-select>
             <x-primary-button class="mt-4" type="submit">Cadastrar</x-primary-button>
         </form>
     @else
