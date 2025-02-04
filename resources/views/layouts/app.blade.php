@@ -22,11 +22,6 @@
         <livewire:layout.sidebar />
         <div class="flex-1 overflow-x-hidden overflow-y-auto">
             <div class="flex flex-col h-full px-6 py-12 mx-auto max-w-7xl">
-                @if ($message = session('message'))
-                    <x-alert info title="{{ $message }}" />
-                @elseif ($message = session('error'))
-                    <x-alert negative title="{{ $message }}" />
-                @endif
                 @isset($heading)
                     <h2 {{ $heading->attributes->merge(['class' => 'my-4 text-4xl font-semibold leading-tight']) }}>
                         {{ $heading }}
