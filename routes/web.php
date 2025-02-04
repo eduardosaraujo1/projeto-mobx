@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\ImobiliariaController;
-use App\Http\Controllers\MissingPageController;
-use App\Http\Middleware\EnsureUserHasImobiliaria;
+use App\Http\Controllers\Search\SearchClients;
+use App\Http\Controllers\Search\SearchImobiliarias;
 use App\Services\ImobiliariaService;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
@@ -59,6 +58,9 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Volt::route('cliente/{client}/info', 'info.client')
         ->name('client.info');
 
+    // search api routes
+    Route::get('/api/search/imobiliarias', SearchImobiliarias::class);
+    Route::get('/api/search/clients', SearchClients::class);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
