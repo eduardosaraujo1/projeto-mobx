@@ -235,7 +235,16 @@ return [
         'modality' => 'modalidade',
         'category' => 'categoria',
         'blood_type' => 'tipo sanguíneo',
-        'birth_date' => 'data de nascimento'
+        'birth_date' => 'data de nascimento',
+        // imobiliaria
+        'contact' => 'contato',
+        // cliente
+        'type' => 'tipo',
+        // imovel
+        'address_name' => 'endereço',
+        'address_number' => 'número',
+        'location_reference' => 'localização',
+        'value' => 'valor',
     ],
 
 ];
