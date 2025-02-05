@@ -2,7 +2,6 @@
 
 use App\Facades\SelectedImobiliaria;
 use App\Http\Controllers\Search\SearchClients;
-use App\Http\Controllers\Search\SearchImobiliarias;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -32,35 +31,35 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Route::view('dashboard', 'pages.imobiliaria.dashboard')
         ->name('dashboard');
 
-    Volt::route('minha-imobiliaria', 'info.imobiliaria')
+    Volt::route('minha-imobiliaria', 'pages.info.imobiliaria')
         ->name('imobiliaria.home');
 
-    Volt::route('imoveis', 'search.imoveis')
+    Volt::route('imoveis', 'pages.search.imoveis')
         ->name('imovel.index');
 
-    Volt::route('clientes', 'search.clients')
+    Volt::route('clientes', 'pages.search.clients')
         ->name('client.index');
 
     // create
-    Volt::route('imovel/novo', 'create.imovel')
+    Volt::route('imovel/novo', 'pages.create.imovel')
         ->name('imovel.new');
 
-    Volt::route('cliente/novo', 'create.client')
+    Volt::route('cliente/novo', 'pages.create.client')
         ->name('client.new');
 
     Route::view('usuario/novo', 'pages.user.create')
         ->name('user.new');
 
     // info/edit
-    Volt::route('imovel/{imovel}/info', 'info.imovel')
+    Volt::route('imovel/{imovel}/info', 'pages.info.imovel')
         ->name('imovel.info');
 
-    Volt::route('cliente/{client}/info', 'info.client')
+    Volt::route('cliente/{client}/info', 'pages.info.client')
         ->name('client.info');
 
     // search api routes
-    Route::get('/api/search/imobiliarias', SearchImobiliarias::class);
-    Route::get('/api/search/clients', SearchClients::class);
+    Route::get('/api/search/clients', SearchClients::class)
+        ->name('api.search.clients');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -88,4 +87,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('imobiliaria.missing');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
