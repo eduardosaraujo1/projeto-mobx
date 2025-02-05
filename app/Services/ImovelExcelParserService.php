@@ -83,10 +83,10 @@ class ImovelExcelParserService
         $values = array_values($row);
 
         // cut array to key length
-        $values = array_slice($row, 0, count($cols));
+        $values = array_slice($values, 0, count($cols));
 
         // put null in missing keys
-        $values = array_pad($row, count($cols), null);
+        $values = array_pad($values, count($cols), null);
 
         // create associative array from the two arrays
         return array_combine(keys: $cols, values: $values);

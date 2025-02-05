@@ -167,18 +167,17 @@ new #[Layout('layouts.app')] class extends Component
 <div class="flex flex-col h-full gap-4">
     <x-slot name="heading">Upload de Planilha Excel</x-slot>
     @can("create", Imovel::class)
-        <x-errors title="O sistema não conseguiu ler sua planilha" outline />
+        <x-errors title="Não foi possivel importar sua planilha" outline>
+            <x-slot name="footer" class="flex items-center justify-end">
+                <span class="text-sm text-red-700">Certifique-se de ler as instruções antes de contatar o administrador</span>
+            </x-slot>
+        </x-errors>
         <div>
             <div x-data="{ expanded: false }">
                 <x-alert info class="relative cursor-pointer *:p-0" secondary x-on:click="expanded = ! expanded">
                     <x-slot name="title">
                         Instruções
-                        <x-icon
-                            name="chevron-down"
-                            class="absolute transition top-4 right-4 size-5 shrink-0"
-                            ::class="expanded ? 'rotate-180' : ''"
-                            x-bind:class="isExpanded ? 'rotate-180' : ''"
-                        />
+                        <x-icon name="chevron-down" class="absolute transition top-4 right-4 size-5 shrink-0" x-bind:class="expanded ? 'rotate-180' : ''" />
                     </x-slot>
                     <x-slot name="slot" class="mt-4" x-cloak x-show="expanded" x-collapse>
                         <ol class="space-y-2 list-decimal">
@@ -188,7 +187,7 @@ new #[Layout('layouts.app')] class extends Component
                             </li>
                             <li>
                                 <strong>Ordem das Colunas:</strong>
-                                Certifique-se de que as colunas seguem a mesma ordem da pré-visualização abaixo.
+                                Certifique-se de que as colunas seguem a mesma ordem da pré-visualização abaixo. Erros por não seguir esta regra não serão detectados
                             </li>
                             <li>
                                 <strong>Regras de Formatação (valores inválidos serão rejeitados):</strong>
