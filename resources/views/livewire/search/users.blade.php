@@ -47,10 +47,12 @@ new class extends Component
 <div class="flex flex-col space-y-2">
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Nome ou E-mail)" />
-        <x-select placeholder="Tipo de Usuário" class="w-min" wire:model.live="searchType">
-            <x-select.option label="Administrador" value="1" />
-            <x-select.option label="Regular" value="0" />
-        </x-select>
+        <div class="w-36">
+            <x-select placeholder="Tipo de Usuário" class="" wire:model.live="searchType">
+                <x-select.option label="Administrador" value="1" />
+                <x-select.option label="Regular" value="0" />
+            </x-select>
+        </div>
         <x-primary-button href="{{ route('user.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
