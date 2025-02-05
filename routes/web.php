@@ -28,7 +28,7 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     })->name('home');
 
     // navbar
-    Route::view('dashboard', 'pages.imobiliaria.dashboard')
+    Route::view('dashboard', 'pages.dashboard')
         ->name('dashboard');
 
     Volt::route('minha-imobiliaria', 'pages.info.imobiliaria')
@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('home');
         }
 
-        return view('pages.imobiliaria.missing');
+        return view('pages.missing');
     })->name('imobiliaria.missing');
 });
 

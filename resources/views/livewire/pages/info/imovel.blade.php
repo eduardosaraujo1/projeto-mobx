@@ -1,33 +1,46 @@
 <?php
 
-use Livewire\Volt\Component;
 use App\Models\Imovel;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 
-new #[Layout('layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component
+{
     use WithFileUploads;
 
     public Imovel $imovel;
 
     // client attributes
+    public int $id;
+
     public string $address_name;
+
     public int $address_number;
+
     public string $bairro;
+
     public ?string $location_reference;
+
     public ?string $value;
+
     public ?string $iptu;
+
     public string $status;
+
     public ?string $photo_path;
+
     public ?int $client_id;
 
     // other attributes
     #[Validate('nullable|image|max:4096')]
     public $uploaded_photo;
+
     public bool $edit = false;
 
     public ?string $stored_photo_cache = null;
+
     public ?string $stored_photo = null;
 
     public function mount()
@@ -66,6 +79,7 @@ new #[Layout('layouts.app')] class extends Component {
 
     public function rebindValues()
     {
+        $this->id = $this->imovel->id;
         $this->address_name = $this->imovel->address_name;
         $this->address_number = $this->imovel->address_number;
         $this->bairro = $this->imovel->bairro;
@@ -133,40 +147,37 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
+
 <div>
-    <x-slot name="heading">
-        Gerenciar Imóvel
-    </x-slot>
-    @can('view', $imovel)
-        <x-errors class='mb-4' />
+    <x-slot name="heading">Gerenciar Imóvel</x-slot>
+    @can("view", $imovel)
+        <x-errors class="mb-4" />
         <div class="space-y-2">
+            <!-- action bar -->
             <div class="flex justify-between">
                 <span class="block text-2xl">Dados do Imóvel</span>
-                @can('update', $imovel)
+                @can("update", $imovel)
                     <div class="flex gap-2 grid-span-3">
                         @if ($edit)
-                            <x-primary-button wire:click='save'>Salvar</x-primary-button>
-                            <x-secondary-button wire:click.prevent='stopEdit'>Cancelar</x-secondary-button>
+                            <x-primary-button wire:click="save">Salvar</x-primary-button>
+                            <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                         @else
-                            <x-primary-button label="Editar" wire:click.prevent='startEdit'>Editar</x-primary-button>
+                            <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
                         @endif
                     </div>
                 @endcan
             </div>
+            <!-- grid with images -->
             <div class="grid grid-cols-3 gap-1">
-                <x-card class='row-span-4'>
+                <x-card class="row-span-4">
                     <div class="grid items-center gap-2">
-                        <div class="w-full bg-gray-200 bg-center bg-cover border border-gray-300 aspect-square"
-                            style="background-image:url('{{ $display_image }}')"></div>
+                        <div class="w-full bg-gray-200 bg-center bg-cover border border-gray-300 aspect-square" style="background-image: url('{{ $display_image }}')"></div>
                         @if ($edit)
                             <div class="grid items-center w-full min-w-0 gap-2">
                                 <form class="flex gap-2">
-                                    <x-primary-button x-on:click.prevent="$refs.photo.click()">
-                                        Alterar Foto
-                                    </x-primary-button>
-                                    <x-secondary-button wire:click='clearPhoto'>Limpar</x-secondary-button>
-                                    <input x-ref="photo" type="file" accept="image/png, image/gif, image/jpeg"
-                                        wire:model='uploaded_photo' :disabled="!$edit" class="hidden" />
+                                    <x-primary-button x-on:click.prevent="$refs.photo.click()">Alterar Foto</x-primary-button>
+                                    <x-secondary-button wire:click="clearPhoto">Limpar</x-secondary-button>
+                                    <input x-ref="photo" type="file" accept="image/png, image/gif, image/jpeg" wire:model="uploaded_photo" :disabled="!$edit" class="hidden" />
                                 </form>
                             </div>
                         @endif
@@ -175,21 +186,21 @@ new #[Layout('layouts.app')] class extends Component {
                 <div class="flex col-span-2 gap-1">
                     <x-card class="grid items-center flex-1">
                         <span class="block text-lg font-bold min-w-max">Endereço:</span>
-                        <x-input :disabled='!$edit' wire:model='address_name' required autofocus />
+                        <x-input :disabled='!$edit' wire:model="address_name" required autofocus />
                     </x-card>
                     <x-card class="grid items-center">
                         <span class="block text-lg font-bold min-w-max">Número:</span>
-                        <x-input :disabled='!$edit' wire:model='address_number' required autofocus />
+                        <x-input :disabled='!$edit' wire:model="address_number" required autofocus />
                     </x-card>
                 </div>
                 <x-card class="grid items-center col-span-2">
                     <span class="block text-lg font-bold min-w-max">Bairro:</span>
-                    <x-input :disabled='!$edit' wire:model='bairro' required autofocus />
+                    <x-input :disabled='!$edit' wire:model="bairro" required autofocus />
                 </x-card>
                 <x-card class="grid items-center col-span-2">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Localização:</span>
-                        <x-select :disabled="!$edit" wire:model='location_reference'>
+                        <x-select :disabled="!$edit" wire:model="location_reference">
                             <x-select.option value="0">Morro</x-select.option>
                             <x-select.option value="1">Praia</x-select.option>
                         </x-select>
@@ -197,17 +208,18 @@ new #[Layout('layouts.app')] class extends Component {
                 </x-card>
                 <x-card class="grid items-center col-span-2">
                     <div class="flex items-center gap-2">
-                        <span class="block text-lg font-bold min-w-max">IPTU: </span>
-                        <x-input prefix="R$" :disabled='!$edit' wire:model='iptu' autofocus />
+                        <span class="block text-lg font-bold min-w-max">IPTU:</span>
+                        <x-input prefix="R$" :disabled='!$edit' wire:model="iptu" autofocus />
                     </div>
                 </x-card>
             </div>
+            <!-- locação info -->
             <span class="block text-2xl">Informações de Locação</span>
             <div class="grid grid-cols-2 gap-1">
                 <x-card class="grid items-center">
                     <div class="flex items-center gap-2">
-                        <span class="block text-lg font-bold min-w-max">Status: </span>
-                        <x-select :disabled="!$edit" wire:model='status'>
+                        <span class="block text-lg font-bold min-w-max">Status:</span>
+                        <x-select :disabled="!$edit" wire:model="status">
                             <x-select.option value="0">Livre</x-select.option>
                             <x-select.option value="1">Alugado</x-select.option>
                             <x-select.option value="2">Vendido</x-select.option>
@@ -217,18 +229,17 @@ new #[Layout('layouts.app')] class extends Component {
                 <x-card class="grid items-center">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Valor:</span>
-                        <x-input prefix="R$" :disabled='!$edit' wire:model='value' autofocus />
+                        <x-input prefix="R$" :disabled='!$edit' wire:model="value" autofocus />
                     </div>
                 </x-card>
                 <x-card class="grid items-center col-span-2">
                     <div class="flex items-center gap-2">
-                        <span class="block text-lg font-bold min-w-max">Cliente: </span>
-                        <x-select placeholder="Cliente" option-label="name" option-value="id" :disabled="!$edit" />
+                        <span class="block text-lg font-bold min-w-max">Cliente:</span>
                     </div>
                 </x-card>
             </div>
-            <x-secondary-button>Ver documentos</x-secondary-button>
         </div>
+        <x-secondary-button>Ver documentos</x-secondary-button>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
