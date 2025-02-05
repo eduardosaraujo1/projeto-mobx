@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Client;
 use App\Models\Imovel;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
@@ -31,9 +33,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public ?string $photo_path;
 
-    public ?int $client_id;
+    public ?int $client_id = null;
 
-    // other attributes
+    // form attributes
     #[Validate('nullable|image|max:4096')]
     public $uploaded_photo;
 
@@ -61,17 +63,18 @@ new #[Layout('layouts.app')] class extends Component
     {
         return [
             'display_image' => $this->resolveImage(),
+            'client' => Client::find($this?->client_id),
         ];
     }
 
     public function resolveImage()
     {
-        if (isset($this->stored_photo)) {
-            return $this->stored_photo;
-        }
-
         if (isset($this->uploaded_photo)) {
             return $this->uploaded_photo->temporaryUrl();
+        }
+
+        if (isset($this->stored_photo)) {
+            return $this->stored_photo;
         }
 
         return asset('images/placeholder-image.svg');
@@ -88,7 +91,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->iptu = $this->imovel->iptu;
         $this->status = $this->imovel->status->value;
         $this->photo_path = $this->imovel->photo_path;
-        $this->client_id = $this->imovel->client?->id;
+        $this->client_id = $this->imovel->client?->id ?? null;
         $this->stored_photo = $this->stored_photo_cache;
     }
 
@@ -127,6 +130,16 @@ new #[Layout('layouts.app')] class extends Component
         $this->stopEdit();
     }
 
+    // #[On('select-client')]
+    public function updateClient(?int $client_id)
+    {
+        if (! isset($client_id)) {
+            return;
+        }
+
+        $this->client_id = $client_id;
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -144,6 +157,11 @@ new #[Layout('layouts.app')] class extends Component
         $this->uploaded_photo = null;
         $this->stored_photo = null;
         $this->photo_path = null;
+    }
+
+    public function clearClient()
+    {
+        $this->client_id = null;
     }
 }; ?>
 
@@ -177,7 +195,7 @@ new #[Layout('layouts.app')] class extends Component
                                 <form class="flex gap-2">
                                     <x-primary-button x-on:click.prevent="$refs.photo.click()">Alterar Foto</x-primary-button>
                                     <x-secondary-button wire:click="clearPhoto">Limpar</x-secondary-button>
-                                    <input x-ref="photo" type="file" accept="image/png, image/gif, image/jpeg" wire:model="uploaded_photo" :disabled="!$edit" class="hidden" />
+                                    <input x-ref="photo" type="file" accept="image/png, image/gif, image/jpeg" wire:model="uploaded_photo" @disabled(! $edit) class="hidden" />
                                 </form>
                             </div>
                         @endif
@@ -213,9 +231,17 @@ new #[Layout('layouts.app')] class extends Component
                     </div>
                 </x-card>
             </div>
-            <!-- locação info -->
+            <!-- info about allocation -->
             <span class="block text-2xl">Informações de Locação</span>
             <div class="grid grid-cols-2 gap-1">
+                <x-card class="grid items-center col-span-2">
+                    <div class="flex items-center gap-2">
+                        <span class="block text-lg font-bold min-w-max">Cliente:</span>
+                        <span class="flex-1">{{ $client?->name ?? "Nenhum cliente atribuido" }}</span>
+                        <x-primary-button :disabled="!$edit" x-on:click.prevent="$dispatch('open-modal', 'select-client')">Alterar</x-primary-button>
+                        <x-secondary-button :disabled="!$edit" wire:click="clearClient">Limpar</x-secondary-button>
+                    </div>
+                </x-card>
                 <x-card class="grid items-center">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Status:</span>
@@ -232,14 +258,15 @@ new #[Layout('layouts.app')] class extends Component
                         <x-input prefix="R$" :disabled='!$edit' wire:model="value" autofocus />
                     </div>
                 </x-card>
-                <x-card class="grid items-center col-span-2">
-                    <div class="flex items-center gap-2">
-                        <span class="block text-lg font-bold min-w-max">Cliente:</span>
-                    </div>
-                </x-card>
             </div>
         </div>
-        <x-secondary-button>Ver documentos</x-secondary-button>
+        <x-secondary-button class="mt-2">Ver documentos</x-secondary-button>
+        <x-modal name="select-client" focusable>
+            <div class="p-6">
+                <h1 class="mb-2 text-2xl">Selecionar Cliente</h1>
+                <livewire:modals.select-imovel-client />
+            </div>
+        </x-modal>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan

@@ -76,102 +76,102 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 #### Usuários
 
--   Listar
--   Ler
--   Criar
--   Editar
--   Apagar
+- Listar
+- Ler
+- Criar
+- Editar
+- Apagar
 
 #### Imobiliárias
 
--   Listar
--   Ler
--   Criar
--   Editar
--   Apagar
+- Listar
+- Ler
+- Criar
+- Editar
+- Apagar
 
 #### Cliente
 
--   Listar
--   Ler
--   Criar
--   Editar
+- Listar
+- Ler
+- Criar
+- Editar
 
 #### Imoveis
 
--   Listar
--   Ler
--   Criar
--   Editar
--   Apagar
+- Listar
+- Ler
+- Criar
+- Editar
+- Apagar
 
 #### Documentos imoveis
 
--   Listar
--   Ler (download)
--   Criar (upload)
--   Apagar
+- Listar
+- Ler (download)
+- Criar (upload)
+- Apagar
 
 #### Logs imoveis
 
--   Listar
--   Ler
--   Criar (não diretamente)
+- Listar
+- Ler
+- Criar (não diretamente)
 
 ### Gerente
 
 #### Imobiliárias
 
--   Listar (apenas suas próprias)
--   Ler (apenas suas próprias)
+- Listar (apenas suas próprias)
+- Ler (apenas suas próprias)
 
 #### Imóveis
 
--   Listar (de sua imobiliária)
--   Ler (de sua imobiliária)
--   Criar (de sua imobiliária)
--   Editar (de sua imobiliária)
--   Apagar (de sua imobiliária)
+- Listar (de sua imobiliária)
+- Ler (de sua imobiliária)
+- Criar (de sua imobiliária)
+- Editar (de sua imobiliária)
+- Apagar (de sua imobiliária)
 
 #### Clientes
 
--   Listar (de imóveis da sua imobiliária)
--   Ler (de imóveis da sua imobiliária)
--   Criar (de imóveis da sua imobiliária)
--   Editar (de imóveis da sua imobiliária)
--   Apagar (de imóveis da sua imobiliária)
+- Listar (de imóveis da sua imobiliária)
+- Ler (de imóveis da sua imobiliária)
+- Criar (de imóveis da sua imobiliária)
+- Editar (de imóveis da sua imobiliária)
+- Apagar (de imóveis da sua imobiliária)
 
 #### Documentos de imóveis
 
--   Ler (download - de imóveis da sua imobiliária)
--   Criar (upload - de imóveis da sua imobiliária)
--   Apagar (de imóveis da sua imobiliária)
+- Ler (download - de imóveis da sua imobiliária)
+- Criar (upload - de imóveis da sua imobiliária)
+- Apagar (de imóveis da sua imobiliária)
 
 #### Logs de imóveis
 
--   Listar (de imóveis da sua imobiliária)
--   Ler (de imóveis da sua imobiliária)
+- Listar (de imóveis da sua imobiliária)
+- Ler (de imóveis da sua imobiliária)
 
 ### Colaborador
 
 #### Imobiliárias
 
--   Listar
--   Ler
+- Listar
+- Ler
 
 #### Imóveis
 
--   Listar
--   Ler
+- Listar
+- Ler
 
 #### Clientes
 
--   Listar
--   Ler
+- Listar
+- Ler
 
 #### Documentos de imóveis
 
--   Ler (download)
+- Ler (download)
 
 </details>
 
@@ -189,262 +189,261 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 ### Login | All
 
--   **Descrição:** campos 'email' e 'senha' e botão de login.
--   **Navegação:**
+- **Descrição:** campos 'email' e 'senha' e botão de login.
+- **Navegação:**
 
-    -   Selecionar Imobiliária
+    - Selecionar Imobiliária
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   login | All
+    - login | All
 
 ### Gerenciar Usuários | Admin
 
--   **Descrição:** pesquisa e visualização de usuários.
--   **Navegação:**
+- **Descrição:** pesquisa e visualização de usuários.
+- **Navegação:**
 
-    -   Cadastrar Usuário
-    -   Visualizar Usuário
-    -   Navbar
+    - Cadastrar Usuário
+    - Visualizar Usuário
+    - Navbar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   pesquisar_usuario | Admin
+    - pesquisar_usuario | Admin
 
 ### Cadastrar Usuário | Admin
 
--   **Descrição:** cadastro de usuário novo, com nome, email, senha e status administrativo.
--   **Navegação:**
+- **Descrição:** cadastro de usuário novo, com nome, email, senha e status administrativo.
+- **Navegação:**
 
-    -   Navbar
+    - Navbar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   cadastrar_usuario
+    - cadastrar_usuario
 
 ### Visualizar Usuário | Self or Admin
 
--   **Descrição:** visualização dos dados do usuário selecionado, com edição para administradores.
--   **Navegação:**
+- **Descrição:** visualização dos dados do usuário selecionado, com edição para administradores.
+- **Navegação:**
 
-    -   Navbar
+    - Navbar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   editar_usuario
-    -   remover_usuario
+    - editar_usuario
+    - remover_usuario
 
 ### Alterar Senha | Self
 
--   **Descrição:** campos para alterar senha do usuário atual e confirmar.
--   **Navegação:**
+- **Descrição:** campos para alterar senha do usuário atual e confirmar.
+- **Navegação:**
 
-    -   Navbar
-    -   Voltar
+    - Navbar
+    - Voltar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   change_password
+    - change_password
 
 ### Selecionar Imobiliária | Authed
 
--   **Descrição:** seleção de imobiliária para gerenciar; com barra de pesquisa e botão para cadastro; navbar para gerenciar usuários.
--   **Navegação:**
+- **Descrição:** seleção de imobiliária para gerenciar; com barra de pesquisa e botão para cadastro; navbar para gerenciar usuários.
+- **Navegação:**
 
-    -   Navbar
-    -   Cadastrar Imobiliária
-    -   Perfil Imobiliária
+    - Navbar
+    - Cadastrar Imobiliária
+    - Perfil Imobiliária
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   select_imobiliaria | Colaborador
-    -   search_imobiliaria | Colaborador
-    -   create_imobiliaria | Admin
+    - select_imobiliaria | Colaborador
+    - search_imobiliaria | Colaborador
+    - create_imobiliaria | Admin
 
 ### Cadastrar Imobiliária | Admin
 
--   **Descrição:** criar nova imobiliária.
--   **Navegação:**
+- **Descrição:** criar nova imobiliária.
+- **Navegação:**
 
-    -   Navbar
-    -   Voltar
+    - Navbar
+    - Voltar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   cadastrar_imobiliaria
-    -   upload_logo_imobiliaria
+    - cadastrar_imobiliaria
+    - upload_logo_imobiliaria
 
 ### Perfil Imobiliária | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver dados da imobiliária, com edição e exclusão (para administrador).
--   **Navegação:**
+- **Descrição:** ver dados da imobiliária, com edição e exclusão (para administrador).
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Gerenciar Membros Imobiliaria
+    - Navbar
+    - Sidebar
+    - Gerenciar Membros Imobiliaria
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   editar_imobiliaria | Admin
-    -   remover_imobiliaria | Admin
+    - editar_imobiliaria | Admin
+    - remover_imobiliaria | Admin
 
 ### Gerenciar Membros Imobiliária | Gerente.SelectedImobiliaria
 
--   **Descrição:** adicionar ou remover pessoas com acesso à imobiliária e seus cargos.
--   **Navegação:**
+- **Descrição:** adicionar ou remover pessoas com acesso à imobiliária e seus cargos.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
+    - Navbar
+    - Sidebar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   pesquisar_usuario | Gerente
-    -   alterar_permissao_usuario | Gerente
+    - pesquisar_usuario | Gerente
+    - alterar_permissao_usuario | Gerente
 
 ### Dashboard Imobiliária | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver gráficos e relatórios relacionados aos imóveis.
--   **Navegação:**
+- **Descrição:** ver gráficos e relatórios relacionados aos imóveis.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
+    - Navbar
+    - Sidebar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   exportar_relatorio | Colaborador.SelectedImobiliaria
+    - exportar_relatorio | Colaborador.SelectedImobiliaria
 
 ### Gerenciar Clientes | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver clientes atrelados à imobiliária.
--   **Navegação:**
+- **Descrição:** ver clientes atrelados à imobiliária.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Cadastrar Cliente
-    -   Visualizar Cliente
+    - Navbar
+    - Sidebar
+    - Cadastrar Cliente
+    - Visualizar Cliente
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   pesquisar_cliente | Colaborador.SelectedImobiliaria
+    - pesquisar_cliente | Colaborador.SelectedImobiliaria
 
 ### Cadastrar Cliente | Gerente.SelectedImobiliaria
 
--   **Descrição:** **modal** para adicionar cliente à imobiliária.
--   **Navegação:**
+- **Descrição:** **modal** para adicionar cliente à imobiliária.
+- **Navegação:**
 
-    -   N/A (é um modal)
+    - N/A (é um modal)
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   cadastrar_cliente | Gerente.SelectedImobiliaria
+    - cadastrar_cliente | Gerente.SelectedImobiliaria
 
 ### Visualizar Cliente | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver dados cadastrados de um cliente, com edição para gerentes.
--   **Navegação:**
+- **Descrição:** ver dados cadastrados de um cliente, com edição para gerentes.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
+    - Navbar
+    - Sidebar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   editar_cliente | Gerente.SelectedImobiliaria
+    - editar_cliente | Gerente.SelectedImobiliaria
 
 ### Gerenciar Imóveis | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver imóveis relacionados à imobiliária.
--   **Navegação:**
+- **Descrição:** ver imóveis relacionados à imobiliária.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Cadastrar Imóvel
+    - Navbar
+    - Sidebar
+    - Cadastrar Imóvel
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   pesquisar_imovel | Colaborador.SelectedImobiliaria
+    - pesquisar_imovel | Colaborador.SelectedImobiliaria
 
 ### Cadastrar Imóvel | Gerente.SelectedImobiliaria
 
--   **Descrição:** cadastrar novo imóvel à imobiliária através do upload de um excel.
--   **Navegação:**
+- **Descrição:** cadastrar novo imóvel à imobiliária através do upload de um excel.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Voltar
+    - Navbar
+    - Sidebar
+    - Voltar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   download_template | Gerente.SelectedImobiliaria
-    -   upload_data | Gerente.SelectedImobiliaria
-    -   verify_template | Gerente.SelectedImobiliaria
-    -   cadastrar_imovel | Gerente.SelectedImobiliaria
+    - download_template | Gerente.SelectedImobiliaria
+    - upload_data | Gerente.SelectedImobiliaria
+    - verify_template | Gerente.SelectedImobiliaria
+    - cadastrar_imovel | Gerente.SelectedImobiliaria
 
 ### Cadastrar Imóvel Manualmente | Gerente.SelectedImobiliaria
 
--   **Descrição:** cadastrar novo imóvel à imobiliária através de um formulário.
--   **Navegação:**
+- **Descrição:** cadastrar novo imóvel à imobiliária através de um formulário.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Voltar
+    - Navbar
+    - Sidebar
+    - Voltar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   cadastrar_imovel | Gerente.SelectedImobiliaria
+    - cadastrar_imovel | Gerente.SelectedImobiliaria
 
 ### Visualizar Imóvel | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver dados cadastrados de um imóvel, com edição para gerentes.
--   **Navegação:**
+- **Descrição:** ver dados cadastrados de um imóvel, com edição para gerentes.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
-    -   Gerenciar Documentos Imóvel
-    -   Histórico de Imóvel
+    - Navbar
+    - Sidebar
+    - Gerenciar Documentos Imóvel
+    - Histórico de Imóvel
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   delete_imovel | Gerente.SelectedImobiliaria
-    -   edit_imovel | Gerente.SelectedImobiliaria
+    - delete_imovel | Gerente.SelectedImobiliaria
+    - edit_imovel | Gerente.SelectedImobiliaria
 
 ### Gerenciar Documentos Imóvel | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver e modificar documentos atrelados ao imóvel.
--   **Navegação:**
+- **Descrição:** ver e modificar documentos atrelados ao imóvel.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
+    - Navbar
+    - Sidebar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   upload_document | Gerente.SelectedImobiliaria
-    -   remove_document | Gerente.SelectedImobiliaria
-    -   download_document | Colaborador.SelectedImobiliaria
+    - upload_document | Gerente.SelectedImobiliaria
+    - remove_document | Gerente.SelectedImobiliaria
+    - download_document | Colaborador.SelectedImobiliaria
 
 ### Histórico de Alterações Imóvel | Colaborador.SelectedImobiliaria
 
--   **Descrição:** ver o histórico de alterações de imóvel.
--   **Navegação:**
+- **Descrição:** ver o histórico de alterações de imóvel.
+- **Navegação:**
 
-    -   Navbar
-    -   Sidebar
+    - Navbar
+    - Sidebar
 
--   **Use Cases:**
+- **Use Cases:**
 
-    -   N/A (readonly page)
+    - N/A (readonly page)
 
 # Roadmap
 
--   [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
--   [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
--   [x] FRONT - Montar estrutura de arquivos (views)
--   [x] MODELAGEM - Um imovel, apesar de ser de um cliente, foi cadastrada por um usuario que pertence a uma imobiliaria. Portanto, imovel pertence à imobiliaria e imovel pertence a cliente, e cliente também pertence à imobiliaria
--   [ ] Seleção de clientes para imóvel - API de pesquisa e dropdown; utilizando wire:model utilizar x-select na seleção de imobiliaria e implementar barra de pesquisa. (veja os exemplos no github do WireUI). É possivel usar auth()->user() na API mas valide para null
--   [ ] CADASTRO - mecanismo de cadastro de usuários
--   [ ] Mecanismo de ver data de aluguel do dashboard
--   [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada
--   [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
-    -   Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
-    -   Fazer apenas se der tempo
--   [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
-    -   Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário
+- [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
+- [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
+- [x] FRONT - Montar estrutura de arquivos (views)
+- [x] MODELAGEM - Um imovel, apesar de ser de um cliente, foi cadastrada por um usuario que pertence a uma imobiliaria. Portanto, imovel pertence à imobiliaria e imovel pertence a cliente, e cliente também pertence à imobiliaria
+- [ ] CADASTRO - mecanismo de cadastro de usuários
+- [ ] Mecanismo de ver data de aluguel do dashboard
+- [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada
+- [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
+    - Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
+    - Fazer apenas se der tempo
+- [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
+    - Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário

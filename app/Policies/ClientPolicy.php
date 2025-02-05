@@ -22,7 +22,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return SelectedImobiliaria::get($user)->id === $client->imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $client->imobiliaria->id;
     }
 
     /**

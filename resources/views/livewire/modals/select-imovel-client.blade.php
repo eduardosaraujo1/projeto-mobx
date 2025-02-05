@@ -1,26 +1,12 @@
 <?php
 
 use App\Facades\SelectedImobiliaria;
-use App\Models\Client;
 use Illuminate\Database\Eloquent\Collection;
-use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')] class extends Component
+new class extends Component
 {
-    /**
-     * Summary of imoveis
-     *
-     * @var Collection<Client>
-     */
-    public Collection $clientsFull;
-
-    public $searchString;
-
-    public function mount()
-    {
-        $this->clientsFull = SelectedImobiliaria::get(auth()->user())->clients;
-    }
+    public string $searchString;
 
     public function with()
     {
@@ -31,7 +17,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public function clientSearch(): Collection
     {
-        return $this->clientsFull->filter(function ($client) {
+        $clients = SelectedImobiliaria::get(auth()->user())->clients;
+
+        return $clients->filter(function ($client) {
             $verdict = true;
 
             // data
@@ -39,7 +27,7 @@ new #[Layout('layouts.app')] class extends Component
             $email = $client->email ?? '';
             $cpf = $client->cpf ?? '';
 
-            // formatted queries
+            // format queries
             $haystack = preg_replace('/[.,]/', '', strtolower("$name $email $cpf"));
             $needle = preg_replace('/[.,]/', '', strtolower($this->searchString ?? ''));
 
@@ -52,18 +40,20 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 
-<div class="space-y-2">
-    <x-slot name="heading">Clientes</x-slot>
+<div>
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Nome, CPF, E-mail)" />
-        @can("create", Client::class)
-            <x-primary-button href="{{ route('client.new') }}" wire:navigate>Cadastrar</x-primary-button>
-        @endcan
+        <x-secondary-button x-on:click="$dispatch('close')">Cancelar</x-secondary-button>
     </div>
-    <div class="bg-white rounded shadow h-[40rem]">
-        <div class="flex flex-col h-full gap-4 p-4 overflow--x-hidden">
+    <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
+        <div class="flex flex-col gap-4 p-4">
             @forelse ($clients as $client)
-                <a href="{{ route("client.info", ["client" => $client->id]) }}" wire:navigate class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
+                <button
+                    wire:click="$parent.updateClient({{ $client?->id }})"
+                    @@click="$dispatch('close')"
+                    wire:navigate
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow"
+                >
                     <div class="mr-2">
                         <x-avatar xl label="C" class="!bg-gray-700" />
                     </div>
@@ -79,7 +69,7 @@ new #[Layout('layouts.app')] class extends Component
                         <span class="block font-bold">E-mail:</span>
                         <span class="block">{{ Str::limit($client->email, 22) }}</span>
                     </div>
-                </a>
+                </button>
             @empty
                 <x-alert title="Nenhum cliente foi encontrado" />
             @endforelse

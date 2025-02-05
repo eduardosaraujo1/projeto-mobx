@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRole;
 use App\Facades\SelectedImobiliaria;
 use App\Models\Imovel;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use App\Enums\UserRole;
 
 class ImovelPolicy
 {
@@ -23,7 +22,7 @@ class ImovelPolicy
      */
     public function view(User $user, Imovel $imovel): bool
     {
-        return SelectedImobiliaria::get($user)->id === $imovel->imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $imovel->imobiliaria->id;
     }
 
     /**

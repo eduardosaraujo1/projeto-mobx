@@ -6,7 +6,6 @@ use App\Enums\UserRole;
 use App\Facades\SelectedImobiliaria;
 use App\Models\Imobiliaria;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ImobiliariaPolicy
 {
@@ -23,7 +22,7 @@ class ImobiliariaPolicy
      */
     public function view(User $user, Imobiliaria $imobiliaria): bool
     {
-        return SelectedImobiliaria::get($user)->id === $imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $imobiliaria->id;
     }
 
     /**

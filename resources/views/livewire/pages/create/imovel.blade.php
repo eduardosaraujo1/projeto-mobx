@@ -3,6 +3,7 @@
 use App\Facades\SelectedImobiliaria;
 use App\Models\Imovel;
 use App\Services\ImovelExcelParserService;
+use App\Utils\StringUtils;
 use Illuminate\Http\UploadedFile;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -130,14 +131,6 @@ new #[Layout('layouts.app')] class extends Component
 
     public function getFormattedTable()
     {
-        function formatCurrencyField($value): string
-        {
-            if (! isset($value) || (float) $value < 0) {
-                return '';
-            }
-
-            return number_format((float) $value, 2);
-        }
 
         $table = $this->parsedTable;
         $formatted = [];
@@ -150,11 +143,11 @@ new #[Layout('layouts.app')] class extends Component
 
             // parse currency values (unset friendly)
             if (isset($row['value'])) {
-                $row['value'] = formatCurrencyField($row['value']);
+                $row['value'] = StringUtils::formatCurrencyField($row['value']);
             }
 
             if (isset($row['iptu'])) {
-                $row['iptu'] = formatCurrencyField($row['iptu']);
+                $row['iptu'] = StringUtils::formatCurrencyField($row['iptu']);
             }
 
             // parse status name (unset friendly)
