@@ -1,31 +1,27 @@
 <?php
 
-use Livewire\Volt\Component;
-use Livewire\Attributes\Layout;
-use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
-use App\Models\Imovel;
-use Spatie\SimpleExcel\SimpleExcelReader;
-use Illuminate\Http\UploadedFile;
-use App\Services\ImovelService;
 use App\Facades\SelectedImobiliaria;
+use App\Models\Imovel;
+use App\Services\ImovelExcelParserService;
+use Illuminate\Http\UploadedFile;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
+use Spatie\SimpleExcel\SimpleExcelReader;
 
-new #[Layout('layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component
+{
     use WithFileUploads;
 
     // file upload
     #[Validate('file|max:32768')]
     public $file;
-    public bool $hasErrors = false;
 
     // component state
-    public array $parsedTable = [];
-    private ImovelService $excelService;
+    public bool $hasErrors = false;
 
-    public function boot(ImovelService $excelService)
-    {
-        $this->excelService = $excelService;
-    }
+    public array $parsedTable = [];
 
     public function with()
     {
@@ -37,8 +33,8 @@ new #[Layout('layouts.app')] class extends Component {
     // this lifecycle hook will run as soon as a form field is updated, and before rendering
     public function updating(string $name, ?UploadedFile $value)
     {
-        if ($name === 'file' && !empty($value->path())) {
-            $this->parsedTable = $this->parseFile($value->path());
+        if ($name === 'file') {
+            $this->fileUploaded($value);
         }
     }
 
@@ -50,6 +46,7 @@ new #[Layout('layouts.app')] class extends Component {
         // If currently has errors, do not proceed
         if ($this->hasErrors) {
             session()->flash('error', 'upload error');
+
             return;
         }
 
@@ -59,6 +56,7 @@ new #[Layout('layouts.app')] class extends Component {
 
             if ($errors) {
                 session()->flash('error', 'upload error');
+
                 return;
             } else {
                 Imovel::create([...$row, 'imobiliaria_id' => SelectedImobiliaria::get(auth()->user())->id]);
@@ -70,17 +68,30 @@ new #[Layout('layouts.app')] class extends Component {
         }
     }
 
-    public function parseFile($file_path)
+    public function fileUploaded(?UploadedFile $file)
     {
-        $rows = SimpleExcelReader::create($file_path)->getRows();
+        // stop invalid paths
+        if (! isset($file) || empty($file->path())) {
+            return;
+        }
+
+        if (! in_array($file->extension(), ['xlsx', 'csv'])) {
+            return;
+        }
+
+        // init parser service
+        $parser = new ImovelExcelParserService;
+
+        // get excel row
+        $rows = SimpleExcelReader::create($file->path())->getRows();
+
+        // parse table
+        $table = $parser->parse($rows);
         $processed = [];
 
-        foreach ($rows as $rowIndex => $row) {
-            // parse the current row
-            $parsed = $this->excelService->parseExcelRow($row);
-
+        foreach ($table as $rowIndex => $row) {
             // validate the normalized row
-            $errors = $this->getRowErrors($parsed);
+            $errors = $this->getRowErrors($row);
 
             if ($errors) {
                 $this->hasErrors = true;
@@ -91,10 +102,10 @@ new #[Layout('layouts.app')] class extends Component {
             // track the error state (if this code runs there were no errors on the column)
             $this->hasErrors = false;
 
-            $processed[] = $parsed;
+            $processed[] = $row;
         }
 
-        return $processed;
+        $this->parsedTable = $processed;
     }
 
     public function getRowErrors($row)
@@ -121,7 +132,7 @@ new #[Layout('layouts.app')] class extends Component {
     {
         function formatCurrencyField($value): string
         {
-            if (!isset($value) || (float) $value < 0) {
+            if (! isset($value) || (float) $value < 0) {
                 return '';
             }
 
@@ -159,59 +170,84 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
+
 <div class="flex flex-col h-full gap-4">
-    <x-slot name="heading">
-        Upload de Planilha Excel
-    </x-slot>
-    @can('create', Imovel::class)
+    <x-slot name="heading">Upload de Planilha Excel</x-slot>
+    @can("create", Imovel::class)
+        <x-errors title="O sistema não conseguiu ler sua planilha" outline />
         <div>
             <div x-data="{ expanded: false }">
                 <x-alert info class="relative cursor-pointer *:p-0" secondary x-on:click="expanded = ! expanded">
                     <x-slot name="title">
                         Instruções
-                        <x-icon name="chevron-down" class="absolute transition top-4 right-4 size-5 shrink-0"
-                            ::class="expanded ? 'rotate-180' : ''" x-bind:class="isExpanded ? 'rotate-180' : ''" />
+                        <x-icon
+                            name="chevron-down"
+                            class="absolute transition top-4 right-4 size-5 shrink-0"
+                            ::class="expanded ? 'rotate-180' : ''"
+                            x-bind:class="isExpanded ? 'rotate-180' : ''"
+                        />
                     </x-slot>
                     <x-slot name="slot" class="mt-4" x-cloak x-show="expanded" x-collapse>
                         <ol class="space-y-2 list-decimal">
                             <li>
-                                <strong>Cabeçalho Obrigatório:</strong> A primeira linha da planilha deve conter um
-                                cabeçalho,
-                                pois será ignorada na importação.
+                                <strong>Cabeçalho Obrigatório:</strong>
+                                A primeira linha da planilha deve conter um cabeçalho, pois será ignorada na importação.
                             </li>
                             <li>
-                                <strong>Ordem das Colunas:</strong> Certifique-se de que as colunas seguem a mesma ordem
-                                da
-                                pré-visualização abaixo.
+                                <strong>Ordem das Colunas:</strong>
+                                Certifique-se de que as colunas seguem a mesma ordem da pré-visualização abaixo.
                             </li>
                             <li>
                                 <strong>Regras de Formatação (valores inválidos serão rejeitados):</strong>
                                 <ul class="ml-6 space-y-1 list-disc">
                                     <li>
-                                        <strong>Localização:</strong> Deve ser
-                                        <pre class="inline px-1 bg-gray-100 rounded">Morro</pre> ou
-                                        <pre class="inline px-1 bg-gray-100 rounded">Praia</pre>.
+                                        <strong>Localização:</strong>
+                                        Deve ser
+                                        <pre class="inline px-1 bg-gray-100 rounded">Morro</pre>
+                                        ou
+                                        <pre class="inline px-1 bg-gray-100 rounded">Praia</pre>
+                                        .
                                     </li>
                                     <li>
-                                        <strong>Status:</strong> Deve ser
-                                        <pre class="inline px-1 bg-gray-100 rounded">Livre</pre>,
-                                        <pre class="inline px-1 bg-gray-100 rounded">Alugado</pre> ou
-                                        <pre class="inline px-1 bg-gray-100 rounded">Vendido</pre>.
+                                        <strong>Status:</strong>
+                                        Deve ser
+                                        <pre class="inline px-1 bg-gray-100 rounded">Livre</pre>
+                                        ,
+                                        <pre class="inline px-1 bg-gray-100 rounded">Alugado</pre>
+                                        ou
+                                        <pre class="inline px-1 bg-gray-100 rounded">Vendido</pre>
+                                        .
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <strong>Confirmação:</strong> Revise os dados na pré-visualização antes de finalizar a
-                                importação.
+                                <strong>Confirmação:</strong>
+                                Revise os dados na pré-visualização antes de finalizar a importação.
                             </li>
                         </ol>
                     </x-slot>
                 </x-alert>
             </div>
         </div>
-        <x-errors title="O sistema não conseguiu ler sua planilha" outline />
-        <input type="file" id="fileInput" name="file" accept=".xlsx" wire:model='file'
-            class="w-full p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md">
+        <div class="flex justify-between">
+            <input
+                type="file"
+                id="fileInput"
+                name="file"
+                accept=".xlsx"
+                wire:model="file"
+                class="w-fit p-3 border border-gray-300 rounded-lg file:mr-2.5 file:cursor-pointer file:bg-black file:text-white file:py-2 file:px-4 file:border-0 file:rounded-md"
+            />
+            <div class="flex flex-row-reverse items-center gap-4">
+                <x-primary-button :disabled="empty($parsedTable) || $hasErrors" class="mt-auto disabled:opacity-75 w-min" wire:click="save">Cadastrar</x-primary-button>
+                @if (session()->exists("error"))
+                    <div class="flex items-center gap-1 text-sm text-negative-700">
+                        <x-icon name="exclamation-circle" class="inline w-4 h-4" />
+                        <span>Não é possível cadastrar essa planilha. Tente novamente mais tarde.</span>
+                    </div>
+                @endif
+            </div>
+        </div>
         <div class="space-y-1">
             <span class="text-2xl font-medium">Pré-visualização</span>
             <div class="overflow-auto bg-white rounded h-96">
@@ -244,13 +280,13 @@ new #[Layout('layouts.app')] class extends Component {
                     <tbody>
                         @forelse ($table as $row)
                             <tr class="*:px-3 *:py-4 border-b-2 border-gray-100">
-                                <td>{{ $row['address_name'] ?? '' }}</td>
-                                <td>{{ $row['address_number'] ?? '' }}</td>
-                                <td>{{ $row['bairro'] ?? '' }}</td>
-                                <td>{{ $row['location_reference'] ?? '' }}</td>
-                                <td>{{ $row['value'] ?? '' }}</td>
-                                <td>{{ $row['iptu'] ?? '' }}</td>
-                                <td>{{ $row['status'] ?? '' }}</td>
+                                <td>{{ $row["address_name"] ?? "" }}</td>
+                                <td>{{ $row["address_number"] ?? "" }}</td>
+                                <td>{{ $row["bairro"] ?? "" }}</td>
+                                <td>{{ $row["location_reference"] ?? "" }}</td>
+                                <td>{{ $row["value"] ?? "" }}</td>
+                                <td>{{ $row["iptu"] ?? "" }}</td>
+                                <td>{{ $row["status"] ?? "" }}</td>
                             </tr>
                         @empty
                             {{-- Blank table rows --}}
@@ -269,16 +305,6 @@ new #[Layout('layouts.app')] class extends Component {
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="flex items-center gap-4">
-            <x-primary-button :disabled="empty($parsedTable)" class="mt-auto disabled:opacity-75 w-min"
-                wire:click='save'>Cadastrar</x-primary-button>
-            @if (session()->exists('error'))
-                <div class="flex items-center gap-1 text-sm text-negative-700">
-                    <x-icon name="exclamation-circle" class="inline w-4 h-4" />
-                    <span>Não é possível cadastrar essa planilha. Tente novamente mais tarde.</span>
-                </div>
-            @endif
         </div>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />

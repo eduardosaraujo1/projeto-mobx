@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\ImovelLocation;
 use App\Enums\ImovelStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,13 +17,15 @@ class Imovel extends Model
     use HasFactory;
 
     protected $table = 'imoveis';
+
     protected $guarded = [
         'id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
+
     protected $attributes = [
-        'status' => 0
+        'status' => 0,
     ];
 
     protected function casts(): array
@@ -64,9 +65,9 @@ class Imovel extends Model
         ]);
     }
 
-    public function base64Image(): string|null
+    public function base64Image(): ?string
     {
-        if (!isset($this->photo_path) || Storage::disk('local')->missing($this->photo_path)) {
+        if (! isset($this->photo_path) || Storage::disk('local')->missing($this->photo_path)) {
             return null;
         }
 
@@ -101,7 +102,7 @@ class Imovel extends Model
     {
         return [
             'address_name' => ['required', 'min:3', 'max:255'],
-            'address_number' => ['integer', 'required', 'max_digits:4'],
+            'address_number' => ['required', 'integer', 'max_digits:4'],
             'bairro' => ['required', 'min:3', 'max:255'],
             'location_reference' => ['nullable', Rule::enum(ImovelLocation::class)],
             'value' => ['nullable', 'numeric'],

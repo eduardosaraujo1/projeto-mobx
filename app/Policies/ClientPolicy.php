@@ -3,9 +3,9 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
+use App\Facades\SelectedImobiliaria;
 use App\Models\Client;
 use App\Models\User;
-use App\Facades\SelectedImobiliaria;
 
 class ClientPolicy
 {
@@ -30,7 +30,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return SelectedImobiliaria::get($user) === UserRole::GERENTE || $user->is_admin;
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
