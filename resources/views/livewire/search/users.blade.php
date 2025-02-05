@@ -56,7 +56,7 @@ new class extends Component
     <div class="h-full bg-white rounded shadow">
         <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
             @foreach ($users as $user)
-                <a href="#" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
+                <a href="{{ route("user.info", ["user" => $user->id]) }}" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
                         <x-avatar xl label="U" @class(["!bg-gray-700", "!bg-red-700" => $user->is_admin]) />
                     </div>

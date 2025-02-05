@@ -52,6 +52,7 @@ class Imobiliaria extends Model
         return [
             'name' => ['string', 'required', 'min:3', 'max:255'],
             'address' => ['string', 'required', 'min:3', 'max:255'],
+            'cnpj' => ['string', 'required', 'size:14'],
             'email' => ['email', 'required', 'min:3', 'max:255'],
             'contact' => ['string', 'required', 'min:3', 'max:255'],
         ];

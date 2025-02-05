@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Validation\Rules\Password;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+    ];
+
+    protected $attributes = [
+        'is_admin' => false,
     ];
 
     /**
@@ -67,5 +73,20 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn () => $this->is_admin ? Imobiliaria::all() : $this->imobiliarias
         );
+    }
+
+    public static function rules()
+    {
+        return [
+            'name' => ['required', 'min:3', 'max:255'],
+            'email' => ['required', 'email', 'min:3', 'max:255'],
+            'password' => ['sometimes', Password::min(8)
+                ->letters()
+                ->mixedCase()
+                ->numbers()
+                ->symbols()
+                ->uncompromised()],
+            'is_admin' => ['boolean'],
+        ];
     }
 }

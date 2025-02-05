@@ -37,13 +37,18 @@ new #[Layout('layouts.app')] class extends Component
         $this->contact = $this->imobiliaria->contact;
     }
 
+    public function rules()
+    {
+        return Imobiliaria::rules();
+    }
+
     public function save()
     {
         // prevent non-mamangers from editing
         $this->authorize('update', $this->imobiliaria);
 
         // validating form
-        $validated = $this->validate(Imobiliaria::rules());
+        $validated = $this->validate($this->rules());
 
         // inserting new data into
         $this->imobiliaria->fill($validated);
@@ -85,7 +90,7 @@ new #[Layout('layouts.app')] class extends Component
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">CNPJ:</span>
-                    <x-input :disabled='!$edit' wire:model="cnpj" required autofocus />
+                    <x-input :disabled='!$edit' wire:model="cnpj" autofocus />
                 </div>
             </x-card>
             <x-card>
