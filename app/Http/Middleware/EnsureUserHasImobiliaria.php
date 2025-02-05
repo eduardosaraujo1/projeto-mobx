@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureUserHasImobiliaria
 {
     public function __construct(
-    ) {
-    }
+    ) {}
+
     /**
      * Handle an incoming request.
      *

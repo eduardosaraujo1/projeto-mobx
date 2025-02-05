@@ -22,7 +22,7 @@ class ImobiliariaPolicy
      */
     public function view(User $user, Imobiliaria $imobiliaria): bool
     {
-        return SelectedImobiliaria::get($user)->id === $imobiliaria->id;
+        return SelectedImobiliaria::get($user)->id === $imobiliaria->id || $user->is_admin;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use App\Facades\SelectedImobiliaria;
+use App\Models\Imobiliaria;
 use App\Models\Imovel;
 use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,9 +25,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public ?string $searchImovelStatus = null;
 
-    public function mount()
+    public function mount(Imobiliaria $imobiliaria)
     {
-        $this->imovelList = SelectedImobiliaria::get(auth()->user())?->imoveis;
+        $this->imovelList = $imobiliaria->imoveis;
     }
 
     public function with(SearchService $search)

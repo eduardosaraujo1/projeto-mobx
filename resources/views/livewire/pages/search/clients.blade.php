@@ -1,7 +1,7 @@
 <?php
 
-use App\Facades\SelectedImobiliaria;
 use App\Models\Client;
+use App\Models\Imobiliaria;
 use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Layout;
@@ -18,9 +18,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public $searchString;
 
-    public function mount()
+    public function mount(Imobiliaria $imobiliaria)
     {
-        $this->clientList = SelectedImobiliaria::get(auth()->user())->clients;
+        $this->clientList = $imobiliaria->clients;
     }
 
     public function with(SearchService $search)

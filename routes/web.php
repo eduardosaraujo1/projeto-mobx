@@ -1,7 +1,6 @@
 <?php
 
 use App\Facades\SelectedImobiliaria;
-use App\Http\Controllers\Search\SearchClients;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -20,18 +19,19 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
-    // Home redirect
-    Route::get('/home', function () {
-        $redirect_route = auth()->user()->is_admin ? route('admin.index') : route('imobiliaria.home');
 
-        return redirect($redirect_route);
+    // Navbar
+    // home redirect
+    Route::get('/home', function () {
+        $name = auth()->user()->is_admin ? 'admin.index' : 'imobiliaria.home';
+
+        return redirect()->route($name);
     })->name('home');
 
-    // navbar
     Route::view('dashboard', 'pages.dashboard')
         ->name('dashboard');
 
-    Volt::route('minha-imobiliaria', 'pages.info.imobiliaria')
+    Volt::route('imobiliaria', 'pages.info.imobiliaria')
         ->name('imobiliaria.home');
 
     Volt::route('imoveis', 'pages.search.imoveis')
@@ -47,8 +47,9 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Volt::route('cliente/novo', 'pages.create.client')
         ->name('client.new');
 
-    Route::view('usuario/novo', 'pages.user.create')
+    Volt::route('usuario/novo', 'pages.create.user')
         ->name('user.new');
+    // new imobiliaria does not require the 'has-imobiliaria' middleware and is in another route group
 
     // info/edit
     Volt::route('imovel/{imovel}/info', 'pages.info.imovel')
@@ -57,9 +58,12 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Volt::route('cliente/{client}/info', 'pages.info.client')
         ->name('client.info');
 
-    // search api routes
-    Route::get('/api/search/clients', SearchClients::class)
-        ->name('api.search.clients');
+    Volt::route('user/{user}/info', 'pages.info.user')
+        ->name('user.info');
+
+    Volt::route('imobiliaria/{imobiliaria}/info', 'pages.info.imobiliaria')
+        ->middleware('admin')
+        ->name('imobiliaria.info');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -71,8 +75,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('configuracoes', 'pages.user.settings')
         ->name('settings');
 
-    // create
-    Route::view('imobiliaria/novo', 'pages.imobiliaria.create')
+    // create imobiliaria
+    Volt::route('imobiliaria/novo', 'pages.create.imobiliaria')
+        ->middleware('admin')
         ->name('imobiliaria.new');
 
     // missing imobiliaria

@@ -1,24 +1,30 @@
 <?php
-use Livewire\Volt\Component;
 use App\Models\Imobiliaria;
 use Livewire\Attributes\Layout;
-use App\Facades\SelectedImobiliaria;
+use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component
+{
     // client attributes
     public Imobiliaria $imobiliaria;
+
     public string $name;
+
     public string $cnpj;
+
     public string $address;
+
     public string $email;
+
     public string $contact;
 
     // component state
     public bool $edit = false;
 
-    public function mount()
+    // AppServiceProvider resolves Imobiliaria from SelectedImobiliariaService, meaning this gets the current imobiliaria
+    public function mount(Imobiliaria $imobiliaria)
     {
-        $this->imobiliaria = SelectedImobiliaria::get(auth()->user());
+        $this->imobiliaria = $imobiliaria->exists ? $imobiliaria : null;
         $this->rebindValues();
     }
 
@@ -60,52 +66,53 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
+
 <div>
     <x-slot name="heading">
         <div class="flex justify-between">
             <span class="flex-1">Imobiliaria {{ $imobiliaria->name }}</span>
         </div>
     </x-slot>
-    @can('view', $imobiliaria)
-        <form class="flex flex-col h-full gap-1" wire:submit='save'>
-            <x-errors class='mb-4' />
+    @can("view", $imobiliaria)
+        <form class="flex flex-col h-full gap-1" wire:submit="save">
+            <x-errors class="mb-4" />
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">Nome:</span>
-                    <x-input :disabled='!$edit' wire:model='name' required autofocus />
+                    <x-input :disabled='!$edit' wire:model="name" required autofocus />
                 </div>
             </x-card>
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">CNPJ:</span>
-                    <x-input :disabled='!$edit' wire:model='cnpj' required autofocus />
+                    <x-input :disabled='!$edit' wire:model="cnpj" required autofocus />
                 </div>
             </x-card>
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">Endereço</span>
-                    <x-input :disabled='!$edit' wire:model='address' required autofocus />
+                    <x-input :disabled='!$edit' wire:model="address" required autofocus />
                 </div>
             </x-card>
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">E-mail</span>
-                    <x-input :disabled='!$edit' wire:model='email' autofocus />
+                    <x-input :disabled='!$edit' wire:model="email" autofocus />
                 </div>
             </x-card>
             <x-card>
                 <div>
                     <span class="block text-lg font-bold min-w-max">Contato:</span>
-                    <x-input :disabled='!$edit' wire:model='contact' autofocus />
+                    <x-input :disabled='!$edit' wire:model="contact" autofocus />
                 </div>
             </x-card>
-            @can('update', $imobiliaria)
+            @can("update", $imobiliaria)
                 <div class="flex mt-4 space-x-2">
                     @if ($edit)
                         <x-primary-button type="submit">Salvar</x-primary-button>
-                        <x-secondary-button wire:click.prevent='stopEdit'>Cancelar</x-secondary-button>
+                        <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                     @else
-                        <x-primary-button label="Editar" wire:click.prevent='startEdit'>Editar</x-primary-button>
+                        <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
                 </div>
             @endcan

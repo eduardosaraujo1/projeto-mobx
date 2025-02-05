@@ -59,12 +59,13 @@ class User extends Authenticatable
 
     /**
      * Gets the imobiliarias the user has access to. If the user is an administrator he will have all imobiliarias
+     *
      * @return void
      */
     protected function allImobiliarias(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->is_admin ? Imobiliaria::all() : $this->imobiliarias
+            get: fn () => $this->is_admin ? Imobiliaria::all() : $this->imobiliarias
         );
     }
 }

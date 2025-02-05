@@ -1,6 +1,6 @@
 <?php
 
-use App\Facades\SelectedImobiliaria;
+use App\Models\Imobiliaria;
 use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Volt\Component;
@@ -11,9 +11,9 @@ new class extends Component
 
     public Collection $clientList;
 
-    public function mount()
+    public function mount(Imobiliaria $imobiliaria)
     {
-        $this->clientList = SelectedImobiliaria::get(auth()->user())->clients;
+        $this->clientList = $imobiliaria->clients;
     }
 
     public function with(SearchService $search)
@@ -21,29 +21,6 @@ new class extends Component
         return [
             'clients' => $search->clientSearch($this->clientList, $this->searchString),
         ];
-    }
-
-    public function clientSearch(): Collection
-    {
-        $clients = SelectedImobiliaria::get(auth()->user())->clients;
-
-        return $clients->filter(function ($client) {
-            $verdict = true;
-
-            // data
-            $name = $client->name ?? '';
-            $email = $client->email ?? '';
-            $cpf = $client->cpf ?? '';
-
-            // format queries
-            $haystack = preg_replace('/[.,]/', '', strtolower("$name $email $cpf"));
-            $needle = preg_replace('/[.,]/', '', strtolower($this->searchString ?? ''));
-
-            // search filter
-            $verdict = str_contains($haystack, $needle);
-
-            return $verdict;
-        })->reverse();
     }
 }; ?>
 

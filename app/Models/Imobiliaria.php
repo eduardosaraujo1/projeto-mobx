@@ -11,12 +11,12 @@ class Imobiliaria extends Model
 {
     /** @use HasFactory<\Database\Factories\ImobiliariaFactory> */
     use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-
     protected $fillable = [
         'name',
         'address',

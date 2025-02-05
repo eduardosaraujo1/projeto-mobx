@@ -1,20 +1,25 @@
 <?php
 
-use Livewire\Volt\Component;
 use App\Models\Client;
-use App\Facades\SelectedImobiliaria;
+use App\Models\Imobiliaria;
 use Livewire\Attributes\Layout;
+use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')] class extends Component {
+new #[Layout('layouts.app')] class extends Component
+{
     public string $name;
+
     public string $cpf;
+
     public string $email;
+
     public string $address;
+
     public int $imobiliaria_id;
 
-    public function mount()
+    public function mount(Imobiliaria $imobiliaria)
     {
-        $this->imobiliaria_id = SelectedImobiliaria::get(auth()->user())->id;
+        $this->imobiliaria_id = $imobiliaria->id;
     }
 
     public function rules()
@@ -45,17 +50,16 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
-<x-slot name="heading">
-    Novo Cliente
-</x-slot>
+
+<x-slot name="heading">Novo Cliente</x-slot>
 <div>
-    @can('create', Client::class)
+    @can("create", Client::class)
         <x-errors class="mb-4" />
-        <form class="flex flex-col items-start gap-2 p-4 bg-white rounded shadow " wire:submit='create'>
-            <x-input errorless label="Nome: " wire:model='name' />
-            <x-maskable errorless mask="###.###.###-##" placeholder="123.456.789-10" label="CPF: " wire:model='cpf' />
-            <x-input errorless label="E-mail: " wire:model='email' />
-            <x-input errorless label="Endereço: " wire:model='address' />
+        <form class="flex flex-col items-start gap-2 p-4 bg-white rounded shadow" wire:submit="create">
+            <x-input errorless label="Nome: " wire:model="name" />
+            <x-maskable errorless mask="###.###.###-##" placeholder="123.456.789-10" label="CPF: " wire:model="cpf" />
+            <x-input errorless label="E-mail: " wire:model="email" />
+            <x-input errorless label="Endereço: " wire:model="address" />
             <x-primary-button class="mt-4" type="submit">Cadastrar</x-primary-button>
         </form>
     @else
