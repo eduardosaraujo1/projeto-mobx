@@ -2,6 +2,7 @@
 
 use App\Facades\SelectedImobiliaria;
 use App\Models\Imovel;
+use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -18,48 +19,22 @@ new #[Layout('layouts.app')] class extends Component
      *
      * @var Collection<Imovel>
      */
-    public Collection $imoveisFull;
+    public Collection $imovelList;
 
-    public string $searchString;
+    public string $searchString = '';
 
-    public ?string $imovelStatus;
+    public ?string $searchImovelStatus = null;
 
     public function mount()
     {
-        $this->imoveisFull = SelectedImobiliaria::get(auth()->user())?->imoveis;
+        $this->imovelList = SelectedImobiliaria::get(auth()->user())?->imoveis;
     }
 
-    public function with()
+    public function with(SearchService $search)
     {
         return [
-            'imoveis' => $this->imovelSearch(),
+            'imoveis' => $search->imovelSearch($this->imovelList, $this->searchString, $this->searchImovelStatus),
         ];
-    }
-
-    public function imovelSearch()
-    {
-        return $this->imoveisFull->filter(function ($imovel) {
-            $verdict = true;
-
-            // data
-            $address = $imovel->fullAddress() ?? '';
-            $value = $imovel->value ?? '';
-            $iptu = $imovel->iptu ?? '';
-
-            // formatted queries
-            $haystack = strtolower("$address $value $iptu");
-            $needle = strtolower($this->searchString ?? '');
-
-            // perform search
-            $verdict = str_contains($haystack, $needle);
-
-            // category filter
-            if (isset($this->imovelStatus)) {
-                $verdict = $verdict && (string) $imovel->status->value === $this->imovelStatus;
-            }
-
-            return $verdict;
-        })->reverse();
     }
 }; ?>
 
@@ -67,8 +42,8 @@ new #[Layout('layouts.app')] class extends Component
 <div class="space-y-2">
     <x-slot name="heading">Imóveis Cadastrados</x-slot>
     <div class="flex gap-2">
-        <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Rua, localização ou status)" />
-        <x-select placeholder="Selecione" wire:model.live="imovelStatus" class="w-min">
+        <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Rua, valor ou iptu)" />
+        <x-select placeholder="Selecione" wire:model.live="searchImovelStatus" class="w-min">
             <x-select.option label="Livre" value="0" />
             <x-select.option label="Alugado" value="1" />
             <x-select.option label="Vendido" value="2" />
@@ -90,7 +65,7 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="inline mt-4 text-base">
                         <b>{{ $imovel->bairro }}</b>
                         -
-                        <span>{{ Str::limit($imovel->address_number . " " . $imovel->address_name, 20) }}</span>
+                        <span>{{ Str::limit($imovel->fullAddress(), 20) }}</span>
                     </span>
 
                     {{-- Overlay de Informações --}}

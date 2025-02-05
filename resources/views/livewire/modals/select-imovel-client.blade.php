@@ -1,17 +1,25 @@
 <?php
 
 use App\Facades\SelectedImobiliaria;
+use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Volt\Component;
 
 new class extends Component
 {
-    public string $searchString;
+    public string $searchString = '';
 
-    public function with()
+    public Collection $clientList;
+
+    public function mount()
+    {
+        $this->clientList = SelectedImobiliaria::get(auth()->user())->clients;
+    }
+
+    public function with(SearchService $search)
     {
         return [
-            'clients' => $this->clientSearch(),
+            'clients' => $search->clientSearch($this->clientList, $this->searchString),
         ];
     }
 

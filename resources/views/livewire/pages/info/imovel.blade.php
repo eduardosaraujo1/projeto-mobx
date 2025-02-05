@@ -238,8 +238,10 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Cliente:</span>
                         <span class="flex-1">{{ $client?->name ?? "Nenhum cliente atribuido" }}</span>
-                        <x-primary-button :disabled="!$edit" x-on:click.prevent="$dispatch('open-modal', 'select-client')">Alterar</x-primary-button>
-                        <x-secondary-button :disabled="!$edit" wire:click="clearClient">Limpar</x-secondary-button>
+                        @can("update", $imovel)
+                            <x-primary-button :disabled="!$edit" x-on:click.prevent="$dispatch('open-modal', 'select-client')">Alterar</x-primary-button>
+                            <x-secondary-button :disabled="!$edit" wire:click="clearClient">Limpar</x-secondary-button>
+                        @endcan
                     </div>
                 </x-card>
                 <x-card class="grid items-center">

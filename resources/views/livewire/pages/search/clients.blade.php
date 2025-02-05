@@ -2,6 +2,7 @@
 
 use App\Facades\SelectedImobiliaria;
 use App\Models\Client;
+use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -13,41 +14,20 @@ new #[Layout('layouts.app')] class extends Component
      *
      * @var Collection<Client>
      */
-    public Collection $clientsFull;
+    public Collection $clientList;
 
     public $searchString;
 
     public function mount()
     {
-        $this->clientsFull = SelectedImobiliaria::get(auth()->user())->clients;
+        $this->clientList = SelectedImobiliaria::get(auth()->user())->clients;
     }
 
-    public function with()
+    public function with(SearchService $search)
     {
         return [
-            'clients' => $this->clientSearch(),
+            'clients' => $search->clientSearch($this->clientList, $this->searchString ?? ''),
         ];
-    }
-
-    public function clientSearch(): Collection
-    {
-        return $this->clientsFull->filter(function ($client) {
-            $verdict = true;
-
-            // data
-            $name = $client->name ?? '';
-            $email = $client->email ?? '';
-            $cpf = $client->cpf ?? '';
-
-            // formatted queries
-            $haystack = preg_replace('/[.,]/', '', strtolower("$name $email $cpf"));
-            $needle = preg_replace('/[.,]/', '', strtolower($this->searchString ?? ''));
-
-            // search filter
-            $verdict = str_contains($haystack, $needle);
-
-            return $verdict;
-        })->reverse();
     }
 }; ?>
 
@@ -60,8 +40,8 @@ new #[Layout('layouts.app')] class extends Component
             <x-primary-button href="{{ route('client.new') }}" wire:navigate>Cadastrar</x-primary-button>
         @endcan
     </div>
-    <div class="bg-white rounded shadow h-[40rem]">
-        <div class="flex flex-col h-full gap-4 p-4 overflow--x-hidden">
+    <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
+        <div class="flex flex-col gap-4 p-4">
             @forelse ($clients as $client)
                 <a href="{{ route("client.info", ["client" => $client->id]) }}" wire:navigate class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
                     <div class="mr-2">
