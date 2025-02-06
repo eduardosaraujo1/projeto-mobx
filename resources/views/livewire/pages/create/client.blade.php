@@ -1,7 +1,7 @@
 <?php
 
+use App\Facades\SelectedImobiliaria;
 use App\Models\Client;
-use App\Models\Imobiliaria;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
@@ -17,9 +17,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public int $imobiliaria_id;
 
-    public function mount(Imobiliaria $imobiliaria)
+    public function mount()
     {
-        $this->imobiliaria_id = $imobiliaria->id;
+        $this->imobiliaria_id = SelectedImobiliaria::get(auth()->user())->id;
     }
 
     public function rules()

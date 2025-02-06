@@ -19,6 +19,7 @@ class Imobiliaria extends Model
      */
     protected $fillable = [
         'name',
+        'cnpj',
         'address',
         'email',
         'contact',

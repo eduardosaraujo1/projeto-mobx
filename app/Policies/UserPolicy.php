@@ -35,7 +35,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->is_admin && auth()->user()->id !== $user->id;
+        return $user->is_admin && $user->id !== $model->id;
     }
 
     /**

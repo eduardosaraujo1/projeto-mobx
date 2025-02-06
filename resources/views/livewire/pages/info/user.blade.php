@@ -72,7 +72,7 @@ new #[Layout('layouts.app')] class extends Component
 
     public function updatePassword()
     {
-        $this->authorize('updatePassword', $this->user);
+        $this->authorize('update', $this->user);
 
         try {
             $validated = $this->validate(['password' => User::rules()['password']]);
@@ -133,9 +133,7 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-lg font-bold min-w-max">Senha</span>
                     <div class="flex items-end gap-2">
                         <x-password disabled required autofocus value="***********" />
-                        @can("updatePassword", $user)
-                            <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-secondary-button>
-                        @endcan
+                        <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-secondary-button>
                     </div>
                 </div>
             </x-card>

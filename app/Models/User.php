@@ -80,13 +80,12 @@ class User extends Authenticatable
         return [
             'name' => ['required', 'min:3', 'max:255'],
             'email' => ['required', 'email', 'min:3', 'max:255'],
-            'password' => ['sometimes', Password::min(8)
+            'password' => ['required', 'confirmed', Password::min(8)
                 ->letters()
                 ->mixedCase()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()],
-            'is_admin' => ['boolean'],
+                ->numbers(),
+            ],
+            'is_admin' => ['required', 'boolean'],
         ];
     }
 }
