@@ -2,8 +2,8 @@
 
 use App\Models\Client;
 use App\Models\Imovel;
+use App\Services\ImovelLogService;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
@@ -17,7 +17,7 @@ new #[Layout('layouts.app')] class extends Component
     // client attributes
     public string $address_name;
 
-    public int $address_number;
+    public string $address_number;
 
     public string $bairro;
 
@@ -109,7 +109,7 @@ new #[Layout('layouts.app')] class extends Component
         // validate once again, accounting for file path
         $validated = $this->validate();
 
-        // convert empty strings to null
+        // convert empty strings to null (for some reason the middeware didn't work very well)
         foreach ($validated as $key => $value) {
             $validated[$key] = match ($value) {
                 '' => null,
@@ -120,6 +120,10 @@ new #[Layout('layouts.app')] class extends Component
         // save changes to object
         $this->imovel->fill($validated);
         $this->imovel->save();
+
+        // log the changes to an ImovelLog instance
+        $logger = new ImovelLogService($this->imovel, auth()->user());
+        $logger->logChanges($this->imovel->getChanges());
 
         // revalidate cache since image may now be different
         $this->stored_photo_cache = $this->imovel->base64Image();
@@ -199,26 +203,26 @@ new #[Layout('layouts.app')] class extends Component
                         @endif
                     </div>
                 </x-card>
+                <x-card class="grid items-center flex-1 col-span-2">
+                    <span class="block text-lg font-bold min-w-max">Endereço:</span>
+                    <x-input :disabled='!$edit' wire:model="address_name" required autofocus />
+                </x-card>
                 <div class="flex col-span-2 gap-1">
-                    <x-card class="grid items-center flex-1">
-                        <span class="block text-lg font-bold min-w-max">Endereço:</span>
-                        <x-input :disabled='!$edit' wire:model="address_name" required autofocus />
+                    <x-card class="flex-1">
+                        <span class="block text-lg font-bold min-w-max">Bairro:</span>
+                        <x-input :disabled='!$edit' wire:model="bairro" required autofocus />
                     </x-card>
-                    <x-card class="grid items-center">
+                    <x-card>
                         <span class="block text-lg font-bold min-w-max">Número:</span>
                         <x-input :disabled='!$edit' wire:model="address_number" required autofocus />
                     </x-card>
                 </div>
                 <x-card class="grid items-center col-span-2">
-                    <span class="block text-lg font-bold min-w-max">Bairro:</span>
-                    <x-input :disabled='!$edit' wire:model="bairro" required autofocus />
-                </x-card>
-                <x-card class="grid items-center col-span-2">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Localização:</span>
                         <x-select :disabled="!$edit" wire:model="location_reference">
-                            <x-select.option value="0">Morro</x-select.option>
-                            <x-select.option value="1">Praia</x-select.option>
+                            <x-select.option value="0">Praia</x-select.option>
+                            <x-select.option value="1">Morro</x-select.option>
                         </x-select>
                     </div>
                 </x-card>

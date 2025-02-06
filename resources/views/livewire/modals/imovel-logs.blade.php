@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Imovel;
+use App\Models\ImovelLog;
+use Illuminate\Support\Carbon;
 use Livewire\Volt\Component;
 
 new class extends Component
@@ -10,13 +12,30 @@ new class extends Component
     public function with()
     {
         return [
-            'logs' => $this->getImovelLogs(),
+            'logs' => $this->formattedImovelLogs(),
         ];
     }
 
-    public function getImovelLogs()
+    public function formattedImovelLogs()
     {
-        return $this->imovel->logs;
+        /**
+         * @var \Illuminate\Database\Eloquent\Collection<\App\Models\ImovelLog>
+         */
+        $logs = $this->imovel->logs;
+
+        return $logs->map(function (ImovelLog $log) {
+            $created_at = Carbon::create($log->created_at)
+                ->setTimezone('America/Sao_Paulo')
+                ->format('d-m-Y H:i:s');
+
+            return [
+                'title' => ucfirst($log?->title ?? ''),
+                'description' => $log?->description ?? '',
+                'user_id' => $log?->user?->id ?? 0,
+                'user_name' => substr($log?->user?->name ?? '', 0, 20),
+                'created_at' => $created_at ?? '',
+            ];
+        });
     }
 }; ?>
 
@@ -31,16 +50,16 @@ new class extends Component
                     </div>
                     <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1">
                         <span class="text-lg font-bold">Título:</span>
-                        <span class="flex items-center">{{ ucfirst($log["title"] ?? "") }}</span>
+                        <span class="flex items-center">{{ $log["title"] }}</span>
                         <span class="text-lg font-bold">Descrição:</span>
-                        <span class="flex items-center">{{ $log["description"] ?? "" }}</span>
+                        <span class="flex items-center">{!! nl2br(e($log["description"])) !!}</span>
                         <span class="text-lg font-bold">Usuário:</span>
-                        <a href="{{ route("user.info", ["user" => $log->user?->id]) }}" class="flex items-center gap-1 text-blue-900">
+                        <a href="{{ route("user.info", ["user" => $log["user_id"]]) }}" class="flex items-center gap-1 text-blue-900">
                             <x-icon name="information-circle" class="w-4.5 h-4.5" />
-                            {{ $log->user?->name }}
+                            {{ $log["user_name"] }}
                         </a>
                         <span class="text-lg font-bold">Data:</span>
-                        <span class="flex items-center">{{ \Illuminate\Support\Carbon::create($log["created_at"]) ?->subHours(3) ?->format("d-m-Y H:m:s") ?? "" }}</span>
+                        <span class="flex items-center">{{ $log["created_at"] }}</span>
                     </div>
                 </div>
             </x-card>

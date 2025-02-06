@@ -11,6 +11,13 @@ class ImovelLog extends Model
     /** @use HasFactory<\Database\Factories\ImovelLogFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'imovel_id',
+        'user_id',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
