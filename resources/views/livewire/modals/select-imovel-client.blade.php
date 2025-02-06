@@ -32,10 +32,10 @@ new class extends Component
     </div>
     <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
         <div class="flex flex-col gap-4 p-4">
-            @forelse ($clients as $client)
+            @forelse ($clients as $user)
                 <button
-                    wire:key="{{ $client->id }}"
-                    wire:click="$parent.updateClient({{ $client?->id }})"
+                    wire:key="{{ $user->id }}"
+                    wire:click="$parent.updateClient({{ $user?->id }})"
                     @@click="$dispatch('close')"
                     wire:navigate
                     class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow"
@@ -45,15 +45,15 @@ new class extends Component
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Nome:</span>
-                        <span class="block">{{ $client->name ?? "" }}</span>
+                        <span class="block">{{ $user->name ?? "" }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">CPF:</span>
-                        <span class="block">{{ App\Utils\StringUtils::cpfFormat($client->cpf ?? "") }}</span>
+                        <span class="block">{{ App\Utils\StringUtils::cpfFormat($user->cpf ?? "") }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">E-mail:</span>
-                        <span class="block">{{ Str::limit($client->email, 22) }}</span>
+                        <span class="block">{{ Str::limit($user->email, 22) }}</span>
                     </div>
                 </button>
             @empty
