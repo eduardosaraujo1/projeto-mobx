@@ -19,7 +19,7 @@ class ImovelLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => implode(' ', fake()->words(2)),
+            'title' => implode(' ', fake()->words(3)),
             'description' => fake()->sentence(),
             'imovel_id' => Imovel::factory(),
             'user_id' => User::factory(),

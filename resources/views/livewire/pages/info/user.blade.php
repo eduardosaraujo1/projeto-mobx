@@ -74,9 +74,6 @@ new #[Layout('layouts.app')] class extends Component
     {
         $this->authorize('updatePassword', $this->user);
 
-        // reset editting state (if it was on previously)
-        $this->stopEdit();
-
         try {
             $validated = $this->validate(['password' => User::rules()['password']]);
         } catch (ValidationException $e) {
@@ -90,6 +87,8 @@ new #[Layout('layouts.app')] class extends Component
         ]);
 
         $this->reset('current_password', 'password', 'password_confirmation');
+        // reset editting state (if it was on previously)
+        $this->stopEdit();
 
         $this->dispatch('saved');
     }
@@ -135,7 +134,7 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="flex items-end gap-2">
                         <x-password disabled required autofocus value="***********" />
                         @can("updatePassword", $user)
-                            <x-primary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-primary-button>
+                            <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-secondary-button>
                         @endcan
                     </div>
                 </div>
@@ -166,6 +165,7 @@ new #[Layout('layouts.app')] class extends Component
                 <x-password wire:model="password_confirmation" label="Confirmar Senha" />
                 <div class="flex items-center gap-4">
                     <x-primary-button wire:click="updatePassword()">Salvar</x-primary-button>
+                    <x-secondary-button x-on:click="$dispatch('close')">Cancelar</x-secondary-button>
                 </div>
             </div>
         </x-modal>
