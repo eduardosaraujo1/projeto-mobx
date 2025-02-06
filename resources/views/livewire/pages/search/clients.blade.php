@@ -41,10 +41,15 @@ new #[Layout('layouts.app')] class extends Component
         @endcan
     </div>
     <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
-        <div class="flex flex-col gap-4 p-4">
+        <div class="flex flex-col gap-1 p-4">
             @forelse ($clients as $client)
-                <a href="{{ route("client.info", ["client" => $client->id]) }}" wire:navigate class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
-                    <div class="mr-2">
+                <a
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
+                    href="{{ route("client.info", ["client" => $client->id]) }}"
+                    wire:navigate
+                    wire:key="{{ $client->id }}"
+                >
+                    <div class="me-2">
                         <x-avatar xl label="C" class="!bg-gray-700" />
                     </div>
                     <div class="flex-1">

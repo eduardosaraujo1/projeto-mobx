@@ -2,20 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRole;
-use App\Models\Client;
-use App\Models\Imobiliaria;
-use App\Models\Imovel;
-use App\Models\ImovelDocument;
-use App\Models\ImovelLog;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-
-
     /**
      * Seed the application's database.
      */

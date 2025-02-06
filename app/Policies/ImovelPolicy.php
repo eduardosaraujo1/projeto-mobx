@@ -38,6 +38,7 @@ class ImovelPolicy
      */
     public function update(User $user, Imovel $imovel): bool
     {
+        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
         return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
@@ -46,6 +47,7 @@ class ImovelPolicy
      */
     public function delete(User $user, Imovel $imovel): bool
     {
+        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
         return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 

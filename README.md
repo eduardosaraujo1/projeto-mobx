@@ -435,13 +435,10 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 # Roadmap
 
-- [x] PROTOTYPE - Planejar estrutura do banco de dados, telas existentes, roles de usuário
 - [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
-- [x] FRONT - Montar estrutura de arquivos (views)
-- [x] MODELAGEM - Um imovel, apesar de ser de um cliente, foi cadastrada por um usuario que pertence a uma imobiliaria. Portanto, imovel pertence à imobiliaria e imovel pertence a cliente, e cliente também pertence à imobiliaria
 - [ ] CADASTRO - mecanismo de cadastro de usuários
 - [ ] Mecanismo de ver data de aluguel do dashboard
-- [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada
+- [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
 - [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
     - Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
     - Fazer apenas se der tempo

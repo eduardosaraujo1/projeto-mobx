@@ -18,8 +18,9 @@ class ImovelDocumentFactory extends Factory
     public function definition(): array
     {
         return [
+            'filename' => fake()->file(),
             'filepath' => fake()->filePath(),
-            'imovel_id' => Imovel::factory()
+            'imovel_id' => Imovel::factory(),
         ];
     }
 }

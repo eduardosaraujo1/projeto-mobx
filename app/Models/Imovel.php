@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 use Storage;
 
 class Imovel extends Model
@@ -18,10 +19,16 @@ class Imovel extends Model
 
     protected $table = 'imoveis';
 
-    protected $guarded = [
-        'id',
-        'created_at',
-        'updated_at',
+    protected $fillable = [
+        'address_name',
+        'address_number',
+        'bairro',
+        'location_reference',
+        'value',
+        'iptu',
+        'status',
+        'photo_path',
+        'client_id',
     ];
 
     protected $attributes = [
@@ -41,12 +48,12 @@ class Imovel extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function imovelDocuments(): HasMany
+    public function documents(): HasMany
     {
         return $this->hasMany(ImovelDocument::class);
     }
 
-    public function imovelLogs(): HasMany
+    public function logs(): HasMany
     {
         return $this->hasMany(ImovelLog::class);
     }

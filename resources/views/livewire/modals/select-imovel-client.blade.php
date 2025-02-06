@@ -34,6 +34,7 @@ new class extends Component
         <div class="flex flex-col gap-4 p-4">
             @forelse ($clients as $client)
                 <button
+                    wire:key="{{ $client->id }}"
                     wire:click="$parent.updateClient({{ $client?->id }})"
                     @@click="$dispatch('close')"
                     wire:navigate

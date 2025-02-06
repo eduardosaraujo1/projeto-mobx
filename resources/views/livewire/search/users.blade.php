@@ -56,9 +56,14 @@ new class extends Component
         <x-primary-button href="{{ route('user.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
-        <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
-            @foreach ($users as $user)
-                <a href="{{ route("user.info", ["user" => $user->id]) }}" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
+        <div class="flex flex-col gap-1 p-4 overflow-scroll h-[40rem]">
+            @forelse ($users as $user)
+                <a
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
+                    href="{{ route("user.info", ["user" => $user->id]) }}"
+                    wire:navigate
+                    wire:key="{{ $user->id }}"
+                >
                     <div class="mr-2">
                         <x-avatar xl label="U" @class(["!bg-gray-700", "!bg-red-700" => $user->is_admin]) />
                     </div>
@@ -75,7 +80,9 @@ new class extends Component
                         <span class="block">{{ $user->updated_at->format("d/m/Y H:i:s") }}</span>
                     </div>
                 </a>
-            @endforeach
+            @empty
+                <x-alert title="Nenhumo usuário foi encontrado" />
+            @endforelse
         </div>
     </div>
 </div>

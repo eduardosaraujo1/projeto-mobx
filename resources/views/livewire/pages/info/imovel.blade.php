@@ -15,8 +15,6 @@ new #[Layout('layouts.app')] class extends Component
     public Imovel $imovel;
 
     // client attributes
-    public int $id;
-
     public string $address_name;
 
     public int $address_number;
@@ -105,7 +103,7 @@ new #[Layout('layouts.app')] class extends Component
 
         // store photo and save path
         if ($this->uploaded_photo) {
-            $this->photo_path = Storage::disk('local')->put('imobiliaria/images', $this->uploaded_photo);
+            $this->photo_path = Storage::disk('local')->putFile('imobiliaria/images', $this->uploaded_photo);
         }
 
         // validate once again, accounting for file path
@@ -262,11 +260,24 @@ new #[Layout('layouts.app')] class extends Component
                 </x-card>
             </div>
         </div>
-        <x-secondary-button class="mt-2">Ver documentos</x-secondary-button>
+        <x-secondary-button class="mt-2" x-on:click="$dispatch('open-modal', 'view-documents')">Ver documentos</x-secondary-button>
+        <x-secondary-button class="mt-2" x-on:click="$dispatch('open-modal', 'view-logs')">Histórico de alterações</x-secondary-button>
         <x-modal name="select-client" focusable>
             <div class="p-6">
-                <h1 class="mb-2 text-2xl">Selecionar Cliente</h1>
+                <h1 class="mb-2 text-2xl font-medium">Selecionar Cliente</h1>
                 <livewire:modals.select-imovel-client />
+            </div>
+        </x-modal>
+        <x-modal name="view-documents" focusable>
+            <div class="p-6">
+                <h1 class="mb-2 text-3xl font-medium">Documentos do imóvel</h1>
+                <livewire:modals.imovel-documents :imovel="$imovel" />
+            </div>
+        </x-modal>
+        <x-modal name="view-logs" focusable>
+            <div class="p-6">
+                <h1 class="mb-2 text-2xl font-medium">Histórico de Alterações</h1>
+                <livewire:modals.imovel-logs :imovel="$imovel" />
             </div>
         </x-modal>
     @else

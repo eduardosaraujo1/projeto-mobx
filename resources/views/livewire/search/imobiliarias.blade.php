@@ -35,9 +35,14 @@ new class extends Component
         <x-primary-button href="{{ route('imobiliaria.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
-        <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
-            @foreach ($imobiliarias as $imobiliaria)
-                <a href="{{ route("imobiliaria.info", ["imobiliaria" => $imobiliaria->id]) }}" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow">
+        <div class="flex flex-col gap-1 p-4 overflow-scroll h-[40rem]">
+            @forelse ($imobiliarias as $imobiliaria)
+                <a
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
+                    href="{{ route("imobiliaria.info", ["imobiliaria" => $imobiliaria->id]) }}"
+                    wire:key="{{ $imobiliaria->id }}"
+                    wire:navigate
+                >
                     <div class="mr-2">
                         <img src="{{ asset("images/placeholder-imobiliaria.png") }}" alt="Imobiliaria Logo" class="w-16 rounded shadow aspect-square" />
                     </div>
@@ -62,7 +67,9 @@ new class extends Component
                         <span class="block">{{ $imobiliaria->updated_at->format("d/m/Y H:i:s") }}</span>
                     </div>
                 </a>
-            @endforeach
+            @empty
+                <x-alert title="Nenhuma imobiliaria foi encontrada" />
+            @endforelse
         </div>
     </div>
 </div>
