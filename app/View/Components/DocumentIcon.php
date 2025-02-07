@@ -20,7 +20,7 @@ class DocumentIcon extends Component
         return match (strtoupper($this->extension)) {
             'DOCX', 'DOC', 'ODT' => 'text-blue-700',
             'XLSX', 'XLS' => 'text-green-700',
-            'PDF' => 'text-red-900',
+            'PDF' => 'text-red-700',
             default => 'text-black',
         };
     }

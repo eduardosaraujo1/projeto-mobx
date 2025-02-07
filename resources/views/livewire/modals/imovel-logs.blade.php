@@ -49,7 +49,7 @@ new class extends Component
                     <x-card wire:key="{{$log['id'] ?? uuid_create()}}">
                         <div class="flex">
                             <div class="w-12 h-12 mr-4">
-                                <x-document-icon name="document-text" class="block w-full h-full" :extension="File::extension($document['filename'] ?? '')" />
+                                <x-icon name="document-text" class="block w-full h-full" />
                             </div>
                             <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1">
                                 <span class="text-lg font-bold">Título:</span>

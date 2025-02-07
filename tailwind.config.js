@@ -22,12 +22,8 @@ export default {
                 const object = {};
 
                 for (const size of sizes) {
-                    object[`fit-${size}`] = `repeat(auto-fit, minmax(${
-                        size / 4
-                    }rem, auto))`;
-                    object[`fill-${size}`] = `repeat(auto-fill, minmax(${
-                        size / 4
-                    }rem, auto))`;
+                    object[`fit-${size}`] = `repeat(auto-fit, minmax(${size / 4}rem, auto))`;
+                    object[`fill-${size}`] = `repeat(auto-fill, minmax(${size / 4}rem, auto))`;
                 }
 
                 return object;
@@ -40,6 +36,6 @@ export default {
             },
         },
     },
-
+    safelist: ["text-green-700", "text-blue-700", "text-red-700"],
     plugins: [forms],
 };
