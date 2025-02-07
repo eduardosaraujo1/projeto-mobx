@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('filename');
             $table->string('filepath');
+            $table->string('filesize', 10);
             $table->timestamps();
             $table->foreignId('imovel_id')->constrained('imoveis', 'id')->cascadeOnDelete();
         });

@@ -27,4 +27,14 @@ class ImovelLog extends Model
     {
         return $this->belongsTo(Imovel::class);
     }
+
+    public static function rules(): array
+    {
+        return [
+            'title' => ['required', 'max:255'],
+            'description' => ['required'],
+            'imovel_id' => ['required', 'exists:imoveis,id'],
+            'user_id' => ['required', 'exists:users,id'],
+        ];
+    }
 }

@@ -16,7 +16,7 @@ class ImovelLogService
      */
     public function __construct(
         private Imovel $imovel,
-        private User $user
+        private ?User $user
     ) {
         //
     }
@@ -66,33 +66,53 @@ class ImovelLogService
         return rtrim($description, "\n");
     }
 
-    public function logChanges(array $changes)
+    private function log(string $title, string $description)
     {
-        $title = 'Edição imóvel #'.$this->imovel->id;
-        $description = $this->generateDescription($changes);
-
-        if (empty($description)) {
-            return;
-        }
-
-        if (empty($this->imovel?->id) || empty($this->user?->id)) {
-            return;
-        }
-
         $fields = [
             'title' => $title,
             'description' => $description,
             'imovel_id' => $this->imovel?->id,
             'user_id' => $this->user?->id,
         ];
-
-        $validated = Validator::make($fields, [
-            'title' => ['required', 'max:255'],
-            'description' => ['required'],
-            'imovel_id' => ['required', 'exists:imoveis,id'],
-            'user_id' => ['required', 'exists:users,id'],
-        ])->validate();
+        $validator = Validator::make($fields, ImovelLog::rules());
+        $validated = $validator->validate();
 
         ImovelLog::create($validated);
+    }
+
+    public function logChanges(array $changes)
+    {
+        $title = 'Edição imóvel #'.$this->imovel->id;
+        $description = $this->generateDescription($changes);
+
+        if (empty($description)) {
+            return false;
+        }
+
+        if (empty($this->imovel?->id) || empty($this->user?->id)) {
+            return false;
+        }
+
+        $this->log($title, $description);
+    }
+
+    public function logDocumentUpload(string $filename, string $filesize)
+    {
+        // parse data
+        $filename = substr($filename, 0, 50);
+        $title = "Adição documento '$filename'";
+        $description = "Adicionado '$filename' ($filesize) à lista de documentos do imóvel";
+
+        $this->log($title, $description);
+    }
+
+    public function logDocumentDelete(string $filename, string $filesize)
+    {
+        // parse data
+        $filename = substr($filename, 0, 50);
+        $title = "Remoção documento '$filename'";
+        $description = "Apagado '$filename' ($filesize) da lista de documentos do imóvel";
+
+        $this->log($title, $description);
     }
 }
