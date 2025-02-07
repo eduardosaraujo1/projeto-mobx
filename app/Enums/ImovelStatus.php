@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Str;
+
 enum ImovelStatus: int
 {
     case LIVRE = 0;
@@ -11,5 +13,10 @@ enum ImovelStatus: int
     public static function randomId()
     {
         return array_rand(static::cases());
+    }
+
+    public function getName()
+    {
+        return Str::title($this->name);
     }
 }

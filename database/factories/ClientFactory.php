@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\ClientType;
 use App\Models\Imobiliaria;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,6 @@ class ClientFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->email(),
             'address' => fake()->address(),
-            'type' => ClientType::randomId(),
             'imobiliaria_id' => Imobiliaria::factory()
         ];
     }

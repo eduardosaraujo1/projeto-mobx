@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRole;
+use App\Facades\SelectedImobiliaria;
 use App\Models\Imovel;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use App\Enums\AccessLevel;
-use App\Services\ImobiliariaService;
 
 class ImovelPolicy
 {
@@ -23,7 +22,15 @@ class ImovelPolicy
      */
     public function view(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $imovel->client->imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $imovel->imobiliaria->id;
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function viewLogs(User $user, Imovel $imovel): bool
+    {
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -31,7 +38,7 @@ class ImovelPolicy
      */
     public function create(User $user): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -39,7 +46,8 @@ class ImovelPolicy
      */
     public function update(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**
@@ -47,7 +55,8 @@ class ImovelPolicy
      */
     public function delete(User $user, Imovel $imovel): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

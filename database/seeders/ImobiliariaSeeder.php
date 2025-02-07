@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
 use App\Models\Imobiliaria;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,15 +18,18 @@ class ImobiliariaSeeder extends Seeder
      * @param \Illuminate\Database\Eloquent\Collection<int, Imobiliaria> $imobiliarias
      * @return \Illuminate\Support\Collection<int|string, array{level: int|string>}
      */
-    private static function generateUserImobiliarias(Collection $imobiliarias): array
+    private static function generateallImobiliarias(): array
     {
-        $levels = AccessLevel::cases();
+        // $imobiliarias = Imobiliaria::factory()->count($count)->create();
+        $levels = UserRole::cases();
+
         $attachments = [];
 
+        // make each user be in every level of a random imobiliaria
         foreach ($levels as $level) {
-            $imobiliaria = $imobiliarias->random();
+            $imobiliaria = Imobiliaria::factory()->create();
             $level_id = $level->value;
-            $attachments[$imobiliaria->id] = ['level' => $level_id];
+            $attachments[$imobiliaria->id] = ['role' => $level_id];
         }
 
         return $attachments;
@@ -38,19 +41,16 @@ class ImobiliariaSeeder extends Seeder
     public function run(): void
     {
         $users = User::all();
-        $imobiliarias = Imobiliaria::factory()->count(15)->recycle($users)->create();
 
-        // Add access for user from imobiliaria (each user may have one or more imobiliaria)
-        $users
-            ->shift() // remove first user (admin)
-            ->each(
-                function (User $user) use ($imobiliarias) {
-                    $attachments = static::generateUserImobiliarias($imobiliarias);
-                    // attach the imobiliarias to the user
-                    // attach object format:
-                    // [imobiliaria_id => ['level' => level_id]]
-                    $user->imobiliarias()->attach($attachments);
-                }
-            );
+        // For each user, create imobiliarias and attach access level
+        $users->skip(1)->each(
+            function (User $user) {
+                $attachments = static::generateallImobiliarias();
+                // attach imobiliarias to the user's imobiliaria list (aquired through user->imobiliarias())
+                // object format:
+                // [imobiliaria_id => ['level' => level_id], ...]
+                $user->imobiliarias()->attach($attachments);
+            }
+        );
     }
 }

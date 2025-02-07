@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\ImovelLocation;
+use App\Enums\ImovelStatus;
 use App\Models\Client;
+use App\Models\Imobiliaria;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,12 +23,13 @@ class ImovelFactory extends Factory
         return [
             'value' => rand(1000, 100000),
             'iptu' => rand(1000, 100000),
-            'status' => rand(0, 2),
-            'address_name' => fake()->address(),
+            'status' => ImovelStatus::randomId(),
+            'address_name' => fake()->streetName(),
             'address_number' => rand(1, 600),
-            'bairro' => fake()->word(),
-            'is_lado_praia' => rand(0, 1),
+            'bairro' => fake()->city(),
+            'location_reference' => ImovelLocation::randomId(),
             'client_id' => Client::factory(),
+            'imobiliaria_id' => Imobiliaria::factory(),
         ];
     }
 }

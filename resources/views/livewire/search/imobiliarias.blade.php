@@ -1,62 +1,50 @@
 <?php
 
-use Livewire\Volt\Component;
 use App\Models\Imobiliaria;
+use App\Services\SearchService;
+use Livewire\Volt\Component;
 
-/**
- * Summary of imobiliariaSearch
- * @param \Illuminate\Database\Eloquent\Collection<Imobiliaria> $imobiliarias
- * @param string $searchString
- * @param string $searchType
- * @return \Illuminate\Database\Eloquent\Collection<Imobiliaria>
- */
-function imobiliariaSearch($imobiliarias, $searchString)
+new class extends Component
 {
-    return $imobiliarias->filter(function (Imobiliaria $imobiliaria) use ($searchString) {
-        $verdict = true;
-
-        // data
-        $imobiliariaName = strtolower($imobiliaria->name ?? '');
-        $imobiliariaEmail = strtolower($imobiliaria->email ?? '');
-        $imobiliariaContact = strtolower($imobiliaria->contact ?? '');
-
-        // formatted queries
-        $haystack = "$imobiliariaName $imobiliariaEmail $imobiliariaContact";
-        $needle = $searchString ?? '';
-
-        // search filter
-        $verdict = str_contains($haystack, $needle);
-
-        return $verdict;
-    });
-}
-
-new class extends Component {
     /**
      * Summary of imoveis
+     *
      * @var \Illuminate\Database\Eloquent\Collection<\App\Models\User>
      */
-    public $imobiliarias;
+    public $imobiliariaList;
+
     public $searchString;
+
+    public function with(SearchService $search)
+    {
+        return [
+            'imobiliarias' => $search->imobiliariaSearch($this->imobiliariaList, $this->searchString ?? ''),
+        ];
+    }
+
     public function mount()
     {
-        $this->imobiliarias = Imobiliaria::all();
+        $this->imobiliariaList = Imobiliaria::all();
     }
 }; ?>
 
+
 <div class="flex flex-col space-y-2">
     <div class="flex gap-2">
-        <x-input type="text" id="searchBar" wire:model.live.debounce='searchString' class="flex-1"
-            placeholder="Pesquisar (Nome, Contato ou E-mail)" />
-        <x-regular-button label="Cadastrar" href="{{ route('imobiliaria.new') }}" />
+        <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Nome ou E-mail)" />
+        <x-primary-button href="{{ route('imobiliaria.new') }}">Cadastrar</x-primary-button>
     </div>
     <div class="h-full bg-white rounded shadow">
-        <div class="flex flex-col gap-4 p-4 overflow-scroll h-[40rem]">
-            @foreach (imobiliariaSearch($imobiliarias, $searchString) as $imobiliaria)
-                <a href="#" class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow ">
+        <div class="flex flex-col gap-1 p-4 overflow-scroll h-[40rem]">
+            @forelse ($imobiliarias as $imobiliaria)
+                <a
+                    class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
+                    href="{{ route("imobiliaria.info", ["imobiliaria" => $imobiliaria->id]) }}"
+                    wire:key="{{ $imobiliaria->id }}"
+                    wire:navigate
+                >
                     <div class="mr-2">
-                        <img src="{{ asset('images/placeholder-imobiliaria.png') }}" alt="Imobiliaria Logo"
-                            class="w-16 rounded shadow aspect-square">
+                        <img src="{{ asset("images/placeholder-imobiliaria.png") }}" alt="Imobiliaria Logo" class="w-16 rounded shadow aspect-square" />
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Nome:</span>
@@ -76,10 +64,12 @@ new class extends Component {
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Ultima Atualização</span>
-                        <span class="block">{{ $imobiliaria->updated_at->format('d/m/Y H:i:s') }}</span>
+                        <span class="block">{{ $imobiliaria->updated_at->format("d/m/Y H:i:s") }}</span>
                     </div>
                 </a>
-            @endforeach
+            @empty
+                <x-alert title="Nenhuma imobiliaria foi encontrada" />
+            @endforelse
         </div>
     </div>
 </div>

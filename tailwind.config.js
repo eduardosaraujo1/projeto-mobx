@@ -22,10 +22,10 @@ export default {
                 const object = {};
 
                 for (const size of sizes) {
-                    object[`auto-fit-${size}`] = `repeat(auto-fit, minmax(${
+                    object[`fit-${size}`] = `repeat(auto-fit, minmax(${
                         size / 4
                     }rem, auto))`;
-                    object[`auto-fill-${size}`] = `repeat(auto-fill, minmax(${
+                    object[`fill-${size}`] = `repeat(auto-fill, minmax(${
                         size / 4
                     }rem, auto))`;
                 }

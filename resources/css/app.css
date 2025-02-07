@@ -4,6 +4,28 @@
 
 @layer components {
     .legacy-nav-link {
-        @apply flex items-center p-3 text-base font-semibold transition-all duration-200 hover:bg-[#e5e7eb] hover:text-[#1f2937] hover:scale-105
+        @apply flex items-center p-3 text-base font-semibold transition-all duration-200 hover:bg-[#e5e7eb] hover:text-[#1f2937] hover:scale-105;
+    }
+}
+
+@layer base {
+    /* width */
+    ::-webkit-scrollbar {
+        @apply w-1.5;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        @apply bg-[#888] rounded-2xl;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-[#555];
     }
 }

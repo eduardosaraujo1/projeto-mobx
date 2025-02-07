@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Enums\AccessLevel;
+use App\Enums\UserRole;
+use App\Facades\SelectedImobiliaria;
 use App\Models\Imobiliaria;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use App\Services\ImobiliariaService;
 
 class ImobiliariaPolicy
 {
@@ -23,7 +22,7 @@ class ImobiliariaPolicy
      */
     public function view(User $user, Imobiliaria $imobiliaria): bool
     {
-        return ImobiliariaService::current_imobiliaria()->id === $imobiliaria->id || $user->is_admin;
+        return SelectedImobiliaria::get($user)->id === $imobiliaria->id || $user->is_admin;
     }
 
     /**
@@ -31,7 +30,7 @@ class ImobiliariaPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -39,7 +38,7 @@ class ImobiliariaPolicy
      */
     public function update(User $user, Imobiliaria $imobiliaria): bool
     {
-        return ImobiliariaService::current_access_level() === AccessLevel::GERENTE || $user->is_admin;
+        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
     }
 
     /**

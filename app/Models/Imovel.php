@@ -2,22 +2,28 @@
 
 namespace App\Models;
 
+use App\Enums\ImovelLocation;
 use App\Enums\ImovelStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
+use Storage;
 
 class Imovel extends Model
 {
     /** @use HasFactory<\Database\Factories\ImovelFactory> */
     use HasFactory;
+
+    protected $table = 'imoveis';
+
     protected $fillable = [
         'address_name',
         'address_number',
         'bairro',
-        'is_lado_praia',
+        'location_reference',
         'value',
         'iptu',
         'status',
@@ -25,12 +31,15 @@ class Imovel extends Model
         'client_id',
     ];
 
-    protected $table = 'imoveis';
+    protected $attributes = [
+        'status' => 0,
+    ];
 
     protected function casts(): array
     {
         return [
-            'is_lado_praia' => 'boolean'
+            'status' => ImovelStatus::class,
+            'location_reference' => ImovelLocation::class,
         ];
     }
 
@@ -39,14 +48,19 @@ class Imovel extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function imovelDocuments(): HasMany
+    public function documents(): HasMany
     {
         return $this->hasMany(ImovelDocument::class);
     }
 
-    public function imovelLogs(): HasMany
+    public function logs(): HasMany
     {
         return $this->hasMany(ImovelLog::class);
+    }
+
+    public function imobiliaria()
+    {
+        return $this->belongsTo(Imobiliaria::class);
     }
 
     public function fullAddress()
@@ -58,32 +72,51 @@ class Imovel extends Model
         ]);
     }
 
-    public function statusName()
+    public function base64Image(): ?string
     {
-        return match ($this->status) {
-            ImovelStatus::LIVRE->value => 'Livre',
-            ImovelStatus::ALUGADO->value => 'Alugado',
-            ImovelStatus::VENDIDO->value => 'Vendido'
-        };
-    }
+        if (! isset($this->photo_path) || Storage::disk('local')->missing($this->photo_path)) {
+            return null;
+        }
 
-    public function lado()
-    {
-        return $this->is_lado_praia ? 'Praia' : 'Morro';
+        $mime_types = [
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'bmp' => 'image/bmp',
+            'svg' => 'image/svg+xml',
+        ];
+
+        // access photo more easily
+        $photo_path = $this->photo_path;
+
+        // get file extension
+        $extension = strtolower(pathinfo($photo_path, PATHINFO_EXTENSION));
+
+        // get mime type of stored file
+        $mime_type = $mime_types[$extension] ?? 'image/png';
+
+        // read the image as base64
+        $photo_bin = Storage::disk('local')->get($photo_path);
+        $base64 = base64_encode($photo_bin);
+
+        // append mime type and return
+        return "data:{$mime_type};base64,{$base64}";
     }
 
     public static function rules()
     {
         return [
             'address_name' => ['required', 'min:3', 'max:255'],
-            'address_number' => ['integer', 'required', 'max_digits:4'],
+            'address_number' => ['required', 'integer', 'max_digits:4'],
             'bairro' => ['required', 'min:3', 'max:255'],
-            'is_lado_praia' => ['boolean', 'required', 'decimal:0,2'],
-            'value' => ['nullable', 'decimal:0,2'],
-            'iptu' => ['nullable', 'between:1,8'],
-            'status' => ['required', Rule::enum(ImovelStatus::class)],
+            'location_reference' => ['nullable', Rule::enum(ImovelLocation::class)],
+            'value' => ['nullable', 'numeric'],
+            'iptu' => ['nullable', 'numeric'],
+            'status' => [Rule::enum(ImovelStatus::class)],
             'photo_path' => ['nullable'],
-            'client_id' => ['exists:clients,id'],
+            'client_id' => ['nullable', 'exists:clients,id'],
         ];
     }
 }

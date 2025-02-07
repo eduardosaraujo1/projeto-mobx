@@ -15,9 +15,11 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         $imobiliarias = Imobiliaria::all();
-        Client::factory()
-            ->count(15)
-            ->recycle($imobiliarias)
-            ->create();
+        $imobiliarias->each(function (Imobiliaria $imobiliaria) {
+            Client::factory()
+                ->count(10)
+                ->recycle($imobiliaria)
+                ->create();
+        });
     }
 }

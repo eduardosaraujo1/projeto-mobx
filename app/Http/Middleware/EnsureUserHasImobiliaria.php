@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\ImobiliariaService;
+use App\Facades\SelectedImobiliaria;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureUserHasImobiliaria
 {
     public function __construct(
-    ) {
-    }
+    ) {}
+
     /**
      * Handle an incoming request.
      *
@@ -19,7 +19,7 @@ class EnsureUserHasImobiliaria
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $hasImobiliaria = ImobiliariaService::current_imobiliaria();
+        $hasImobiliaria = SelectedImobiliaria::get($request->user());
 
         if (isset($hasImobiliaria)) {
             return $next($request);

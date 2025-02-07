@@ -18,6 +18,7 @@ class ImobiliariaFactory extends Factory
     {
         return [
             'name' => fake()->company(),
+            'cnpj' => fake()->bothify(str_repeat('#', 14)),
             'address' => fake()->address(),
             'email' => fake()->email(),
             'contact' => fake()->phoneNumber(),
