@@ -25,7 +25,18 @@ class StringUtils
         return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj_cpf);
     }
 
-    public function removeAccents($string)
+    /**
+     * Converts a file size represented in bytes in integer form and parses it as a readable format (e.g. 1024 -> 1.00 KB)
+     */
+    public static function humanFileSize(int $bytes, int $decimals = 2): string
+    {
+        $sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $factor = floor((strlen((string) $bytes) - 1) / 3);
+
+        return sprintf("%.{$decimals}f", $bytes / (1024 ** $factor)).' '.$sizes[$factor];
+    }
+
+    public static function removeAccents($string)
     {
         if (! preg_match('/[\x80-\xff]/', $string)) {
             return $string;

@@ -2,6 +2,8 @@
 
 use App\Models\Imovel;
 use App\Models\ImovelDocument;
+use App\Services\ImovelLogService;
+use App\Utils\StringUtils;
 use Illuminate\Http\UploadedFile;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
@@ -112,6 +114,11 @@ new class extends Component
 
         // add path do the database
         ImovelDocument::create($validated);
+
+        // log creation of the document with file size
+        $filesize = StringUtils::humanFileSize($file->getSize());
+        $logService = new ImovelLogService($this->imovel, auth()->user());
+        $logService->logDocumentUpload($filename, $filesize);
     }
 
     public function download(ImovelDocument $document)
@@ -138,14 +145,19 @@ new class extends Component
         // follow deletion protocol as usual:
         $this->authorize('delete', $document);
 
-        // get file path
-        $filePath = $document->filepath;
+        // get file path and file name
+        $filename = $document->filename;
+        $filepath = $document->filepath;
 
         // delete file
-        Storage::disk('local')->delete($filePath);
+        Storage::disk('local')->delete($filepath);
 
         // remove entry from database
         $document->delete();
+
+        // log deletion of the document
+        $logService = new ImovelLogService($this->imovel, auth()->user());
+        $logService->logDocumentDelete($filename);
     }
 
     public function stageDocumentForDeletion(?int $id)

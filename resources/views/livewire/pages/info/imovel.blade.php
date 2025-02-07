@@ -122,7 +122,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->imovel->save();
 
         // log the changes to an ImovelLog instance
-        $logger = new ImovelLogService($this->imovel, auth()->user());
+        $logger = new ImovelLogService(imovel: $this->imovel, user: auth()->user());
         $logger->logChanges($this->imovel->getChanges());
 
         // revalidate cache since image may now be different
