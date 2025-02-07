@@ -22,7 +22,10 @@ class ImovelPolicy
      */
     public function view(User $user, Imovel $imovel): bool
     {
-        return SelectedImobiliaria::get($user)->id === $imovel->imobiliaria->id;
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::get($user)?->is($imovel->imobiliaria);
+
+        return $verdict;
     }
 
     /**
@@ -30,7 +33,11 @@ class ImovelPolicy
      */
     public function viewLogs(User $user, Imovel $imovel): bool
     {
-        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
+        $verdict = $user->is_admin
+            || $user->getRole($imovel->imobiliaria) === UserRole::GERENTE
+            && SelectedImobiliaria::is($imovel->imobiliaria, $user);
+
+        return $verdict;
     }
 
     /**
@@ -38,7 +45,10 @@ class ImovelPolicy
      */
     public function create(User $user): bool
     {
-        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE;
+
+        return $verdict;
     }
 
     /**
@@ -46,8 +56,11 @@ class ImovelPolicy
      */
     public function update(User $user, Imovel $imovel): bool
     {
-        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
-        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
+        $verdict = $user->is_admin
+            || $user->getRole($imovel->imobiliaria) === UserRole::GERENTE
+            && SelectedImobiliaria::is($imovel->imobiliaria, $user);
+
+        return $verdict;
     }
 
     /**
@@ -55,8 +68,11 @@ class ImovelPolicy
      */
     public function delete(User $user, Imovel $imovel): bool
     {
-        // TODO: Apply rules of "curent imovel's imobiliaria is the same as user's selected imobiliaria"
-        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
+        $verdict = $user->is_admin
+            || $user->getRole($imovel->imobiliaria) === UserRole::GERENTE // manager in the imovel's imobiliaria
+            && SelectedImobiliaria::is($imovel->imobiliaria, $user); // selecting the imovel's imobiliaria
+
+        return $verdict;
     }
 
     /**

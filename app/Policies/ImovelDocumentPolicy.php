@@ -22,7 +22,18 @@ class ImovelDocumentPolicy
      */
     public function view(User $user, ImovelDocument $imovelDocument): bool
     {
-        return false;
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::is($imovelDocument->imovel->imobiliaria, $user);
+
+        return $verdict;
+    }
+
+    public function download(User $user, ImovelDocument $imovelDocument): bool
+    {
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::is($imovelDocument->imovel->imobiliaria, $user);
+
+        return $verdict;
     }
 
     /**
@@ -30,7 +41,10 @@ class ImovelDocumentPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE;
+
+        return $verdict;
     }
 
     /**
@@ -46,16 +60,11 @@ class ImovelDocumentPolicy
      */
     public function delete(User $user, ImovelDocument $imovelDocument): bool
     {
-        /**
-         * @var \Illuminate\Database\Eloquent\Collection<\App\Models\Imovel>
-         */
-        $imoveis = SelectedImobiliaria::get($user)->imoveis->pluck('id');
+        $verdict = $user->is_admin
+            || $user->getRole($imovelDocument->imovel->imobiliaria) === UserRole::GERENTE
+            && SelectedImobiliaria::is($imovelDocument->imovel->imobiliaria);
 
-        $is_manager = SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE;
-        $is_admin = $user->is_admin;
-        $belongsToImobiliaria = $imoveis->contains($imovelDocument->imovel_id);
-
-        return ($is_manager || $is_admin) && $belongsToImobiliaria;
+        return $verdict;
     }
 
     /**

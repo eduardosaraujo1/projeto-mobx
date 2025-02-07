@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -73,6 +74,13 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn () => $this->is_admin ? Imobiliaria::all() : $this->imobiliarias
         );
+    }
+
+    public function getRole(Imobiliaria $imobiliaria): ?UserRole
+    {
+        $imobiliariaUser = $imobiliaria->users?->firstWhere('id', $this->id);
+
+        return $imobiliariaUser->role->role ?? null;
     }
 
     public static function rules()

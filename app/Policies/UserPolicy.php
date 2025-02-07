@@ -35,7 +35,10 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->is_admin && $user->id !== $model->id;
+        $verdict = $user->is_admin
+            && $user->isNot($model);
+
+        return $verdict;
     }
 
     /**
@@ -43,7 +46,10 @@ class UserPolicy
      */
     public function updatePassword(User $user, User $model): bool
     {
-        return $user->is_admin;
+        $verdict = $user->is_admin
+            && $user->isNot($model);
+
+        return $verdict;
     }
 
     /**
@@ -51,7 +57,10 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->is_admin;
+        $verdict = $user->is_admin
+            && $user->isNot($model);
+
+        return $verdict;
     }
 
     /**
