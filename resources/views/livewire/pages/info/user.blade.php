@@ -93,6 +93,16 @@ new #[Layout('layouts.app')] class extends Component
         $this->dispatch('saved');
     }
 
+    public function delete()
+    {
+        $this->authorize('delete', $this->user);
+
+        $this->user->delete();
+
+        // redirect
+        $this->redirectRoute('home');
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -146,17 +156,21 @@ new #[Layout('layouts.app')] class extends Component
                     <x-radio :disabled="!$edit" id="admin" label="Administrador" wire:model="userType" value="admin" />
                 </div>
             </x-card>
-            @can("update", $user)
-                <div class="flex items-center mt-4 space-x-2">
+            <div class="flex items-center gap-2 mt-4">
+                @can("update", $user)
                     @if ($edit)
                         <x-primary-button type="submit">Salvar</x-primary-button>
                         <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                     @else
-                        <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
+                        @can("delete", $user)
+                            <x-danger-button x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')">Delete</x-danger-button>
+                        @endcan
+
+                        <x-primary-button wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
                     <x-action-message class="me-3" on="saved">Salvo</x-action-message>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </form>
         <x-modal name="updatePassword" focusable>
             <div class="p-6 space-y-2">
@@ -165,7 +179,17 @@ new #[Layout('layouts.app')] class extends Component
                 <x-password wire:model="password_confirmation" label="Confirmar Senha" />
                 <div class="flex items-center gap-4">
                     <x-primary-button wire:click="updatePassword()" x-on:click="$dispatch('close')">Salvar</x-primary-button>
-                    <x-secondary-button x-on:click="$dispatch('close')">Cancelar</x-secondary-button>
+                    <x-secondary-button x-on:click.prevent="$dispatch('close')">Cancelar</x-secondary-button>
+                </div>
+            </div>
+        </x-modal>
+        <x-modal name="confirm-delete" focusable>
+            <div class="p-6">
+                <h2 class="text-2xl font-medium">Confirmar Exclusão</h2>
+                <p class="mt-1 text-base">Todos os dados serão permanentemente apagados. Tem certeza que deseja apagar?</p>
+                <div class="flex items-center gap-4 pt-8 mt-4">
+                    <x-danger-button wire:click="delete()" x-on:click="$dispatch('close')">EXCLUIR</x-danger-button>
+                    <x-secondary-button x-on:click.prevent="$dispatch('close')">Cancelar</x-secondary-button>
                 </div>
             </div>
         </x-modal>
