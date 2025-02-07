@@ -106,7 +106,7 @@ new class extends Component
 
 
 <div>
-    <x-modal name="imobiliariaMembers">
+    <x-modal name="imobiliariaMembers" focusable>
         <div class="p-6 space-y-2">
             <h1 class="text-2xl font-bold">Membros da Imobiliária</h1>
             <x-errors title="Erro" />

@@ -265,25 +265,13 @@ new #[Layout('layouts.app')] class extends Component
             </div>
         </div>
         <x-secondary-button class="mt-2" x-on:click="$dispatch('open-modal', 'view-documents')">Ver documentos</x-secondary-button>
-        <x-secondary-button class="mt-2" x-on:click="$dispatch('open-modal', 'view-logs')">Histórico de alterações</x-secondary-button>
-        <x-modal name="select-client" focusable>
-            <div class="p-6">
-                <h1 class="mb-2 text-2xl font-medium">Selecionar Cliente</h1>
-                <livewire:modals.select-imovel-client />
-            </div>
-        </x-modal>
-        <x-modal name="view-documents" focusable>
-            <div class="p-6">
-                <h1 class="mb-2 text-3xl font-medium">Documentos do imóvel</h1>
-                <livewire:modals.imovel-documents :imovel="$imovel" />
-            </div>
-        </x-modal>
-        <x-modal name="view-logs" focusable>
-            <div class="p-6">
-                <h1 class="mb-2 text-2xl font-medium">Histórico de Alterações</h1>
-                <livewire:modals.imovel-logs :imovel="$imovel" />
-            </div>
-        </x-modal>
+        @can("viewLogs", $imovel)
+            <x-secondary-button class="mt-2" x-on:click="$dispatch('open-modal', 'view-logs')">Histórico de alterações</x-secondary-button>
+            <livewire:modals.imovel-logs :imovel="$imovel" />
+        @endcan
+
+        <livewire:modals.select-imovel-client />
+        <livewire:modals.imovel-documents :imovel="$imovel" />
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan

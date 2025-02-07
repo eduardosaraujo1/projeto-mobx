@@ -166,54 +166,59 @@ new class extends Component
 
 
 <div>
-    @if (session("documentError"))
-        <x-alert negative title="Não foi possivel fazer o upload do arquivo. Tente novamente mais tarde."></x-alert>
-    @endif
+    <x-modal name="view-documents" focusable>
+        <div class="p-6">
+            <h1 class="mb-2 text-3xl font-medium">Documentos do imóvel</h1>
+            @if (session("documentError"))
+                <x-alert negative title="Não foi possivel fazer o upload do arquivo. Tente novamente mais tarde."></x-alert>
+            @endif
 
-    <input class="hidden" type="file" name="uploadedDocument" x-ref="uploadDoc" wire:model.change="file" />
-    <div class="bg-white border border-gray-200 max-h-[40rem] space-y-2 overflow-y-auto p-2">
-        @forelse ($documents as $document)
-            <x-card wire:key="{{$document['id'] ?? uuid_create()}}">
-                <div class="flex items-center gap-4">
-                    <x-document-icon name="document" class="w-12 h-12" :extension="$document['extension'] ?? ''" />
-                    <div class="flex flex-col self-stretch justify-between flex-1">
-                        <span id="filename" class="text-lg font-medium">{{ $document["filename"] ?? "" }}</span>
-                        <span id="fileformat">{{ $document["extension"] ?? "" }}</span>
+            <input class="hidden" type="file" name="uploadedDocument" x-ref="uploadDoc" wire:model.change="file" />
+            <div class="bg-white border border-gray-200 max-h-[40rem] space-y-2 overflow-y-auto p-2">
+                @forelse ($documents as $document)
+                    <x-card wire:key="{{$document['id'] ?? uuid_create()}}">
+                        <div class="flex items-center gap-4">
+                            <x-document-icon name="document" class="w-12 h-12" :extension="$document['extension'] ?? ''" />
+                            <div class="flex flex-col self-stretch justify-between flex-1">
+                                <span id="filename" class="text-lg font-medium">{{ $document["filename"] ?? "" }}</span>
+                                <span id="fileformat">{{ $document["extension"] ?? "" }}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <x-mini-button icon="trash" lg rounded red outline interaction:solid wire:click="stageDocumentForDeletion({{ $document['id'] }})" />
+                                <x-mini-button icon="arrow-down-tray" lg rounded black wire:click="download('{{ $document['id'] }}')" />
+                            </div>
+                        </div>
+                    </x-card>
+                @empty
+                    
+                @endforelse
+                <div class="block w-full mt-2 text-center">
+                    <x-secondary-button class="flex gap-1 h-min" x-on:click="$refs.uploadDoc.click()">
+                        <x-icon name="plus" class="w-5 h-5" />
+                        Adicionar
+                    </x-secondary-button>
+                </div>
+            </div>
+            <div class="flex justify-end w-full mt-2">
+                <x-primary-button x-on:click="$dispatch('close')">Fechar</x-primary-button>
+            </div>
+            <x-modal name="deleteDocument">
+                <div class="flex flex-col p-6">
+                    <h2 class="text-2xl font-medium">Deletar documento</h2>
+                    <div class="text-lg">
+                        <div>
+                            Tem certeza que deseja deletar
+                            <span class="font-bold">{{ $documentToDelete?->filename }}</span>
+                            ?
+                        </div>
+                        <span class="text-red-700 underline">Essa ação é irreversivel</span>
                     </div>
-                    <div class="flex gap-2">
-                        <x-mini-button icon="trash" lg rounded red outline interaction:solid wire:click="stageDocumentForDeletion({{ $document['id'] }})" />
-                        <x-mini-button icon="arrow-down-tray" lg rounded black wire:click="download('{{ $document['id'] }}')" />
+                    <div class="flex justify-end w-full gap-2 mt-5">
+                        <x-danger-button x-on:click="$dispatch('close')" wire:click="deleteStagedDocument">DELETAR</x-danger-button>
+                        <x-secondary-button x-on:click="$dispatch('close')" wire:click="clearDocumentStage">Cancelar</x-secondary-button>
                     </div>
                 </div>
-            </x-card>
-        @empty
-            <x-alert title="Nenhum documento encontrado" />
-        @endforelse
-        <div class="block w-full mt-2 text-center">
-            <x-secondary-button class="flex gap-1 h-min" x-on:click="$refs.uploadDoc.click()">
-                <x-icon name="plus" class="w-5 h-5" />
-                Adicionar
-            </x-secondary-button>
-        </div>
-    </div>
-    <div class="flex justify-end w-full mt-2">
-        <x-primary-button x-on:click="$dispatch('close')">Fechar</x-primary-button>
-    </div>
-    <x-modal name="deleteDocument">
-        <div class="flex flex-col p-6">
-            <h2 class="text-2xl font-medium">Deletar documento</h2>
-            <div class="text-lg">
-                <div>
-                    Tem certeza que deseja deletar
-                    <span class="font-bold">{{ $documentToDelete?->filename }}</span>
-                    ?
-                </div>
-                <span class="text-red-700 underline">Essa ação é irreversivel</span>
-            </div>
-            <div class="flex justify-end w-full gap-2 mt-5">
-                <x-danger-button x-on:click="$dispatch('close')" wire:click="deleteStagedDocument">DELETAR</x-danger-button>
-                <x-secondary-button x-on:click="$dispatch('close')" wire:click="clearDocumentStage">Cancelar</x-secondary-button>
-            </div>
+            </x-modal>
         </div>
     </x-modal>
 </div>
