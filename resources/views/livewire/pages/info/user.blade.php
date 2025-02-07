@@ -118,11 +118,7 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <x-slot name="heading">
-        <div class="flex justify-between">
-            <span class="flex-1">Visualizar Usuário</span>
-        </div>
-    </x-slot>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Visualizar Usuário</h2>
     @can("view", $user)
         <form class="flex flex-col h-full gap-1" wire:submit="save">
             <x-errors class="mb-4" />

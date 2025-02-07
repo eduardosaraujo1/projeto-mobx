@@ -73,11 +73,7 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <x-slot name="heading">
-        <div class="flex justify-between">
-            <span class="flex-1">Imobiliaria {{ $imobiliaria->name }}</span>
-        </div>
-    </x-slot>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Imobiliaria {{ $imobiliaria->name }}</h2>
     @can("view", $imobiliaria)
         <form class="flex flex-col gap-1" wire:submit="save">
             <x-errors class="mb-4" />

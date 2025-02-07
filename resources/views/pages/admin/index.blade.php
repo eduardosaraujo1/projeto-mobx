@@ -1,8 +1,6 @@
 <x-app-layout>
-    <x-slot name="heading">
-        Painel Administrador
-    </x-slot>
-    <h3 class="my-4 text-3xl">Gerenciar Usuários</h3>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Painel Administrativo</h2>
+    <h2 class="my-4 text-3xl">Gerenciar Usuários</h2>
     <livewire:search.users />
     <h3 class="my-4 text-3xl">Gerenciar Imobiliarias</h3>
     <livewire:search.imobiliarias />

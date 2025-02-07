@@ -169,7 +169,7 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <x-slot name="heading">Gerenciar Imóvel</x-slot>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Gerenciar Imóvel</h2>
     @can("view", $imovel)
         <x-errors class="mb-4" />
         <div class="space-y-2">
