@@ -1,5 +1,38 @@
 # MVP MOBX
 
+## Instalação para Ambiente de Desenvolvimento
+
+1. Tenha [docker](https://www.docker.com/) instalado e funcionando
+2. Clone o repositório utilizando `git clone https://github.com/eduardosaraujo1/projeto-mobx`
+3. Entre na raiz do repositório com `cd projeto-mobx`
+4. Crie o arquivo `.env` copiando do arquivo `.env.example`
+
+- Linux/MacOS: `cp .env.example .env`
+    - Windows: `copy .env.example .env`
+
+5. Abra o arquivo `.env` com seu editor de código e altere os dados do banco de dados para o que desejar
+    - Defina uma senha segura caso queira utilizar outra ferramenta para colocar em produção
+6. Caso esteja em Linux, execute o comando `bash ./saildeploy.sh` para inicializar o projeto
+
+    - Em Windows, utilize os comandos abaixo
+
+    ```sh
+    docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -v "$(pwd):/var/www/html" \
+        -w /var/www/html \
+        laravelsail/php84-composer:latest \
+        composer install --ignore-platform-reqs
+
+    ./vendor/bin/sail up -d
+    ./vendor/bin/sail npm install
+    ./vendor/bin/sail artisan key:generate
+    ./vendor/bin/sail artisan config:cache
+    ./vendor/bin/sail artisan migrate --seed
+    ```
+
+    - Por fim, utilize `./vendor/bin/sail npm run dev` para iniciar o [Vite](https://vite.dev/)
+
 ## Resumo
 
 O MOBX é um sistema destinado à organização interna de imobiliárias que o utilizarem. Seu objetivo principal é possibilitar a busca e gerenciamento de imóveis importados de uma planilha Excel. Essa planilha contém informações como número do imóvel, endereço, localização (lado praia ou morro), IPTU, aluguel, e bairro. O sistema não possui funcionalidade externa e é restrito ao uso interno.
