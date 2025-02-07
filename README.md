@@ -5,7 +5,7 @@
 1. Tenha [docker](https://www.docker.com/) instalado e funcionando
 2. Clone o repositório utilizando `git clone https://github.com/eduardosaraujo1/projeto-mobx`
 3. Entre na raiz do repositório com `cd projeto-mobx`
-4. Crie o arquivo .env copiando do arquivo .env.example
+4. Crie o arquivo `.env` copiando do arquivo `.env.example`
 
 - Linux/MacOS: `cp .env.example .env`
     - Windows: `copy .env.example .env`
@@ -28,6 +28,7 @@
     ./vendor/bin/sail npm install
     ./vendor/bin/sail artisan key:generate
     ./vendor/bin/sail artisan config:cache
+    ./vendor/bin/sail artisan migrate --seed
     ```
 
     - Por fim, utilize `./vendor/bin/sail npm run dev` para iniciar o [Vite](https://vite.dev/)
