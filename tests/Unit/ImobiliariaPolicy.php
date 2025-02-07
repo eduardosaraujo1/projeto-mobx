@@ -7,10 +7,11 @@ use App\Models\User;
 use App\Policies\ImobiliariaPolicy;
 
 test('tests the update policy of imobiliaria', function () {
+    // SETUP MODELS
     $admin = User::factory()->make(['is_admin' => true]);
-    $gerente = User::factory()->make();
+    $gerente = User::factory()->make(['name' => 'MOCKMANAGER']);
+    $colaborador = User::factory()->make(['name' => 'MOCKCOLAB']);
     $imobiliaria = Imobiliaria::factory()->make();
-    $colaborador = User::factory()->make();
 
     // Manually create the pivot model instance
     $managerRole = new Role([
@@ -30,11 +31,14 @@ test('tests the update policy of imobiliaria', function () {
     $imobiliaria->setRelation('users', collect([$gerente, $colaborador]));
 
     // Manually associate the pivot attributes
-    $colaborador->imobiliarias()->firstWhere('id', $imobiliaria->id)->role = $managerRole;
-    $gerente->imobiliarias()->firstWhere('id', $imobiliaria->id)->role = $managerRole;
+    $gerente->imobiliarias->firstWhere('id', $imobiliaria->id)->role = $managerRole;
+    $colaborador->imobiliarias->firstWhere('id', $imobiliaria->id)->role = $colabRole;
     $imobiliaria->users->firstWhere('id', $gerente->id)->role = $managerRole;
     $imobiliaria->users->firstWhere('id', $colaborador->id)->role = $colabRole;
 
+    dd($gerente->imobiliarias->firstWhere('id', $imobiliaria->id)->role->role);
+
+    // ASSERT RESULTS
     // admin test
     $policy = new ImobiliariaPolicy;
     $result = $policy->update($admin, $imobiliaria);
