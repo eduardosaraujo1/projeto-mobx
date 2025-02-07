@@ -7,13 +7,18 @@ use App\Models\User;
 use App\Policies\ImobiliariaPolicy;
 
 test('tests the update policy of imobiliaria', function () {
-    // SETUP MODELS
+    // Create the models in memory (not persisted)
     $admin = User::factory()->make(['is_admin' => true]);
     $gerente = User::factory()->make(['name' => 'MOCKMANAGER']);
     $colaborador = User::factory()->make(['name' => 'MOCKCOLAB']);
     $imobiliaria = Imobiliaria::factory()->make();
 
-    // Manually create the pivot model instance
+    // Manually assign IDs so that firstWhere() can differentiate them
+    $gerente->id = 1;
+    $colaborador->id = 2;
+    $imobiliaria->id = 10;
+
+    // Create the pivot role instances (simulate the pivot table records)
     $managerRole = new Role([
         'user_id' => $gerente->id,
         'imobiliaria_id' => $imobiliaria->id,
@@ -25,18 +30,27 @@ test('tests the update policy of imobiliaria', function () {
         'role' => UserRole::COLABORADOR,
     ]);
 
-    // Attach the pivot model to the relationship in memory
-    $gerente->setRelation('imobiliarias', collect([$imobiliaria]));
-    $colaborador->setRelation('imobiliarias', collect([$imobiliaria]));
-    $imobiliaria->setRelation('users', collect([$gerente, $colaborador]));
+    // Instead of attaching the same $imobiliaria instance to both users,
+    // clone it so each relationship can have its own pivot data.
+    $imobiliariaForGerente = clone $imobiliaria;
+    $imobiliariaForColaborador = clone $imobiliaria;
 
-    // Manually associate the pivot attributes
-    $gerente->imobiliarias->firstWhere('id', $imobiliaria->id)->role = $managerRole;
-    $colaborador->imobiliarias->firstWhere('id', $imobiliaria->id)->role = $colabRole;
-    $imobiliaria->users->firstWhere('id', $gerente->id)->role = $managerRole;
-    $imobiliaria->users->firstWhere('id', $colaborador->id)->role = $colabRole;
+    // Assign each clone its corresponding pivot role (simulate the pivot data)
+    $imobiliariaForGerente->role = $managerRole;
+    $imobiliariaForColaborador->role = $colabRole;
 
-    dd($gerente->imobiliarias->firstWhere('id', $imobiliaria->id)->role->role);
+    // Set the "imobiliarias" relation on each user to contain their unique clone
+    $gerente->setRelation('imobiliarias', collect([$imobiliariaForGerente]));
+    $colaborador->setRelation('imobiliarias', collect([$imobiliariaForColaborador]));
+
+    // Also, set the "users" relation on the imobiliaria to simulate the inverse side.
+    // Clone each user so that the pivot data remains independent.
+    $gerenteClone = clone $gerente;
+    $colaboradorClone = clone $colaborador;
+    $gerenteClone->role = $managerRole;
+    $colaboradorClone->role = $colabRole;
+
+    $imobiliaria->setRelation('users', collect([$gerenteClone, $colaboradorClone]));
 
     // ASSERT RESULTS
     // admin test
@@ -45,10 +59,10 @@ test('tests the update policy of imobiliaria', function () {
     expect($result)->toBeTrue('Admin cannot update imobiliaria');
 
     // user manager test
-    $result = $policy->update($gerente, $imobiliaria);
+    $result = $policy->update($gerenteClone, $imobiliariaForGerente);
     expect($result)->toBeTrue('Manager should update imobiliaria');
 
     // user colaborator test
-    $result = $policy->update($colaborador, $imobiliaria);
+    $result = $policy->update($colaboradorClone, $imobiliariaForColaborador);
     expect($result)->toBeFalse('Colaborador must not update imobiliaria');
 });
