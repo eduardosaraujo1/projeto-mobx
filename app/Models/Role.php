@@ -12,6 +12,8 @@ class Role extends Pivot
      *
      * @param  array<UserRole>|string  $roles  the role(s) to check against the user
      */
+    protected $table = 'imobiliaria_user';
+
     public function hasPermission(array|string $roles): bool
     {
         return in_array($this->role, (array) $roles);

@@ -62,7 +62,7 @@ class SearchService
 
             // formatted queries
             $haystack = "$userName $userEmail";
-            $needle = $search ?? '';
+            $needle = strtolower($search ?? '');
 
             // search filter
             $verdict = str_contains($haystack, $needle);

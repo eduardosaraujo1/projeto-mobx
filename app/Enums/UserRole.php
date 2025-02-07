@@ -11,7 +11,16 @@ enum UserRole: int
 
     public static function randomId()
     {
-        return array_rand(static::cases());
+        return array_rand(self::cases());
+    }
+
+    public static function fromName(string $name): ?UserRole
+    {
+        return match (strtolower($name)) {
+            'colaborador' => self::COLABORADOR,
+            'gerente' => self::GERENTE,
+            default => null
+        };
     }
 
     public function getName()

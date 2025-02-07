@@ -79,7 +79,7 @@ new #[Layout('layouts.app')] class extends Component
         </div>
     </x-slot>
     @can("view", $imobiliaria)
-        <form class="flex flex-col h-full gap-1" wire:submit="save">
+        <form class="flex flex-col gap-1" wire:submit="save">
             <x-errors class="mb-4" />
             <x-card>
                 <div>
@@ -111,16 +111,18 @@ new #[Layout('layouts.app')] class extends Component
                     <x-input :disabled='!$edit' wire:model="contact" autofocus />
                 </div>
             </x-card>
-            @can("update", $imobiliaria)
-                <div class="flex mt-4 space-x-2">
+            <div class="flex items-end gap-2 mt-4">
+                @can("update", $imobiliaria)
                     @if ($edit)
                         <x-primary-button type="submit">Salvar</x-primary-button>
                         <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                     @else
                         <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
-                </div>
-            @endcan
+                @endcan
+
+                <x-secondary-button :href="route('imobiliaria.members.info')" class="mt-2 ml-auto w-fit" wire:navigate>Gerenciar Membros</x-secondary-button>
+            </div>
         </form>
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />

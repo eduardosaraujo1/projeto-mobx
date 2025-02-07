@@ -72,7 +72,7 @@ new #[Layout('layouts.app')] class extends Component
 
     public function updatePassword()
     {
-        $this->authorize('update', $this->user);
+        $this->authorize('updatePassword', $this->user);
 
         try {
             $validated = $this->validate(['password' => User::rules()['password']]);
@@ -162,7 +162,7 @@ new #[Layout('layouts.app')] class extends Component
                 <x-password wire:model="password" label="Nova Senha" />
                 <x-password wire:model="password_confirmation" label="Confirmar Senha" />
                 <div class="flex items-center gap-4">
-                    <x-primary-button wire:click="updatePassword()">Salvar</x-primary-button>
+                    <x-primary-button wire:click="updatePassword()" x-on:click="$dispatch('close')">Salvar</x-primary-button>
                     <x-secondary-button x-on:click="$dispatch('close')">Cancelar</x-secondary-button>
                 </div>
             </div>
