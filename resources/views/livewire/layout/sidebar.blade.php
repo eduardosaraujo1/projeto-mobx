@@ -39,7 +39,7 @@ new class extends Component
     {
         if ($name === 'index_imobiliaria') {
             SelectedImobiliaria::set($value);
-            $this->js('window.location.reload()');
+            $this->redirect(route('home'), navigate: true);
         }
     }
 

@@ -220,6 +220,10 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 ## Telas
 
+### Design
+
+Esboços das telas estão localizadas no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
+
 ### Login | All
 
 - **Descrição:** campos 'email' e 'senha' e botão de login.
@@ -468,14 +472,17 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 # Roadmap
 
-- [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
-- [x] CADASTRO - mecanismo de cadastro de usuários e imobiliarias
-- [x] GERENCIAR USUARIOS - mecanismo para gerenciar usuários
-- [ ] SETUP - colocar no readme como fazer deploy do ambiente de desenvolvimento
-- [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
-- [ ] DASHBOARD - Mecanismo de ver data de aluguel do dashboard
-- [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
+- [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no
+- [x] fix/permissions - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
+- [ ] feat/RF13 - Adicionar upload de documentos aos logs
+- [ ] feat/deletion - Adicionar funcionalidade de deleção de usuários, imóveis, clientes e imobiliarias (lembre-se dos onDeleteNull das relações)
+- [ ] feat/radio-status-form - Definir Status utilizando elemento Radio ao em vez de um select
+- [ ] feat/dashboard-db - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
+- [ ] feat/manage-aluguel - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
+- [ ] feat/dashboard - Mecanismo de ver data de aluguel do dashboard
+- [ ] feat/relatorios - Mecanismo de ver data de aluguel do dashboard
+- [ ] feat/notifications - Sistema de notificar os usuários de acontecimentos relevantes
     - Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
     - Fazer apenas se der tempo
-- [ ] CALENDAR - Agendar lembretes para a visita de um imóvel
+- [ ] feat/calendar - Agendar lembretes para a visita de um imóvel
     - Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário

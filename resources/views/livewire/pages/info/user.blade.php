@@ -133,7 +133,9 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-lg font-bold min-w-max">Senha</span>
                     <div class="flex items-end gap-2">
                         <x-password disabled required autofocus value="***********" />
-                        <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-secondary-button>
+                        @can("updatePassword", $user)
+                            <x-secondary-button x-on:click.prevent="$dispatch('open-modal', 'updatePassword')">Alterar</x-secondary-button>
+                        @endcan
                     </div>
                 </div>
             </x-card>

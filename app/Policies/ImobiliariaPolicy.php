@@ -22,7 +22,10 @@ class ImobiliariaPolicy
      */
     public function view(User $user, Imobiliaria $imobiliaria): bool
     {
-        return SelectedImobiliaria::get($user)->id === $imobiliaria->id || $user->is_admin;
+        $verdict = $user->is_admin
+            || SelectedImobiliaria::is($imobiliaria, $user);
+
+        return $verdict;
     }
 
     /**
@@ -38,7 +41,11 @@ class ImobiliariaPolicy
      */
     public function update(User $user, Imobiliaria $imobiliaria): bool
     {
-        return SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE || $user->is_admin;
+        $verdict = $user->is_admin
+            || $user->getRole($imobiliaria) === UserRole::GERENTE
+            && SelectedImobiliaria::is($imobiliaria, $user);
+
+        return $verdict;
     }
 
     /**
@@ -46,7 +53,7 @@ class ImobiliariaPolicy
      */
     public function delete(User $user, Imobiliaria $imobiliaria): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**

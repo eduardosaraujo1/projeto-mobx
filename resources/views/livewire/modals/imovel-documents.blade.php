@@ -48,7 +48,8 @@ new class extends Component
 
         // filter for documents that are in the system to be downloaded
         $validDocs = $documents->filter(function (ImovelDocument $document) {
-            return Storage::disk('local')->exists($document?->filepath ?? '');
+            return Storage::disk('local')->exists($document?->filepath ?? '')
+                && Gate::allows('view', $document);
         });
 
         // parse documents for easier front end reading
@@ -58,6 +59,7 @@ new class extends Component
                 'filepath' => $doc->filepath,
                 'filename' => File::name($doc->filename),
                 'extension' => strtoupper(File::extension($doc->filepath)),
+                'document' => $doc,
             ];
         })->toArray();
 
@@ -114,7 +116,7 @@ new class extends Component
 
     public function download(ImovelDocument $document)
     {
-        $this->authorize('view', $this->imovel);
+        $this->authorize('download', $document);
 
         // get file path to download and file name
         $filePath = $document->filepath;
@@ -184,20 +186,30 @@ new class extends Component
                                 <span id="fileformat">{{ $document["extension"] ?? "" }}</span>
                             </div>
                             <div class="flex gap-2">
-                                <x-mini-button icon="trash" lg rounded red outline interaction:solid wire:click="stageDocumentForDeletion({{ $document['id'] }})" />
-                                <x-mini-button icon="arrow-down-tray" lg rounded black wire:click="download('{{ $document['id'] }}')" />
+                                @can("delete", $document["document"])
+                                    <x-mini-button icon="trash" lg rounded red outline interaction:solid wire:click="stageDocumentForDeletion({{ $document['id'] }})" />
+                                @endcan
+
+                                @can("download", $document["document"])
+                                    <x-mini-button icon="arrow-down-tray" lg rounded black wire:click="download('{{ $document['id'] }}')" />
+                                @endcan
                             </div>
                         </div>
                     </x-card>
                 @empty
-                    
+                    @can("update", $imovel)
+                    @else
+                        <x-alert title="Nenhum imóvel encontrado" />
+                    @endcan
                 @endforelse
-                <div class="block w-full mt-2 text-center">
-                    <x-secondary-button class="flex gap-1 h-min" x-on:click="$refs.uploadDoc.click()">
-                        <x-icon name="plus" class="w-5 h-5" />
-                        Adicionar
-                    </x-secondary-button>
-                </div>
+                @can("update", $imovel)
+                    <div class="block w-full my-2 text-center">
+                        <x-secondary-button class="flex gap-1 h-min" x-on:click="$refs.uploadDoc.click()">
+                            <x-icon name="plus" class="w-5 h-5" />
+                            Adicionar
+                        </x-secondary-button>
+                    </div>
+                @endcan
             </div>
             <div class="flex justify-end w-full mt-2">
                 <x-primary-button x-on:click="$dispatch('close')">Fechar</x-primary-button>
