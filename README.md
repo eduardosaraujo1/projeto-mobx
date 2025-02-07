@@ -437,9 +437,10 @@ Cada imóvel terá um histórico detalhado das alterações realizadas, como mud
 
 - [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no [figma](https://www.figma.com/design/3C5ob6CECygrrGYAjsHRY9/Mobx)
 - [x] CADASTRO - mecanismo de cadastro de usuários e imobiliarias
-- [ ] GERENCIAR USUARIOS - mecanismo para gerenciar usuários
-- [ ] DASHBOARD - Mecanismo de ver data de aluguel do dashboard
+- [x] GERENCIAR USUARIOS - mecanismo para gerenciar usuários
+- [ ] SETUP - colocar no readme como fazer deploy do ambiente de desenvolvimento
 - [ ] PERMISSIONS - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
+- [ ] DASHBOARD - Mecanismo de ver data de aluguel do dashboard
 - [ ] NOTIFICATIONS - Sistema de notificar os usuários de acontecimentos relevantes
     - Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
     - Fazer apenas se der tempo
