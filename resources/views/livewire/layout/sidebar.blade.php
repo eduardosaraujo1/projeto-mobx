@@ -56,17 +56,11 @@ new class extends Component
     {
         $is_admin = auth()->user()->is_admin ?? false;
 
-        $home = $is_admin
-            ? [
-                'label' => 'Painel Administrativo',
-                'active' => $this->routeMatches('admin'),
-                'href' => route('home'),
-            ]
-            : [
-                'label' => 'Minha Imobiliária',
-                'active' => $this->routeMatches('imobiliaria'),
-                'href' => route('home'),
-            ];
+        $home = [
+            'label' => $is_admin ? 'Painel Administrativo' : 'Minha Imobiliária',
+            'active' => $this->routeMatches('(admin|imobiliaria|user)'),
+            'href' => route('home'),
+        ];
 
         $dashboard = [
             'label' => 'Dashboard',
@@ -95,7 +89,7 @@ new class extends Component
     {
         $routeName = Route::currentRouteName();
 
-        return str_contains($routeName, $pattern);
+        return preg_match("/$pattern/", $routeName);
     }
 }; ?>
 
