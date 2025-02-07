@@ -106,12 +106,12 @@ class ImovelLogService
         $this->log($title, $description);
     }
 
-    public function logDocumentDelete(string $filename)
+    public function logDocumentDelete(string $filename, string $filesize)
     {
         // parse data
         $filename = substr($filename, 0, 50);
         $title = "Remoção documento '$filename'";
-        $description = "Apagado '$filename' da lista de documentos do imóvel";
+        $description = "Apagado '$filename' ($filesize) da lista de documentos do imóvel";
 
         $this->log($title, $description);
     }

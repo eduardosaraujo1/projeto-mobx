@@ -60,6 +60,7 @@ new class extends Component
                 'id' => $doc?->id,
                 'filepath' => $doc->filepath,
                 'filename' => File::name($doc->filename),
+                'filesize' => $doc->filesize,
                 'extension' => strtoupper(File::extension($doc->filepath)),
                 'document' => $doc,
             ];
@@ -87,6 +88,7 @@ new class extends Component
 
         // save file to disk
         $filename = $file->getClientOriginalName();
+        $filesize = StringUtils::humanFileSize($file->getSize());
         $path = Storage::disk('local')->putFile('imovel_documents', $file);
 
         // if storing the file failed, send error message and stop propagation
@@ -100,6 +102,7 @@ new class extends Component
         $validator = ImovelDocument::validator([
             'filename' => $filename,
             'filepath' => $path,
+            'filesize' => $filesize,
             'imovel_id' => $this->imovel->id,
         ]);
 
@@ -116,7 +119,6 @@ new class extends Component
         ImovelDocument::create($validated);
 
         // log creation of the document with file size
-        $filesize = StringUtils::humanFileSize($file->getSize());
         $logService = new ImovelLogService($this->imovel, auth()->user());
         $logService->logDocumentUpload($filename, $filesize);
     }
@@ -148,6 +150,7 @@ new class extends Component
         // get file path and file name
         $filename = $document->filename;
         $filepath = $document->filepath;
+        $filesize = $document->filesize;
 
         // delete file
         Storage::disk('local')->delete($filepath);
@@ -157,7 +160,7 @@ new class extends Component
 
         // log deletion of the document
         $logService = new ImovelLogService($this->imovel, auth()->user());
-        $logService->logDocumentDelete($filename);
+        $logService->logDocumentDelete($filename, $filesize);
     }
 
     public function stageDocumentForDeletion(?int $id)
@@ -194,8 +197,8 @@ new class extends Component
                         <div class="flex items-center gap-4">
                             <x-document-icon name="document" class="w-12 h-12" :extension="$document['extension'] ?? ''" />
                             <div class="flex flex-col self-stretch justify-between flex-1">
-                                <span id="filename" class="text-lg font-medium">{{ $document["filename"] ?? "" }}</span>
-                                <span id="fileformat">{{ $document["extension"] ?? "" }}</span>
+                                <span class="text-lg font-medium">{{ $document["filename"] ?? "" }}</span>
+                                <span>{{ $document["extension"] ?? "" }} ({{ $document["filesize"] }})</span>
                             </div>
                             <div class="flex gap-2">
                                 @can("delete", $document["document"])

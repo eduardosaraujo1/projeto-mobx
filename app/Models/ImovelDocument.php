@@ -14,6 +14,7 @@ class ImovelDocument extends Model
     protected $fillable = [
         'filepath',
         'filename',
+        'filesize',
         'imovel_id',
     ];
 

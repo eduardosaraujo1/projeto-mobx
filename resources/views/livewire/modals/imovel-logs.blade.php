@@ -49,7 +49,7 @@ new class extends Component
                     <x-card wire:key="{{$log['id'] ?? uuid_create()}}">
                         <div class="flex">
                             <div class="w-12 h-12 mr-4">
-                                <x-icon name="document-text" class="block w-full h-full" />
+                                <x-document-icon name="document-text" class="block w-full h-full" :extension="File::extension($document['filename'] ?? '')" />
                             </div>
                             <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1">
                                 <span class="text-lg font-bold">Título:</span>
@@ -57,10 +57,17 @@ new class extends Component
                                 <span class="text-lg font-bold">Descrição:</span>
                                 <span class="flex items-center">{!! nl2br(e($log["description"])) !!}</span>
                                 <span class="text-lg font-bold">Usuário:</span>
-                                <a href="{{ route("user.info", ["user" => $log["user_id"]]) }}" class="flex items-center gap-1 text-blue-900">
-                                    <x-icon name="information-circle" class="w-4.5 h-4.5" />
-                                    {{ $log["user_name"] }}
-                                </a>
+                                @can("viewAny", App\Models\User::class)
+                                    <a href="{{ route("user.info", ["user" => $log["user_id"]]) }}" class="flex items-center gap-1 text-blue-900">
+                                        <x-icon name="information-circle" class="w-4.5 h-4.5" />
+                                        {{ $log["user_name"] }}
+                                    </a>
+                                @else
+                                    <span class="flex items-center gap-1">
+                                        <x-icon name="information-circle" class="w-4.5 h-4.5" />
+                                        {{ $log["user_name"] }}
+                                    </span>
+                                @endcan
                                 <span class="text-lg font-bold">Data:</span>
                                 <span class="flex items-center">{{ $log["created_at"] }}</span>
                             </div>
