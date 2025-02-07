@@ -119,9 +119,9 @@ new #[Layout('layouts.app')] class extends Component
                     @else
                         <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
+                    <x-secondary-button class="mt-2 ml-auto w-fit" x-on:click="$dispatch('open-modal', 'imobiliariaMembers')" wire:navigate>Gerenciar Membros</x-secondary-button>
+                    <livewire:modals.members />
                 @endcan
-
-                <x-secondary-button :href="route('imobiliaria.members.info')" class="mt-2 ml-auto w-fit" wire:navigate>Gerenciar Membros</x-secondary-button>
             </div>
         </form>
     @else

@@ -64,9 +64,6 @@ Route::middleware(['auth', 'verified', 'has-imobiliaria'])->group(function () {
     Volt::route('imobiliaria/{imobiliaria}/info', 'pages.info.imobiliaria')
         ->middleware('admin')
         ->name('imobiliaria.info');
-
-    Volt::route('imobiliaria/membros', 'pages.info.members')
-        ->name('imobiliaria.members.info');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

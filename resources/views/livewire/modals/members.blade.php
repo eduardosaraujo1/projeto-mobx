@@ -7,10 +7,9 @@ use App\Models\User;
 use App\Services\SearchService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\JoinClause;
-use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.app')] class extends Component
+new class extends Component
 {
     /**
      * list of users with their respective access level to this imobiliaria
@@ -25,7 +24,7 @@ new #[Layout('layouts.app')] class extends Component
 
     public function mount(Imobiliaria $imobiliaria)
     {
-        $this->authorize('view', $imobiliaria);
+        // $this->authorize('update', $imobiliaria);
         $this->userList = $this->orderByAccess($imobiliaria);
         $this->imobiliaria = $imobiliaria;
     }
@@ -106,49 +105,54 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 
-<div class="space-y-2">
-    <x-errors title="Erro" />
-    <x-slot name="heading">{{ $imobiliaria->name }}: Gerenciar Membros</x-slot>
-    <div class="flex gap-2">
-        <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Nome ou e-mail)" />
-    </div>
-    <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
-        <div class="flex flex-col gap-1 p-4">
-            @forelse ($users as $user)
-                <div class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm" wire:key="{{ $user->id }}">
-                    <div class="me-2">
-                        <x-avatar xl label="U" class="!bg-gray-700" />
-                    </div>
-                    <div class="flex-1">
-                        <span class="block font-bold">Nome:</span>
-                        <span class="block">{{ $user->name ?? "" }}</span>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block font-bold">E-mail:</span>
-                        <span class="block">{{ $user->email }}</span>
-                    </div>
-                    <div class="flex-1">
-                        <span class="block font-bold">Permissões:</span>
-                        <form
-                            class="flex gap-2"
-                            x-data="{
-                                role: @js($user->role?->getName() ?? "None"),
-                                onChange() {
-                                    $wire.updateRole(@js($user->id), this.role)
-                                },
-                            }"
-                            x-on:change="onChange()"
-                        >
-                            <x-radio id="none-{{$loop->index}}" name="role-{{$loop->index}}" label="Nenhum" value="None" x-model="role" />
-                            <x-radio id="colaborador-{{$loop->index}}" name="role-{{$loop->index}}" label="Colaborador" value="Colaborador" x-model="role" />
-                            <x-radio id="gerente-{{$loop->index}}" name="role-{{$loop->index}}" label="Gerente" value="Gerente" x-model="role" />
-                        </form>
-                        <span class="block">{{ App\Utils\StringUtils::cpfFormat($user->cpf ?? "") }}</span>
-                    </div>
+<div>
+    <x-modal name="imobiliariaMembers">
+        <div class="p-6 space-y-2">
+            <h1 class="text-2xl font-bold">Membros da Imobiliária</h1>
+            <x-errors title="Erro" />
+            <div class="flex gap-2">
+                <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Nome ou e-mail)" />
+            </div>
+            <div class="bg-white rounded shadow h-[40rem] overflow-y-scroll">
+                <div class="flex flex-col gap-1 p-4">
+                    @forelse ($users as $user)
+                        <div class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm" wire:key="{{ $user->id }}">
+                            <div class="me-2">
+                                <x-avatar xl label="U" class="!bg-gray-700" />
+                            </div>
+                            <div class="flex-1">
+                                <div>
+                                    <span class="font-bold">Nome:</span>
+                                    <span>{{ $user->name ?? "" }}</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold">E-mail:</span>
+                                    <span>{{ $user->email }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="block font-bold">Permissões:</span>
+                                <div
+                                    x-data="{
+                                        role: @js($user->role?->getName() ?? "None"),
+                                        onChange() {
+                                            $wire.updateRole(@js($user->id), this.role)
+                                        },
+                                    }"
+                                    x-on:change="onChange()"
+                                >
+                                    <x-radio id="none-{{$user->id}}" name="role-{{$user->id}}" label="Nenhum" value="None" x-model="role" />
+                                    <x-radio id="colaborador-{{$user->id}}" name="role-{{$user->id}}" label="Colaborador" value="Colaborador" x-model="role" />
+                                    <x-radio id="gerente-{{$user->id}}" name="role-{{$user->id}}" label="Gerente" value="Gerente" x-model="role" />
+                                </div>
+                                <span class="block">{{ App\Utils\StringUtils::cpfFormat($user->cpf ?? "") }}</span>
+                            </div>
+                        </div>
+                    @empty
+                        <x-alert title="Nenhum usuário disponivel foi encontrado" />
+                    @endforelse
                 </div>
-            @empty
-                <x-alert title="Nenhum cliente foi encontrado" />
-            @endforelse
+            </div>
         </div>
-    </div>
+    </x-modal>
 </div>
