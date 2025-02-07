@@ -70,7 +70,6 @@ class ImovelLogService
     {
         $title = 'Edição imóvel #'.$this->imovel->id;
         $description = $this->generateDescription($changes);
-        dump($description);
 
         if (empty($description)) {
             return;
