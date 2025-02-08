@@ -142,6 +142,15 @@ new #[Layout('layouts.app')] class extends Component
         $this->client_id = $client_id;
     }
 
+    public function delete()
+    {
+        $this->authorize('delete', $this->imovel);
+
+        $this->imovel->delete();
+
+        $this->redirectRoute('imovel.index');
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -169,7 +178,12 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <h2 class="my-4 text-4xl font-semibold leading-tight">Gerenciar Imóvel</h2>
+    <div class="flex items-center gap-4">
+        <h2 class="my-4 text-4xl font-semibold leading-tight">Gerenciar Imóvel</h2>
+        @can("delete", $imovel)
+            <x-mini-button icon="trash" lg solid negative interaction:outline x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')" />
+        @endcan
+    </div>
     @can("view", $imovel)
         <x-errors class="mb-4" />
         <div class="space-y-2">
@@ -272,6 +286,7 @@ new #[Layout('layouts.app')] class extends Component
 
         <livewire:modals.select-imovel-client />
         <livewire:modals.imovel-documents :imovel="$imovel" />
+        <livewire:modals.delete-model />
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
