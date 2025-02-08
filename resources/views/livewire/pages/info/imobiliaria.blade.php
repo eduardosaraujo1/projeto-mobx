@@ -58,6 +58,15 @@ new #[Layout('layouts.app')] class extends Component
         $this->stopEdit();
     }
 
+    public function delete()
+    {
+        $this->authorize('delete', $this->imobiliaria);
+
+        $this->imobiliaria->delete();
+
+        $this->redirectRoute('home');
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -73,7 +82,12 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <h2 class="my-4 text-4xl font-semibold leading-tight">Imobiliaria {{ $imobiliaria->name }}</h2>
+    <div class="flex items-center gap-4">
+        <h2 class="my-4 text-4xl font-semibold leading-tight">Imobiliaria {{ $imobiliaria->name }}</h2>
+        @can("delete", $imobiliaria)
+            <x-mini-button icon="trash" lg solid negative interaction:outline x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')" />
+        @endcan
+    </div>
     @can("view", $imobiliaria)
         <form class="flex flex-col gap-1" wire:submit="save">
             <x-errors class="mb-4" />
@@ -120,6 +134,7 @@ new #[Layout('layouts.app')] class extends Component
                 @endcan
             </div>
         </form>
+        <livewire:modals.delete-model />
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
