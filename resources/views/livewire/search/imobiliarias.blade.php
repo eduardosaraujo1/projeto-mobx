@@ -2,6 +2,8 @@
 
 use App\Models\Imobiliaria;
 use App\Services\SearchService;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Volt\Component;
 
 new class extends Component
@@ -17,14 +19,31 @@ new class extends Component
 
     public function with(SearchService $search)
     {
+        // perform search
+        $filteredList = $search->imobiliariaSearch($this->imobiliariaList, $this->searchString ?? '');
+        $formatted = $this->imobiliariaFormat($filteredList);
+
         return [
-            'imobiliarias' => $search->imobiliariaSearch($this->imobiliariaList, $this->searchString ?? ''),
+            'imobiliarias' => $formatted,
         ];
     }
 
     public function mount()
     {
         $this->imobiliariaList = Imobiliaria::all();
+    }
+
+    public function imobiliariaFormat(Collection $imobiliarias): array
+    {
+        return $imobiliarias->map(function (Imobiliaria $imobiliaria) {
+            $arr = $imobiliaria->toArray();
+            $arr['address'] = substr($arr['address'], 0, 20);
+            $arr['updated_at'] = Carbon::create($arr['updated_at'])
+                ->setTimezone('America/Sao_Paulo')
+                ->format('d-m-Y H:i:s');
+
+            return $arr;
+        })->toArray();
     }
 }; ?>
 
@@ -39,32 +58,32 @@ new class extends Component
             @forelse ($imobiliarias as $imobiliaria)
                 <a
                     class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
-                    href="{{ route("imobiliaria.info", ["imobiliaria" => $imobiliaria->id]) }}"
-                    wire:key="{{ $imobiliaria->id }}"
+                    href="{{ route("imobiliaria.info", ["imobiliaria" => $imobiliaria["id"]]) }}"
+                    wire:key="{{ $imobiliaria["id"] }}"
                     wire:navigate
                 >
                     <div class="mr-2">
-                        <img src="{{ asset("images/placeholder-imobiliaria.png") }}" alt="Imobiliaria Logo" class="w-16 rounded shadow aspect-square" />
+                        <img src="{{ asset("images/placeholder-imobiliaria.png") }}" alt="Imobiliaria Logo" class="w-16 rounded aspect-square" />
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Nome:</span>
-                        <span class="block">{{ $imobiliaria->name }}</span>
+                        <span class="block">{{ $imobiliaria["name"] }}</span>
                     </div>
                     <div class="flex-1">
-                        <span class="block font-bold">Endereço</span>
-                        <span class="block">{{ Str::limit($imobiliaria->address, 50) }}</span>
+                        <span class="block font-bold">Endereço:</span>
+                        <span class="block">{{ $imobiliaria["address"] }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">E-mail:</span>
-                        <span class="block">{{ $imobiliaria->email }}</span>
+                        <span class="block">{{ $imobiliaria["email"] }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Contato:</span>
-                        <span class="block">{{ $imobiliaria->contact }}</span>
+                        <span class="block">{{ $imobiliaria["contact"] }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Ultima Atualização</span>
-                        <span class="block">{{ $imobiliaria->updated_at->format("d/m/Y H:i:s") }}</span>
+                        <span class="block">{{ $imobiliaria["updated_at"] }}</span>
                     </div>
                 </a>
             @empty
