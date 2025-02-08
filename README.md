@@ -476,7 +476,6 @@ Esboços das telas estão localizadas no [figma](https://www.figma.com/design/3C
 - [x] fix/permissions - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
 - [x] feat/RF13 - Adicionar upload de documentos aos logs
 - [x] feat/deletion - Adicionar funcionalidade de deleção de usuários, imóveis, clientes e imobiliarias
-- [ ] feat/radio-status-form - Definir Status utilizando elemento Radio ao em vez de um select
 - [ ] feat/dashboard-db - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
 - [ ] feat/manage-aluguel - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
 - [ ] feat/dashboard - Mecanismo de ver data de aluguel do dashboard
