@@ -118,7 +118,12 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <h2 class="my-4 text-4xl font-semibold leading-tight">Visualizar Usuário</h2>
+    <div class="flex items-center gap-4">
+        <h2 class="my-4 text-4xl font-semibold leading-tight">Visualizar Usuário</h2>
+        @can("delete", $user)
+            <x-mini-button icon="trash" lg solid negative interaction:outline x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')" />
+        @endcan
+    </div>
     @can("view", $user)
         <form class="flex flex-col h-full gap-1" wire:submit="save">
             <x-errors class="mb-4" />
@@ -158,10 +163,6 @@ new #[Layout('layouts.app')] class extends Component
                         <x-primary-button type="submit">Salvar</x-primary-button>
                         <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                     @else
-                        @can("delete", $user)
-                            <x-danger-button x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')">Delete</x-danger-button>
-                        @endcan
-
                         <x-primary-button wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
                     <x-action-message class="me-3" on="saved">Salvo</x-action-message>
