@@ -57,6 +57,15 @@ new #[Layout('layouts.app')] class extends Component
         $this->stopEdit();
     }
 
+    public function delete()
+    {
+        $this->authorize('delete', $this->client);
+
+        $this->client->delete();
+
+        $this->redirectRoute('client.index');
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -72,7 +81,12 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <h2 class="my-4 text-4xl font-semibold leading-tight">Gerenciar Cliente</h2>
+    <div class="flex items-center gap-4">
+        <h2 class="my-4 text-4xl font-semibold leading-tight">Gerenciar Cliente</h2>
+        @can("delete", $client)
+            <x-mini-button icon="trash" lg solid negative interaction:outline x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')" />
+        @endcan
+    </div>
     @can("view", $client)
         <x-errors class="mb-4" />
         <div class="flex flex-col h-full gap-1">
@@ -106,6 +120,7 @@ new #[Layout('layouts.app')] class extends Component
                 <x-input :disabled='!$edit' wire:model="address" autofocus />
             </x-card>
         </div>
+        <livewire:modals.delete-model />
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
