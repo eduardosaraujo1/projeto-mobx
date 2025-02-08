@@ -263,7 +263,7 @@ new #[Layout('layouts.app')] class extends Component
                 <x-card class="grid items-center">
                     <div class="flex items-center gap-2">
                         <span class="block text-lg font-bold min-w-max">Status:</span>
-                        <x-select :disabled="!$edit" wire:model="status">
+                        <x-select :disabled="!$edit" wire:model="status" :clearable='false'>
                             <x-select.option value="0">Livre</x-select.option>
                             <x-select.option value="1">Alugado</x-select.option>
                             <x-select.option value="2">Vendido</x-select.option>

@@ -470,19 +470,33 @@ Esboços das telas estão localizadas no [figma](https://www.figma.com/design/3C
 
     - N/A (readonly page)
 
+## Grande mudança: registro de aluguel
+
+Para obter o "tempo médio de aluguel", "alertas sobre contratos vencendo" e "alertas de status de imóveis alterados" é necessário acompanhar quais alugueis foram feitos.
+
+Para isso, ao em vez de definir cliente, status e valor manualmente, faremos registro em uma tabela "aluguel" com os valores:
+
+- Valor
+- Data inicio
+- Data final (nullable)
+- Cliente
+- mark_finalizado (bool)
+
+Tudo isso é editavel, mas não é possível remover um aluguel, apenas "marcar como finalizado". uma venda é definida separadamente e é uma flag (checkbox) do imóvel (vendido?). Se essa for marcada o valor da venda deve ser dado em outro campo.
+Deve ser possível também "renovar" um aluguel, que o extende por mais um mês
+Por fim, remover 'status' e 'cliente' do imovel dado que o status de "livre", "alugado" ou "vendido" é definido se o mais recente aluguel foi finalizado, está ativo, ou
+
 # Roadmap
 
 - [x] DOCS - Separar o único fluxo de telas em três: um para cada nível, como foi feito no
 - [x] fix/permissions - Verificar se nenhuma permissão indevida está dada (e.g um usuário alterar o valor de um cliente artificialmente pra um cliente que não pertence a imobiliaria)
 - [x] feat/RF13 - Adicionar upload de documentos aos logs
 - [x] feat/deletion - Adicionar funcionalidade de deleção de usuários, imóveis, clientes e imobiliarias
-- [ ] feat/radio-status-form - Definir Status utilizando elemento Radio ao em vez de um select
-- [ ] feat/dashboard-db - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
-- [ ] feat/manage-aluguel - Criar migrações do banco de dados para existirem dados de aluguel para um imovel
-- [ ] feat/dashboard - Mecanismo de ver data de aluguel do dashboard
-- [ ] feat/relatorios - Mecanismo de ver data de aluguel do dashboard
+- [ ] feat/RF12-advanced-search - Mecanismo de busca de imoveis avançada (localização, status, valor de aluguel ou venda)
+- [ ] feat/dashboard - Gráfico de divisão para situação de imóveis
+- [ ] feat/relatorios - Gerar aluguel
+- [ ] feat/track-aluguel - Criar mecanismos de log para saber qual é o tempo médio de um aluguel e mostrar no dashboard
 - [ ] feat/notifications - Sistema de notificar os usuários de acontecimentos relevantes
-    - Requisitos: adicionar tabelas notifications para guardar as notificacoes e a tabela view_notifications para guardar os usuários que já leram as notificações
-    - Fazer apenas se der tempo
-- [ ] feat/calendar - Agendar lembretes para a visita de um imóvel
-    - Requisitos: criar tabela agendamentos para gerenciar agendas e renderiza-las em calendário
+    - Requirements: table notifications, user_notification; job for triggering notifications
+- [ ] feat/visit-schedule - Agendar lembretes para a visita de um imóvel
+    - Requirements: table visit

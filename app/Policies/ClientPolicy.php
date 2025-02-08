@@ -56,9 +56,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        $verdict = $user->is_admin
-            || SelectedImobiliaria::is($client->imobiliaria, $user)
-            || SelectedImobiliaria::accessLevel($user) === UserRole::GERENTE;
+        $verdict = $user->is_admin;
 
         return $verdict;
     }
