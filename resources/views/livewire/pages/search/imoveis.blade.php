@@ -40,7 +40,7 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div class="space-y-2">
-    <x-slot name="heading">Imóveis Cadastrados</x-slot>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Imóveis Cadastrados</h2>
     <div class="flex gap-2">
         <x-input type="text" id="searchBar" wire:model.live.debounce="searchString" class="flex-1" placeholder="Pesquisar (Rua, valor ou iptu)" />
         <x-select placeholder="Selecione" wire:model.live="searchImovelStatus" class="w-min">

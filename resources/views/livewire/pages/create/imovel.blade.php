@@ -165,7 +165,7 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div class="flex flex-col h-full gap-4">
-    <x-slot name="heading">Upload de Planilha Excel</x-slot>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Upload de Planilha Excel</h2>
     @can("create", Imovel::class)
         <x-errors title="Não foi possivel importar sua planilha" outline>
             <x-slot name="footer" class="flex items-center justify-end">

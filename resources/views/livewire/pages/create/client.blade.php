@@ -51,8 +51,8 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 
-<x-slot name="heading">Novo Cliente</x-slot>
 <div>
+    <h2 class="my-4 text-4xl font-semibold leading-tight">Novo Cliente</h2>
     @can("create", Client::class)
         <x-errors class="mb-4" />
         <form class="flex flex-col items-start gap-2 p-4 bg-white rounded shadow" wire:submit="create">

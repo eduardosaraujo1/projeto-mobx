@@ -2,6 +2,8 @@
 
 use App\Models\User;
 use App\Services\SearchService;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Volt\Component;
 
 /**
@@ -32,14 +34,29 @@ new class extends Component
 
     public function with(SearchService $search)
     {
+        $filteredList = $search->userSearch($this->userList, $this->searchString ?? '', $this->searchType);
+        $formatted = $this->userFormat($filteredList);
+
         return [
-            'users' => $search->userSearch($this->userList, $this->searchString ?? '', $this->searchType),
+            'users' => $formatted,
         ];
     }
 
     public function searchUsers()
     {
         return User::all();
+    }
+
+    public function userFormat(Collection $users): array
+    {
+        return $users->map(function (User $user) {
+            $arr = $user->toArray();
+            $arr['updated_at'] = Carbon::create($arr['updated_at'])
+                ->setTimezone('America/Sao_Paulo')
+                ->format('d-m-Y H:i:s');
+
+            return $arr;
+        })->toArray();
     }
 }; ?>
 
@@ -60,24 +77,24 @@ new class extends Component
             @forelse ($users as $user)
                 <a
                     class="flex w-full px-4 py-2 space-x-2 bg-white border rounded shadow-sm"
-                    href="{{ route("user.info", ["user" => $user->id]) }}"
+                    href="{{ route("user.info", ["user" => $user["id"]]) }}"
                     wire:navigate
-                    wire:key="{{ $user->id }}"
+                    wire:key="{{ $user["id"] }}"
                 >
                     <div class="mr-2">
-                        <x-avatar xl label="U" @class(["!bg-gray-700", "!bg-red-700" => $user->is_admin]) />
+                        <x-avatar xl label="U" @class(["!bg-gray-700", "!bg-red-700" => $user["is_admin"]]) />
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">Nome:</span>
-                        <span class="block">{{ $user->name }}</span>
+                        <span class="block">{{ $user["name"] }}</span>
                     </div>
                     <div class="flex-1">
                         <span class="block font-bold">E-mail:</span>
-                        <span class="block">{{ $user->email }}</span>
+                        <span class="block">{{ $user["email"] }}</span>
                     </div>
                     <div class="flex-1">
-                        <span class="block font-bold">Ultima Atualização</span>
-                        <span class="block">{{ $user->updated_at->format("d/m/Y H:i:s") }}</span>
+                        <span class="block font-bold">Ultima Atualização:</span>
+                        <span class="block">{{ $user["updated_at"] }}</span>
                     </div>
                 </a>
             @empty

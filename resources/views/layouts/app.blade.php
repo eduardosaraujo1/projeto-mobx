@@ -26,11 +26,6 @@
                     @elseif ($message = session("error"))
                         <x-alert negative title="{{ $message }}" />
                     @endif
-                    @isset($heading)
-                        <h2 {{ $heading->attributes->merge(["class" => "my-4 text-4xl font-semibold leading-tight"]) }}>
-                            {{ $heading }}
-                        </h2>
-                    @endisset
 
                     {{ $slot }}
                 </div>

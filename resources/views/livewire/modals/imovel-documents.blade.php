@@ -185,7 +185,7 @@ new class extends Component
 <div>
     <x-modal name="view-documents" focusable>
         <div class="p-6">
-            <h1 class="mb-2 text-3xl font-medium">Documentos do imóvel</h1>
+            <h1 class="mb-2 text-2xl font-medium">Documentos do imóvel</h1>
             @if (session("documentError"))
                 <x-alert negative title="Não foi possivel fazer o upload do arquivo. Tente novamente mais tarde."></x-alert>
             @endif

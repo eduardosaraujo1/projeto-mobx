@@ -93,6 +93,16 @@ new #[Layout('layouts.app')] class extends Component
         $this->dispatch('saved');
     }
 
+    public function delete()
+    {
+        $this->authorize('delete', $this->user);
+
+        $this->user->delete();
+
+        // redirect
+        $this->redirectRoute('home');
+    }
+
     public function startEdit()
     {
         $this->edit = true;
@@ -108,11 +118,12 @@ new #[Layout('layouts.app')] class extends Component
 
 
 <div>
-    <x-slot name="heading">
-        <div class="flex justify-between">
-            <span class="flex-1">Visualizar Usuário</span>
-        </div>
-    </x-slot>
+    <div class="flex items-center gap-4">
+        <h2 class="my-4 text-4xl font-semibold leading-tight">Visualizar Usuário</h2>
+        @can("delete", $user)
+            <x-mini-button icon="trash" lg solid negative interaction:outline x-on:click.prevent="$dispatch('open-modal', 'confirm-delete')" />
+        @endcan
+    </div>
     @can("view", $user)
         <form class="flex flex-col h-full gap-1" wire:submit="save">
             <x-errors class="mb-4" />
@@ -146,17 +157,17 @@ new #[Layout('layouts.app')] class extends Component
                     <x-radio :disabled="!$edit" id="admin" label="Administrador" wire:model="userType" value="admin" />
                 </div>
             </x-card>
-            @can("update", $user)
-                <div class="flex items-center mt-4 space-x-2">
+            <div class="flex items-center gap-2 mt-4">
+                @can("update", $user)
                     @if ($edit)
                         <x-primary-button type="submit">Salvar</x-primary-button>
                         <x-secondary-button wire:click.prevent="stopEdit">Cancelar</x-secondary-button>
                     @else
-                        <x-primary-button label="Editar" wire:click.prevent="startEdit">Editar</x-primary-button>
+                        <x-primary-button wire:click.prevent="startEdit">Editar</x-primary-button>
                     @endif
                     <x-action-message class="me-3" on="saved">Salvo</x-action-message>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </form>
         <x-modal name="updatePassword" focusable>
             <div class="p-6 space-y-2">
@@ -165,10 +176,11 @@ new #[Layout('layouts.app')] class extends Component
                 <x-password wire:model="password_confirmation" label="Confirmar Senha" />
                 <div class="flex items-center gap-4">
                     <x-primary-button wire:click="updatePassword()" x-on:click="$dispatch('close')">Salvar</x-primary-button>
-                    <x-secondary-button x-on:click="$dispatch('close')">Cancelar</x-secondary-button>
+                    <x-secondary-button x-on:click.prevent="$dispatch('close')">Cancelar</x-secondary-button>
                 </div>
             </div>
         </x-modal>
+        <livewire:modals.delete-model />
     @else
         <x-alert negative title="Você não tem acesso a esse recurso. " />
     @endcan
